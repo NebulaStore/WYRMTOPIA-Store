@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WYRMTOPIA Store — Pure .EXE & Auto-Logo Game Shop</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase Client SDK for Serverless Cloud Sync -->
+  <!-- Supabase Client SDK for Serverless Cloud Sync & HTTPS File Storage -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- JSZip for in-browser .ZIP packaging (.exe + .ico logo + assets) -->
+  <!-- JSZip for packaging .exe + .ico logo + assets -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body class="bg-[#0b0514] text-purple-50 min-h-screen font-sans selection:bg-purple-600 selection:text-white">
@@ -24,7 +24,7 @@
         </div>
         <div>
           <h1 class="text-xl font-bold tracking-tight text-white">WYRMTOPIA Store</h1>
-          <p class="text-xs text-purple-300/70">Pure .EXE & Auto-Logo Game Distribution</p>
+          <p class="text-xs text-purple-300/70">Direct HTTPS Cloud Storage • Auto-Logo Game Shop</p>
         </div>
       </div>
 
@@ -75,7 +75,7 @@
               <input type="radio" name="regRole" value="player" checked class="mt-1 accent-purple-600" />
               <div>
                 <div class="text-sm font-semibold text-white">Player</div>
-                <div class="text-xs text-purple-300/70">Browse the store, download clean .EXE game .ZIPs, and receive updates.</div>
+                <div class="text-xs text-purple-300/70">Browse the store, download game .ZIPs via HTTPS Cloud Storage, and receive updates.</div>
               </div>
             </label>
 
@@ -123,10 +123,10 @@
                 Supabase Cloud Realtime
               </span>
               <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 font-medium">
-                🛡️ WyrmShield Auto-AV
+                🛡️ WyrmShield HTTPS Storage
               </span>
             </h1>
-            <p class="text-xs text-purple-300/70">Uploaded Game Logo Automatically Becomes the Store Photo • Zero .BAT Scripts</p>
+            <p class="text-xs text-purple-300/70">Direct HTTPS Cloud ZIP Hosting • Auto-Logo Shop Cover • Zero Synthetic Shellcode</p>
           </div>
         </div>
 
@@ -204,7 +204,7 @@
               🛠️ WYRMTOPIA Developer Studio — Pure .EXE & Auto-Logo Publishing
             </h2>
             <p class="text-xs text-purple-300/75 mt-1">
-              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). When you upload a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) with your <code>.exe</code>, it automatically becomes the game's photo in the shop.
+              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). Your uploaded <code>.ZIP</code> is hosted on Supabase HTTPS Storage so browsers download it from a verified cloud domain.
             </p>
           </div>
           <button
@@ -330,8 +330,8 @@
           </div>
 
           <p id="fileKeepHint" class="text-[11px] text-purple-300/60 leading-relaxed">
-            ✓ <strong>Auto-Shop Photo:</strong> Uploading a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) automatically sets it as the game's photo in WYRMTOPIA Store.<br/>
-            ✓ <strong>Zero <code>.bat</code> Scripts:</strong> Only your clean <code>.exe</code>, logo, and assets are packaged into the <code>.ZIP</code>.
+            ✓ <strong>Supabase HTTPS Cloud Hosting:</strong> Your <code>.ZIP</code> is uploaded directly to your Supabase Storage bucket so Chrome downloads it from a verified HTTPS URL instead of a local <code>blob:</code> link.<br/>
+            ✓ <strong>No Synthetic Shellcode:</strong> Only your real uploaded files are packaged inside the archive.
           </p>
         </div>
 
@@ -357,7 +357,7 @@
           <span class="text-xl">🛡️</span>
           <div>
             <h3 id="secModalGameTitle" class="text-base font-bold text-white">WyrmShield Pure .EXE Report</h3>
-            <p class="text-xs text-emerald-400 font-medium">Verified Clean • 0 .BAT Scripts • Direct Windows Executable</p>
+            <p class="text-xs text-emerald-400 font-medium">Verified Clean • 0 .BAT Scripts • Supabase HTTPS Cloud ZIP</p>
           </div>
         </div>
         <button onclick="closeSecurityModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
@@ -413,7 +413,7 @@
     }
 
     /********************************************************************
-     * 2. WYRMSHIELD AUTO VIRUS & PE32 .EXE VERIFIER (BLOCKS .BAT)
+     * 2. WYRMSHIELD AUTO VIRUS & PE32 .EXE VERIFIER
      ********************************************************************/
     const MALWARE_SIGNATURES = [
       {
@@ -505,13 +505,11 @@
 
     async function handleFileSelection(fileListObj) {
       const rawFiles = Array.from(fileListObj || []);
-      // Strip out .bat and .cmd files so Windows Defender never flags the bundle
       selectedUploadFiles = rawFiles.filter(f => {
         const lower = f.name.toLowerCase();
         return !lower.endsWith(".bat") && !lower.endsWith(".cmd");
       });
 
-      // Automatically detect uploaded logo (.ico, .png, .jpg, .jpeg, .webp, .svg) and set it as the shop photo!
       detectedLogoDataUrl = null;
       detectedLogoFileName = null;
       const logoPreviewBox = document.getElementById("logoPreviewBox");
@@ -573,7 +571,7 @@
 
         scannedFiles.push(res);
         if (!res.clean) {
-          allThreats.push(...res.threats.map(t => `${res.name}: ${t}`));
+          allThreats.push(...res.threats.map(t => `${res.name}:${t}`));
         }
         progressBar.style.width = `${Math.round(((i + 1) / files.length) * 100)}%`;
       }
@@ -582,7 +580,7 @@
       lastScanResult = { passed, files: scannedFiles, threats: allThreats };
 
       if (passed) {
-        statusBadge.textContent = "✓ Pure .EXE Verified";
+        statusBadge.textContent = "✓ Verified Clean";
         statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
         progressBar.className = "h-full bg-emerald-500 transition-all duration-300";
         submitBtn.disabled = false;
@@ -601,11 +599,9 @@
 
       const exeNotice = hasExe
         ? `<div class="text-purple-200 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded text-[10px]">
-             🎯 Native Windows <code>.exe</code> verified — will run directly when extracted (Zero <code>.bat</code> files).
+             🎯 Native Windows <code>.exe</code> verified — will be hosted on Supabase HTTPS Storage.
            </div>`
-        : `<div class="text-purple-200 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded text-[10px]">
-             ℹ️ No <code>.exe</code> selected — WYRMTOPIA Store will include a standalone native Win32 GUI <code>.exe</code>.
-           </div>`;
+        : "";
 
       const logoNotice = detectedLogoFileName
         ? `<div class="text-emerald-300 bg-emerald-950/30 border border-emerald-500/20 px-2.5 py-1 rounded text-[10px]">
@@ -646,17 +642,17 @@
       const safeName = sanitizeIdentifier(game.title);
       const bundled = Array.isArray(game.bundledFiles) && game.bundledFiles.length > 0
         ? game.bundledFiles.filter(name => !/\.bat\b|\.cmd\b/i.test(name))
-        : [`${safeName}.exe (Native Windows Executable)`, `${safeName}.ico (Game Logo)`];
+        : [`${safeName}_ReadMe.txt (Clean Bundle)`];
 
       document.getElementById("secModalContent").innerHTML = `
         <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
-          <div class="font-bold mb-0.5">✓ 100% .BAT-Free Native .EXE Package</div>
-          <div class="text-purple-100 text-[11px]">This download contains <strong>zero</strong> <code>.bat</code> or <code>.cmd</code> scripts, preventing false-positive script alerts in Windows and browsers.</div>
+          <div class="font-bold mb-0.5">✓ 100% .BAT-Free & Zero Synthetic Shellcode</div>
+          <div class="text-purple-100 text-[11px]">This archive contains only the developer's verified files with zero <code>.bat</code> scripts or synthetic PE headers.</div>
         </div>
 
-        <div class="p-3 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-200">
-          <div class="font-bold mb-0.5">✓ How to Run & Update</div>
-          <div class="text-purple-100 text-[11px]">Extract <code>${safeName}.zip</code> and double-click the <code>.exe</code> file directly to play. When downloading an update, extract to the same folder to replace the old <code>.exe</code>.</div>
+        <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200">
+          <div class="font-bold mb-0.5">💡 Why Chrome Prompts on Indie .EXE Games</div>
+          <div class="text-purple-100 text-[11px]">Like Itch.io and GitHub, brand-new indie <code>.exe</code> files without a $300/yr Microsoft certificate may show <em>"Uncommonly downloaded"</em> in Chrome. Press <strong>Ctrl + J</strong> in Chrome and click <strong>Keep anyway / Download suspicious file</strong>.</div>
         </div>
 
         <div class="p-3 rounded-xl bg-[#0c0517] border border-purple-900/70">
@@ -889,7 +885,9 @@
     }
 
     /********************************************************************
-     * 4. PURE .EXE & AUTO-LOGO PACKAGER (ZERO .BAT SCRIPTS!)
+     * 4. CLEAN ZIP PACKAGER & SUPABASE HTTPS STORAGE UPLOADER
+     * - NO 1KB synthetic shellcode .EXE generator (prevents Chrome false-positives!)
+     * - Packages only the exact files uploaded by the developer
      ********************************************************************/
     function sanitizeIdentifier(str) {
       return (str || "Game").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
@@ -916,6 +914,11 @@
       return bytes;
     }
 
+    function stringToBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      return arrayBufferToBase64(bytes.buffer);
+    }
+
     function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -925,7 +928,6 @@
       });
     }
 
-    // Automatically resolves the game's shop photo from the uploaded logo (.ico, .png, .jpg, .webp, .svg)
     function resolveGameLogoPhoto(game) {
       if (game.launcherScript) {
         try {
@@ -965,109 +967,26 @@
       };
     }
 
-    // Generates a pure Win32 GUI .EXE (imports USER32.dll MessageBoxA + KERNEL32.dll ExitProcess)
-    function generatePureWin32GuiExeBase64(title, version, author, description) {
-      const buffer = new ArrayBuffer(1024);
-      const bytes = new Uint8Array(buffer);
-      const view = new DataView(buffer);
-
-      const writeAscii = (offset, str, maxLen = 120) => {
-        const clean = (str || "").slice(0, maxLen);
-        for (let i = 0; i < clean.length; i++) {
-          bytes[offset + i] = clean.charCodeAt(i) & 0xFF;
-        }
-        bytes[offset + clean.length] = 0;
-      };
-
-      view.setUint16(0x00, 0x5A4D, true);
-      view.setUint32(0x3C, 0x00000040, true);
-
-      view.setUint32(0x40, 0x00004550, true);
-      view.setUint16(0x44, 0x014C, true);
-      view.setUint16(0x46, 0x0001, true);
-      view.setUint32(0x48, 0x65A00000, true);
-      view.setUint16(0x54, 0x00E0, true);
-      view.setUint16(0x56, 0x010F, true);
-
-      view.setUint16(0x58, 0x010B, true);
-      bytes[0x5A] = 14;
-      view.setUint32(0x5C, 0x00000200, true);
-      view.setUint32(0x60, 0x00000200, true);
-      view.setUint32(0x68, 0x00001000, true);
-      view.setUint32(0x6C, 0x00001000, true);
-      view.setUint32(0x70, 0x00001000, true);
-      view.setUint32(0x74, 0x00400000, true);
-      view.setUint32(0x78, 0x00001000, true);
-      view.setUint32(0x7C, 0x00000200, true);
-      view.setUint16(0x80, 4, true);
-      view.setUint16(0x88, 4, true);
-      view.setUint32(0x90, 0x00002000, true);
-      view.setUint32(0x94, 0x00000200, true);
-      view.setUint16(0x9C, 2, true);
-      view.setUint32(0xA0, 0x00100000, true);
-      view.setUint32(0xA4, 0x00001000, true);
-      view.setUint32(0xA8, 0x00100000, true);
-      view.setUint32(0xAC, 0x00001000, true);
-      view.setUint32(0xB4, 16, true);
-
-      view.setUint32(0xC0, 0x00001030, true);
-      view.setUint32(0xC4, 0x0000003C, true);
-      view.setUint32(0x118, 0x00001080, true);
-      view.setUint32(0x11C, 0x00000010, true);
-
-      writeAscii(0x138, ".text", 5);
-      view.setUint32(0x140, 0x00000200, true);
-      view.setUint32(0x144, 0x00001000, true);
-      view.setUint32(0x148, 0x00000200, true);
-      view.setUint32(0x14C, 0x00000200, true);
-      view.setUint32(0x15C, 0xE0000060, true);
-
-      const code = [
-        0x6A, 0x40,
-        0x68, 0xD0, 0x10, 0x40, 0x00,
-        0x68, 0x10, 0x11, 0x40, 0x00,
-        0x6A, 0x00,
-        0xFF, 0x15, 0x80, 0x10, 0x40, 0x00,
-        0x6A, 0x00,
-        0xFF, 0x15, 0x88, 0x10, 0x40, 0x00,
-        0xC3
-      ];
-      bytes.set(code, 0x200);
-
-      view.setUint32(0x230, 0x00001070, true);
-      view.setUint32(0x23C, 0x00001090, true);
-      view.setUint32(0x240, 0x00001080, true);
-
-      view.setUint32(0x244, 0x00001078, true);
-      view.setUint32(0x250, 0x0000109C, true);
-      view.setUint32(0x254, 0x00001088, true);
-
-      view.setUint32(0x270, 0x000010AA, true);
-      view.setUint32(0x278, 0x000010B8, true);
-      view.setUint32(0x280, 0x000010AA, true);
-      view.setUint32(0x288, 0x000010B8, true);
-
-      writeAscii(0x290, "USER32.dll", 11);
-      writeAscii(0x29C, "KERNEL32.dll", 13);
-      writeAscii(0x2AC, "MessageBoxA", 12);
-      writeAscii(0x2BA, "ExitProcess", 12);
-
-      writeAscii(0x2D0, `${title} (v${version})`, 60);
-      writeAscii(0x310, `Launched ${title} v${version} by ${author}!\r\n\r\n${description || "Pure Win32 Executable"}`, 220);
-
-      return arrayBufferToBase64(buffer);
-    }
-
-    function createDefaultPureExeFiles(title, version, author, description) {
+    // Clean, non-executable ReadMe fallback when no .exe was uploaded (so Chrome NEVER flags starter/demo games!)
+    function createCleanFallbackFiles(title, version, author, description) {
       const safeName = sanitizeIdentifier(title);
-      const exeName = `${safeName}.exe`;
-      const pureExeB64 = generatePureWin32GuiExeBase64(title, version, author, description);
+      const readmeText = [
+        `==================================================`,
+        `  WYRMTOPIA STORE — ${title} (v${version})`,
+        `  Developer: ${author}`,
+        `==================================================`,
+        ``,
+        `Description / Patch Notes:`,
+        `${description || "No description provided."}`,
+        ``,
+        `Package Integrity: Verified Clean by WyrmShield.`
+      ].join("\r\n");
 
       return [
         {
-          name: exeName,
-          label: `${exeName} (Native Windows .EXE)`,
-          base64: pureExeB64
+          name: `${safeName}_ReadMe.txt`,
+          label: `${safeName}_ReadMe.txt (Verified Info)`,
+          base64: stringToBase64(readmeText)
         }
       ];
     }
@@ -1078,7 +997,6 @@
 
       if (fileList && fileList.length > 0) {
         const filesArr = Array.from(fileList);
-        let hasUploadedExe = false;
 
         for (let i = 0; i < filesArr.length; i++) {
           const file = filesArr[i];
@@ -1086,7 +1004,6 @@
           const lower = cleanPath.toLowerCase();
 
           if (lower.endsWith(".bat") || lower.endsWith(".cmd")) continue;
-          if (lower.endsWith(".exe")) hasUploadedExe = true;
 
           const b64 = await readFileAsBase64(file);
           const hashInfo = scanMetaList[i] ? ` (SHA256: ${scanMetaList[i].shortHash})` : " (SHA256: Verified)";
@@ -1096,23 +1013,21 @@
             base64: b64
           });
         }
+      }
 
-        if (!hasUploadedExe) {
-          encodedFiles.push(...createDefaultPureExeFiles(title, version, author, description));
-        }
-      } else {
-        encodedFiles.push(...createDefaultPureExeFiles(title, version, author, description));
+      if (encodedFiles.length === 0) {
+        encodedFiles.push(...createCleanFallbackFiles(title, version, author, description));
       }
 
       const folderPayload = {
-        format: "nebula_pure_exe_v5",
+        format: "wyrmtopia_clean_v6",
         folderName: safeName,
         version: version,
         files: encodedFiles.map(f => ({ name: f.name, base64: f.base64 }))
       };
 
       return {
-        archiveFileName: `${safeName}.zip`,
+        archiveFileName: `${safeName}_v${version}.zip`,
         launcherScript: JSON.stringify(folderPayload),
         bundledFiles: encodedFiles.map(f => f.label)
       };
@@ -1124,42 +1039,32 @@
         try {
           const parsed = JSON.parse(game.launcherScript);
           if (parsed && Array.isArray(parsed.files)) {
-            let cleanFiles = parsed.files.filter(
-              f => !f.name.toLowerCase().endsWith(".bat") && !f.name.toLowerCase().endsWith(".cmd")
-            );
+            // Strip any .bat, .cmd, or old 1,024-byte synthetic PE32 files (base64 length == 1368) that triggered Chrome
+            const cleanFiles = parsed.files.filter(f => {
+              const lower = f.name.toLowerCase();
+              if (lower.endsWith(".bat") || lower.endsWith(".cmd")) return false;
+              if (lower.endsWith(".exe") && f.base64 && f.base64.length === 1368) return false;
+              return true;
+            });
 
-            const hasRealExe = cleanFiles.some(f => f.name.toLowerCase().endsWith(".exe") && f.base64 && f.base64.length > 1500);
-            if (!hasRealExe && parsed.format !== "nebula_pure_exe_v5") {
-              cleanFiles = cleanFiles.filter(f => !f.name.toLowerCase().endsWith(".exe"));
-              cleanFiles.push(...createDefaultPureExeFiles(game.title, game.version, game.author, game.description));
+            if (cleanFiles.length > 0) {
+              return {
+                folderName: safeName,
+                files: cleanFiles
+              };
             }
-
-            return {
-              folderName: safeName,
-              files: cleanFiles
-            };
           }
         } catch (_) {}
       }
 
-      const fallbackFiles = createDefaultPureExeFiles(game.title, game.version, game.author, game.description);
+      const fallbackFiles = createCleanFallbackFiles(game.title, game.version, game.author, game.description);
       return {
         folderName: safeName,
         files: fallbackFiles.map(f => ({ name: f.name, base64: f.base64 }))
       };
     }
 
-    /********************************************************************
-     * 5. SINGLE-CLICK PURE .EXE .ZIP DOWNLOADER
-     ********************************************************************/
-    async function downloadGameFolderZip(gameId) {
-      const game = gamesCatalog.find(g => g.id === gameId);
-      if (!game) return;
-
-      const installedLib = getInstalledLibrary();
-      const wasInstalled = Boolean(installedLib[game.id]);
-      const prevVersion = wasInstalled ? installedLib[game.id].installedVersion : null;
-
+    async function createZipBlobFromGame(game) {
       const { folderName, files } = getFolderFilesFromGame(game);
       const zip = new JSZip();
       const folder = zip.folder(folderName);
@@ -1169,27 +1074,50 @@
         folder.file(fileObj.name, binaryBytes);
       }
 
-      const zipBlob = await zip.generateAsync({ type: "blob" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(zipBlob);
-      link.download = `${folderName}.zip`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      return {
+        folderName,
+        files,
+        zipBlob: await zip.generateAsync({ type: "blob", compression: "DEFLATE" })
+      };
+    }
+
+    /********************************************************************
+     * 5. HTTPS CLOUD ZIP DOWNLOADER (AVOIDS BLOB: URL BLOCKS WHEN POSSIBLE)
+     ********************************************************************/
+    async function downloadGameFolderZip(gameId) {
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      const installedLib = getInstalledLibrary();
+      const wasInstalled = Boolean(installedLib[game.id]);
+      const prevVersion = wasInstalled ? installedLib[game.id].installedVersion : null;
+      const safeName = sanitizeIdentifier(game.title);
+
+      // Prefer real HTTPS Supabase Cloud URL if available (reduces Chrome blob: suspicion)
+      if (game.fileUrl && game.fileUrl.startsWith("https://")) {
+        const link = document.createElement("a");
+        link.href = `${game.fileUrl}?download=${encodeURIComponent(game.fileName || safeName + ".zip")}`;
+        link.download = game.fileName || `${safeName}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        const { folderName, zipBlob } = await createZipBlobFromGame(game);
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(zipBlob);
+        link.download = `${folderName}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
 
       setInstalledVersion(game.id, game.version);
 
-      if (wasInstalled && prevVersion !== game.version) {
-        showStatusBanner(
-          `<strong>✓ Downloaded Update <code>${folderName}.zip</code> (v${prevVersion} → v${game.version})!</strong> Contains <strong>${files.map(f => f.name).join(", ")}</strong> (Zero <code>.bat</code> files). Extract into your existing <code>${folderName}</code> folder to replace the old <code>.exe</code>!`,
-          true
-        );
-      } else {
-        showStatusBanner(
-          `<strong>✓ Downloaded <code>${folderName}.zip</code> (v${game.version})!</strong> Contains <strong>${files.map(f => f.name).join(", ")}</strong> with zero <code>.bat</code> files. Extract the folder and double-click the <code>.exe</code> file to play!`,
-          true
-        );
-      }
+      showStatusBanner(
+        `<strong>✓ Downloading <code>${safeName}.zip</code> (v${game.version})!</strong><br/>` +
+        `💡 <strong>If Chrome says "Suspicious download blocked" or "Uncommonly downloaded":</strong> Chrome shows this for all new indie <code>.exe</code> games that don't have a paid Microsoft certificate. Press <strong>Ctrl + J</strong> in Chrome (or click the top-right Downloads icon), click the <strong>three dots (⋮)</strong> on the file, and select <strong>Download suspicious file / Keep anyway</strong>.`,
+        true
+      );
     }
 
     async function buildStarterCatalogWithScripts() {
@@ -1202,7 +1130,7 @@
           version: "1.2.0",
           description: "Fast-paced retro space dogfighter. v1.2.0 adds boss rush mode and gamepad support.",
           cover: "https://images.unsplash.com/photo-1614732414444-096e5f1122d5?auto=format&fit=crop&w=800&q=80",
-          fileSize: "Pure .EXE Bundle (No .BAT)",
+          fileSize: "Verified ZIP Bundle",
           fileUrl: null,
           updatedAt: new Date(Date.now() - 3600 * 1000 * 5).toISOString()
         },
@@ -1214,7 +1142,7 @@
           version: "1.0.4",
           description: "Procedural roguelike dungeon crawler with dynamic lighting and 80+ relics.",
           cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-          fileSize: "Pure .EXE Bundle (No .BAT)",
+          fileSize: "Verified ZIP Bundle",
           fileUrl: null,
           updatedAt: new Date(Date.now() - 3600 * 1000 * 24).toISOString()
         }
@@ -1250,7 +1178,7 @@
     }
 
     /********************************************************************
-     * 7. DATA LAYER: SUPABASE CLOUD + AUTOMATIC FALLBACK
+     * 7. DATA LAYER: SUPABASE CLOUD + HTTPS ZIP STORAGE UPLOAD
      ********************************************************************/
     async function loadCatalog() {
       if (useCloudSupabase) {
@@ -1294,6 +1222,29 @@
 
     async function saveGameToCatalog(gameObj) {
       if (useCloudSupabase) {
+        // Upload the actual .ZIP file to Supabase HTTPS Storage so Chrome downloads from a real HTTPS URL instead of a blob: URL
+        try {
+          const { zipBlob } = await createZipBlobFromGame(gameObj);
+          const storagePath = `${gameObj.id}/${gameObj.fileName || sanitizeIdentifier(gameObj.title) + ".zip"}`;
+          const { error: uploadErr } = await supabaseClient.storage
+            .from("game-builds")
+            .upload(storagePath, zipBlob, {
+              upsert: true,
+              contentType: "application/zip"
+            });
+
+          if (!uploadErr) {
+            const { data: pubUrlData } = supabaseClient.storage
+              .from("game-builds")
+              .getPublicUrl(storagePath);
+            if (pubUrlData && pubUrlData.publicUrl) {
+              gameObj.fileUrl = pubUrlData.publicUrl;
+            }
+          }
+        } catch (storageEx) {
+          console.warn("Supabase storage upload fallback:", storageEx);
+        }
+
         const { error } = await supabaseClient.from("games").upsert(gameObj);
         if (error) {
           alert("Supabase Save Error: " + error.message);
@@ -1413,10 +1364,10 @@
     function getCleanBundledFilesLabel(game) {
       const safeName = sanitizeIdentifier(game.title);
       if (Array.isArray(game.bundledFiles) && game.bundledFiles.length > 0) {
-        const filtered = game.bundledFiles.filter(f => !/\.bat\b|\.cmd\b/i.test(f));
+        const filtered = game.bundledFiles.filter(f => !/\.bat\b|\.cmd\b|Web-Built/i.test(f));
         if (filtered.length > 0) return filtered.join(", ");
       }
-      return `${safeName}.exe (Pure Windows Executable)`;
+      return `${safeName}.zip (Verified Bundle)`;
     }
 
     function renderStorefrontGrid() {
@@ -1468,13 +1419,13 @@
         if (!isInstalled) {
           actionButtonHtml = `
             <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-purple-700 hover:bg-purple-600 text-white transition flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30">
-              <span>📦 Download .EXE Bundle (v${game.version})</span>
+              <span>📦 Download Game .ZIP (v${game.version})</span>
             </button>
           `;
         } else if (hasUpdate) {
           actionButtonHtml = `
             <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
-              <span>🔄 Download Update .EXE (v${localEntry.installedVersion} → v${game.version})</span>
+              <span>🔄 Download Update .ZIP (v${localEntry.installedVersion} → v${game.version})</span>
             </button>
           `;
         } else {
@@ -1502,13 +1453,11 @@
                 <div class="absolute top-3 right-3 bg-purple-700/90 backdrop-blur px-2.5 py-1 rounded-md text-xs font-mono font-bold text-white">
                   v${game.version}
                 </div>
-                <!-- Clickable WyrmShield Antivirus Badge -->
                 <button
                   onclick="openSecurityModal('${game.id}')"
                   class="absolute bottom-3 left-3 bg-emerald-950/90 hover:bg-emerald-900/90 border border-emerald-500/40 backdrop-blur px-2.5 py-1 rounded-md text-[11px] font-semibold text-emerald-300 flex items-center gap-1 transition"
-                  title="Click to view Pure .EXE & Antivirus Scan Report"
                 >
-                  <span>🛡️ Pure .EXE • No .BAT (View Info)</span>
+                  <span>🛡️ WyrmShield Verified (View Info)</span>
                 </button>
               </div>
 
@@ -1520,7 +1469,7 @@
                 <p class="text-xs text-purple-300/70 mb-2">
                   By <span class="text-purple-200 font-medium">${game.author}</span>
                   <span class="text-purple-700 mx-1">•</span>
-                  <span class="text-purple-300/70">${game.fileSize || "Pure .EXE Bundle"}</span>
+                  <span class="text-purple-300/70">${game.fileSize || "ZIP Bundle"}</span>
                 </p>
                 <p class="text-xs text-purple-100/80 leading-relaxed line-clamp-3 mb-3">${game.description}</p>
                 <div class="bg-[#0c0517] border border-purple-900/70 rounded-lg px-2.5 py-1.5 text-[11px] text-purple-300/80 font-mono truncate" title="${bundledList}">
@@ -1583,7 +1532,7 @@
                       v${game.version}
                     </span>
                     <button onclick="openSecurityModal('${game.id}')" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                      🛡️ Pure .EXE (0 .BAT)
+                      🛡️ HTTPS Cloud ZIP
                     </button>
                   </div>
                   <span class="text-xs text-purple-300/70">${game.genre}</span>
@@ -1709,7 +1658,7 @@
 
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = true;
-      submitBtn.textContent = "Packing .EXE & Logo...";
+      submitBtn.textContent = "Uploading HTTPS .ZIP...";
 
       try {
         const scanResult = await runLiveFileVirusScan();
@@ -1748,15 +1697,15 @@
         let fileSize;
 
         if (existingGame && files.length === 0 && existingGame.launcherScript) {
-          archiveFileName = `${sanitizeIdentifier(title)}.zip`;
+          archiveFileName = `${sanitizeIdentifier(title)}_v${version}.zip`;
           launcherScript = existingGame.launcherScript;
           bundledFiles = existingGame.bundledFiles;
-          fileSize = existingGame.fileSize || "Pure .EXE Bundle (No .BAT)";
+          fileSize = existingGame.fileSize || "HTTPS .ZIP Bundle";
         } else {
           const totalBytes = files.reduce((acc, f) => acc + f.size, 0);
           fileSize = files.length > 0
-            ? `Pure .EXE • ${files.length} file(s) (${(totalBytes / 1024).toFixed(1)} KB)`
-            : "Pure .EXE Bundle (No .BAT)";
+            ? `HTTPS .ZIP • ${files.length} file(s) (${(totalBytes / 1024).toFixed(1)} KB)`
+            : "Verified .ZIP Bundle";
 
           const pkg = await buildWebFolderPackage(
             files,
