@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NebulaStore — Pure .EXE & Logo Game Shop (No .BAT Files)</title>
+  <title>NebulaStore — Pure .EXE & Auto-Logo Game Shop</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Supabase Client SDK for Serverless Cloud Sync -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -24,7 +24,7 @@
         </div>
         <div>
           <h1 class="text-xl font-bold tracking-tight">NebulaStore</h1>
-          <p class="text-xs text-slate-400">Pure .EXE & Logo Distribution • Zero .BAT Scripts</p>
+          <p class="text-xs text-slate-400">Pure .EXE & Auto-Logo Game Distribution</p>
         </div>
       </div>
 
@@ -83,7 +83,7 @@
               <input type="radio" name="regRole" value="developer" class="mt-1 accent-indigo-600" />
               <div>
                 <div class="text-sm font-semibold text-indigo-400">Developer</div>
-                <div class="text-xs text-slate-400">Upload your .EXE and Logo (.ico / .png) directly with zero .bat scripts.</div>
+                <div class="text-xs text-slate-400">Upload your .EXE and Logo (.ico / .png)—your logo automatically becomes the shop photo.</div>
               </div>
             </label>
 
@@ -123,10 +123,10 @@
                 Supabase Cloud Realtime
               </span>
               <span class="text-xs px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 font-medium">
-                🛡️ Pure .EXE + Logo (No .BAT Scripts)
+                🛡️ Pure .EXE + Auto-Logo Cover
               </span>
             </h1>
-            <p class="text-xs text-slate-400">Direct .EXE & Logo Packaging • Zero .BAT Malware False-Positives • Auto-AV Verified</p>
+            <p class="text-xs text-slate-400">Uploaded Game Logo Automatically Becomes the Store Photo • Zero .BAT Scripts</p>
           </div>
         </div>
 
@@ -201,10 +201,10 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              🛠️ Developer Studio — Pure .EXE & Logo Publishing
+              🛠️ Developer Studio — Pure .EXE & Auto-Logo Publishing
             </h2>
             <p class="text-xs text-slate-400 mt-1">
-              Manage the games published under your developer account (<span id="studioOwnerName" class="text-indigo-400 font-semibold"></span>). Upload just your <code>.exe</code> and logo (<code>.ico</code> or <code>.png</code>)—no <code>.bat</code> files are generated so Windows never blocks your game.
+              Manage the games published under your developer account (<span id="studioOwnerName" class="text-indigo-400 font-semibold"></span>). When you upload a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) with your <code>.exe</code>, it automatically becomes the game's photo in the shop.
             </p>
           </div>
           <button
@@ -222,12 +222,12 @@
   </div>
 
   <!-- =================================================================
-       DEVELOPER UPLOAD / CONFIGURE GAME MODAL (PURE .EXE + LOGO)
+       DEVELOPER UPLOAD / CONFIGURE GAME MODAL (PURE .EXE + AUTO LOGO)
        ================================================================= -->
   <div id="uploadModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
-        <h2 id="modalTitle" class="text-lg font-bold">Upload .EXE & Logo</h2>
+        <h2 id="modalTitle" class="text-lg font-bold">Upload .EXE & Game Logo</h2>
         <button onclick="closeUploadModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
       </div>
 
@@ -256,8 +256,8 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Store Card Cover Image URL (Optional)</label>
-            <input id="gameCover" type="url" placeholder="https://... (or auto-use uploaded logo)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm" />
+            <label class="block text-xs text-slate-400 mb-1">Fallback Cover URL (If No Logo Uploaded)</label>
+            <input id="gameCover" type="url" placeholder="Uploaded logo overrides this automatically" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm" />
           </div>
         </div>
 
@@ -269,7 +269,7 @@
         <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL ASSETS -->
         <div class="space-y-2.5 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800">
           <label class="block text-xs font-semibold text-slate-300">
-            Select Your <code>.exe</code> File & Logo (<code>.ico</code> / <code>.png</code>) — No <code>.bat</code> Needed!
+            Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>)
           </label>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -281,16 +281,16 @@
                 id="gameFile"
                 type="file"
                 multiple
-                accept=".exe,.ico,.png,.jpg,.jpeg,.dll,.txt,.json,.wav,.mp3,.cs"
+                accept=".exe,.ico,.png,.jpg,.jpeg,.webp,.svg,.dll,.txt,.json,.wav,.mp3,.cs"
                 onchange="handleFileSelection(this.files)"
                 class="hidden"
               />
             </label>
 
-            <!-- Option 2: Select Whole Folder (Automatically strips any .bat files!) -->
+            <!-- Option 2: Select Whole Folder -->
             <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-700 bg-slate-900 hover:border-emerald-500 cursor-pointer transition text-center">
               <span class="text-xs font-semibold text-emerald-300">📁 Select Game Folder</span>
-              <span class="text-[10px] text-slate-400 mt-0.5">Auto-ignores .bat files for safety</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">Auto-uses folder's logo as shop photo</span>
               <input
                 id="gameFolder"
                 type="file"
@@ -301,6 +301,16 @@
                 class="hidden"
               />
             </label>
+          </div>
+
+          <!-- LIVE SHOP PHOTO LOGO PREVIEW -->
+          <div id="logoPreviewBox" class="hidden mt-2 p-3 rounded-xl border border-indigo-500/30 bg-indigo-950/20 flex items-center gap-3">
+            <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-14 h-14 rounded-xl object-contain bg-slate-900 border border-slate-700 p-1 shrink-0" />
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-indigo-300">✓ Game Logo Set as Shop Photo</div>
+              <div id="logoPreviewName" class="text-[11px] text-slate-400 truncate"></div>
+              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in NebulaStore and bundled in the .ZIP.</div>
+            </div>
           </div>
 
           <!-- NEBULASHIELD LIVE VIRUS SCANNER PANEL -->
@@ -320,8 +330,8 @@
           </div>
 
           <p id="fileKeepHint" class="text-[11px] text-slate-500 leading-relaxed">
-            ✓ <strong>Zero <code>.bat</code> Scripts:</strong> Any <code>.bat</code> or <code>.cmd</code> files are automatically excluded so Windows Defender and browsers never flag your download.<br/>
-            ✓ <strong>Direct <code>.exe</code> Execution:</strong> Players download a clean <code>.ZIP</code> containing your exact <code>.exe</code> and logo ready to double-click and run.
+            ✓ <strong>Auto-Shop Photo:</strong> Uploading a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) automatically sets it as the game's photo in the shop.<br/>
+            ✓ <strong>Zero <code>.bat</code> Scripts:</strong> Only your clean <code>.exe</code>, logo, and assets are packaged into the <code>.ZIP</code>.
           </p>
         </div>
 
@@ -330,7 +340,7 @@
             Cancel
           </button>
           <button id="submitBtn" type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-600 hover:bg-indigo-500">
-            Publish Pure .EXE Bundle
+            Publish .EXE & Logo
           </button>
         </div>
       </form>
@@ -382,6 +392,7 @@
     let currentUser = null;
     let selectedUploadFiles = [];
     let detectedLogoDataUrl = null;
+    let detectedLogoFileName = null;
     let lastScanResult = { passed: true, files: [], threats: [] };
 
     function isDeveloperRole() {
@@ -494,19 +505,38 @@
 
     async function handleFileSelection(fileListObj) {
       const rawFiles = Array.from(fileListObj || []);
-      // Automatically strip out .bat and .cmd files so Windows Defender never flags the bundle!
+      // Strip out .bat and .cmd files so Windows Defender never flags the bundle
       selectedUploadFiles = rawFiles.filter(f => {
         const lower = f.name.toLowerCase();
         return !lower.endsWith(".bat") && !lower.endsWith(".cmd");
       });
 
-      // Detect if developer uploaded a logo (.ico, .png, .jpg) to preview/use as cover if needed
+      // Automatically detect uploaded logo (.ico, .png, .jpg, .jpeg, .webp, .svg) and set it as the shop photo!
       detectedLogoDataUrl = null;
-      const logoFile = selectedUploadFiles.find(f => /\.(ico|png|jpg|jpeg)$/i.test(f.name));
-      if (logoFile) {
+      detectedLogoFileName = null;
+      const logoPreviewBox = document.getElementById("logoPreviewBox");
+      const logoPreviewImg = document.getElementById("logoPreviewImg");
+      const logoPreviewName = document.getElementById("logoPreviewName");
+
+      // Prioritize files with "logo" or "icon" in the name, or any .ico/.png/.jpg/.webp/.svg file
+      const imageCandidates = selectedUploadFiles.filter(f => /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name));
+      const prioritizedLogo =
+        imageCandidates.find(f => /logo|icon/i.test(f.name)) ||
+        imageCandidates.find(f => /\.ico$/i.test(f.name)) ||
+        imageCandidates[0];
+
+      if (prioritizedLogo) {
         try {
-          detectedLogoDataUrl = await readFileAsDataURL(logoFile);
-        } catch (_) {}
+          detectedLogoDataUrl = await readFileAsDataURL(prioritizedLogo);
+          detectedLogoFileName = getNormalizedRelativePath(prioritizedLogo);
+          logoPreviewImg.src = detectedLogoDataUrl;
+          logoPreviewName.textContent = `Source file: ${detectedLogoFileName}`;
+          logoPreviewBox.classList.remove("hidden");
+        } catch (_) {
+          logoPreviewBox.classList.add("hidden");
+        }
+      } else {
+        logoPreviewBox.classList.add("hidden");
       }
 
       await runLiveFileVirusScan(rawFiles.length - selectedUploadFiles.length);
@@ -537,12 +567,10 @@
       const scannedFiles = [];
       const allThreats = [];
       let hasExe = false;
-      let logoName = null;
 
       for (let i = 0; i < files.length; i++) {
         const res = await scanSingleFile(files[i]);
         if (res.ext === "exe") hasExe = true;
-        if (["ico", "png"].includes(res.ext) && !logoName) logoName = res.name;
 
         scannedFiles.push(res);
         if (!res.clean) {
@@ -577,12 +605,12 @@
              🎯 Native Windows <code>.exe</code> verified — will run directly when extracted (Zero <code>.bat</code> files).
            </div>`
         : `<div class="text-sky-300 bg-sky-950/40 border border-sky-500/30 px-2.5 py-1 rounded text-[10px]">
-             ℹ️ No <code>.exe</code> selected — NebulaStore will include a standalone native Win32 GUI <code>.exe</code> (No <code>cmd.exe</code> or <code>.bat</code>).
+             ℹ️ No <code>.exe</code> selected — NebulaStore will include a standalone native Win32 GUI <code>.exe</code>.
            </div>`;
 
-      const logoNotice = logoName
+      const logoNotice = detectedLogoFileName
         ? `<div class="text-emerald-300 bg-emerald-950/30 border border-emerald-500/20 px-2.5 py-1 rounded text-[10px]">
-             🎨 Logo file (<code>${logoName}</code>) bundled with executable!
+             🎨 Uploaded Logo (<code>${detectedLogoFileName}</code>) will be used as the Game Photo in the shop!
            </div>`
         : "";
 
@@ -862,10 +890,7 @@
     }
 
     /********************************************************************
-     * 4. PURE .EXE & LOGO PACKAGER (ZERO .BAT SCRIPTS!)
-     * - Preserves developer's uploaded .exe and .ico/.png logo byte-for-byte
-     * - For starter/demo games without an uploaded .exe, synthesizes a
-     *   100% pure Win32 GUI .exe (calls USER32.dll MessageBoxA — NEVER cmd.exe or .bat!)
+     * 4. PURE .EXE & AUTO-LOGO PACKAGER (ZERO .BAT SCRIPTS!)
      ********************************************************************/
     function sanitizeIdentifier(str) {
       return (str || "Game").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
@@ -901,8 +926,49 @@
       });
     }
 
+    // Automatically resolves the game's shop photo:
+    // 1. If a logo file (.ico, .png, .jpg, .webp, .svg) is bundled inside the game package, use that logo!
+    // 2. Otherwise use game.cover (which is also set to the uploaded logo Data URL on publish)
+    function resolveGameLogoPhoto(game) {
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && Array.isArray(parsed.files)) {
+            const logoFile =
+              parsed.files.find(f => /logo|icon/i.test(f.name) && /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name)) ||
+              parsed.files.find(f => /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name));
+
+            if (logoFile && logoFile.base64) {
+              const ext = (logoFile.name.split(".").pop() || "png").toLowerCase();
+              const mimeMap = {
+                ico: "image/x-icon",
+                png: "image/png",
+                jpg: "image/jpeg",
+                jpeg: "image/jpeg",
+                webp: "image/webp",
+                svg: "image/svg+xml"
+              };
+              const mime = mimeMap[ext] || "image/png";
+              return {
+                url: `data:${mime};base64,${logoFile.base64}`,
+                isCustomLogo: true
+              };
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (game.cover && game.cover.startsWith("data:image/")) {
+        return { url: game.cover, isCustomLogo: true };
+      }
+
+      return {
+        url: game.cover || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+        isCustomLogo: false
+      };
+    }
+
     // Generates a pure Win32 GUI .EXE (imports USER32.dll MessageBoxA + KERNEL32.dll ExitProcess)
-    // Does NOT call cmd.exe or any .bat script — runs natively on Windows without script alerts!
     function generatePureWin32GuiExeBase64(title, version, author, description) {
       const buffer = new ArrayBuffer(1024);
       const bytes = new Uint8Array(buffer);
@@ -916,48 +982,42 @@
         bytes[offset + clean.length] = 0;
       };
 
-      // 1. DOS Header
-      view.setUint16(0x00, 0x5A4D, true); // "MZ"
+      view.setUint16(0x00, 0x5A4D, true);
       view.setUint32(0x3C, 0x00000040, true);
 
-      // 2. PE Signature & COFF Header
-      view.setUint32(0x40, 0x00004550, true); // "PE\0\0"
-      view.setUint16(0x44, 0x014C, true);     // I386
-      view.setUint16(0x46, 0x0001, true);     // 1 Section
+      view.setUint32(0x40, 0x00004550, true);
+      view.setUint16(0x44, 0x014C, true);
+      view.setUint16(0x46, 0x0001, true);
       view.setUint32(0x48, 0x65A00000, true);
       view.setUint16(0x54, 0x00E0, true);
       view.setUint16(0x56, 0x010F, true);
 
-      // 3. PE32 Optional Header
       view.setUint16(0x58, 0x010B, true);
       bytes[0x5A] = 14;
       view.setUint32(0x5C, 0x00000200, true);
       view.setUint32(0x60, 0x00000200, true);
-      view.setUint32(0x68, 0x00001000, true); // EntryPoint RVA = 0x1000
+      view.setUint32(0x68, 0x00001000, true);
       view.setUint32(0x6C, 0x00001000, true);
       view.setUint32(0x70, 0x00001000, true);
-      view.setUint32(0x74, 0x00400000, true); // ImageBase = 0x00400000
+      view.setUint32(0x74, 0x00400000, true);
       view.setUint32(0x78, 0x00001000, true);
       view.setUint32(0x7C, 0x00000200, true);
       view.setUint16(0x80, 4, true);
       view.setUint16(0x88, 4, true);
       view.setUint32(0x90, 0x00002000, true);
       view.setUint32(0x94, 0x00000200, true);
-      view.setUint16(0x9C, 2, true);          // Subsystem = WINDOWS_GUI
+      view.setUint16(0x9C, 2, true);
       view.setUint32(0xA0, 0x00100000, true);
       view.setUint32(0xA4, 0x00001000, true);
       view.setUint32(0xA8, 0x00100000, true);
       view.setUint32(0xAC, 0x00001000, true);
       view.setUint32(0xB4, 16, true);
 
-      // Import Directory at RVA 0x1030 (Size 60 bytes: 2 DLLs + null terminator)
       view.setUint32(0xC0, 0x00001030, true);
       view.setUint32(0xC4, 0x0000003C, true);
-      // IAT at RVA 0x1080 (Size 16 bytes)
       view.setUint32(0x118, 0x00001080, true);
       view.setUint32(0x11C, 0x00000010, true);
 
-      // 4. Section Header ".text"
       writeAscii(0x138, ".text", 5);
       view.setUint32(0x140, 0x00000200, true);
       view.setUint32(0x144, 0x00001000, true);
@@ -965,14 +1025,6 @@
       view.setUint32(0x14C, 0x00000200, true);
       view.setUint32(0x15C, 0xE0000060, true);
 
-      // 5. Machine Code at file offset 0x200 (RVA 0x1000):
-      // push 0x40 (MB_ICONINFORMATION)
-      // push 0x004010D0 (Caption VA)
-      // push 0x00401110 (Message Text VA)
-      // push 0 (hWnd = NULL)
-      // call dword ptr [0x00401080] (USER32!MessageBoxA)
-      // push 0
-      // call dword ptr [0x00401088] (KERNEL32!ExitProcess)
       const code = [
         0x6A, 0x40,
         0x68, 0xD0, 0x10, 0x40, 0x00,
@@ -985,30 +1037,25 @@
       ];
       bytes.set(code, 0x200);
 
-      // Import Descriptor 1: USER32.dll at 0x230 (RVA 0x1030)
-      view.setUint32(0x230, 0x00001070, true); // ILT1 RVA
-      view.setUint32(0x23C, 0x00001090, true); // Name RVA ("USER32.dll")
-      view.setUint32(0x240, 0x00001080, true); // IAT1 RVA
+      view.setUint32(0x230, 0x00001070, true);
+      view.setUint32(0x23C, 0x00001090, true);
+      view.setUint32(0x240, 0x00001080, true);
 
-      // Import Descriptor 2: KERNEL32.dll at 0x244 (RVA 0x1044)
-      view.setUint32(0x244, 0x00001078, true); // ILT2 RVA
-      view.setUint32(0x250, 0x0000109C, true); // Name RVA ("KERNEL32.dll")
-      view.setUint32(0x254, 0x00001088, true); // IAT2 RVA
+      view.setUint32(0x244, 0x00001078, true);
+      view.setUint32(0x250, 0x0000109C, true);
+      view.setUint32(0x254, 0x00001088, true);
 
-      // ILT & IAT
-      view.setUint32(0x270, 0x000010AA, true); // MessageBoxA Hint/Name
-      view.setUint32(0x278, 0x000010B8, true); // ExitProcess Hint/Name
-      view.setUint32(0x280, 0x000010AA, true); // IAT1[0] -> MessageBoxA
-      view.setUint32(0x288, 0x000010B8, true); // IAT2[0] -> ExitProcess
+      view.setUint32(0x270, 0x000010AA, true);
+      view.setUint32(0x278, 0x000010B8, true);
+      view.setUint32(0x280, 0x000010AA, true);
+      view.setUint32(0x288, 0x000010B8, true);
 
       writeAscii(0x290, "USER32.dll", 11);
       writeAscii(0x29C, "KERNEL32.dll", 13);
       writeAscii(0x2AC, "MessageBoxA", 12);
       writeAscii(0x2BA, "ExitProcess", 12);
 
-      // Caption at 0x2D0 (VA 0x004010D0)
       writeAscii(0x2D0, `${title} (v${version})`, 60);
-      // Body text at 0x310 (VA 0x00401110)
       writeAscii(0x310, `Launched ${title} v${version} by ${author}!\r\n\r\n${description || "Pure Win32 Executable"}`, 220);
 
       return arrayBufferToBase64(buffer);
@@ -1028,7 +1075,6 @@
       ];
     }
 
-    // Packages ONLY the uploaded .exe, logo (.ico / .png), and assets — NEVER adds any .bat file!
     async function buildWebFolderPackage(fileList, title, version, author, description, scanMetaList = []) {
       const safeName = sanitizeIdentifier(title);
       const encodedFiles = [];
@@ -1042,7 +1088,7 @@
           const cleanPath = getNormalizedRelativePath(file);
           const lower = cleanPath.toLowerCase();
 
-          // Hard guarantee: never include .bat or .cmd files
+          // Never include .bat or .cmd files
           if (lower.endsWith(".bat") || lower.endsWith(".cmd")) continue;
 
           if (lower.endsWith(".exe")) hasUploadedExe = true;
@@ -1056,7 +1102,6 @@
           });
         }
 
-        // If developer uploaded only a logo/assets without an .exe, add a pure Win32 GUI .exe (no .bat!)
         if (!hasUploadedExe) {
           encodedFiles.push(...createDefaultPureExeFiles(title, version, author, description));
         }
@@ -1078,19 +1123,16 @@
       };
     }
 
-    // Retrieves files for the .ZIP and strips out any legacy .bat/.cmd scripts so players only get clean .exe + logo + assets
     function getFolderFilesFromGame(game) {
       const safeName = sanitizeIdentifier(game.title);
       if (game.launcherScript) {
         try {
           const parsed = JSON.parse(game.launcherScript);
           if (parsed && Array.isArray(parsed.files)) {
-            // Strip any legacy .bat or .cmd files from older cloud rows
             let cleanFiles = parsed.files.filter(
               f => !f.name.toLowerCase().endsWith(".bat") && !f.name.toLowerCase().endsWith(".cmd")
             );
 
-            // If an older cloud game only had a .cs + .bat or a 1KB cmd-runner .exe, ensure a clean standalone .exe exists
             const hasRealExe = cleanFiles.some(f => f.name.toLowerCase().endsWith(".exe") && f.base64 && f.base64.length > 1500);
             if (!hasRealExe && parsed.format !== "nebula_pure_exe_v5") {
               cleanFiles = cleanFiles.filter(f => !f.name.toLowerCase().endsWith(".exe"));
@@ -1416,6 +1458,17 @@
         const isOwner = isDeveloperRole() && game.author.toLowerCase() === currentUser.username.toLowerCase();
 
         const bundledList = getCleanBundledFilesLabel(game);
+        const photoInfo = resolveGameLogoPhoto(game);
+
+        // If the game uses an uploaded .ico/.png logo, frame it nicely so square icons look sharp and never get cropped
+        const cardPhotoHtml = photoInfo.isCustomLogo
+          ? `
+            <img src="${photoInfo.url}" alt="" class="w-full h-full object-cover blur-xl opacity-35 scale-125" />
+            <div class="absolute inset-0 flex items-center justify-center p-5">
+              <img src="${photoInfo.url}" alt="${game.title} Logo" class="max-h-28 max-w-28 w-24 h-24 object-contain rounded-2xl shadow-2xl border border-white/10 bg-slate-950/60 p-2" />
+            </div>
+          `
+          : `<img src="${photoInfo.url}" alt="${game.title}" class="w-full h-full object-cover" />`;
 
         let actionButtonHtml = "";
         if (!isInstalled) {
@@ -1447,8 +1500,8 @@
         return `
           <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
             <div>
-              <div class="h-44 bg-slate-800 relative overflow-hidden">
-                <img src="${game.cover || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80'}" alt="${game.title}" class="w-full h-full object-cover" />
+              <div class="h-44 bg-slate-950 relative overflow-hidden">
+                ${cardPhotoHtml}
                 <div class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur px-2.5 py-1 rounded-md text-xs font-medium text-slate-300">
                   ${game.genre}
                 </div>
@@ -1507,7 +1560,7 @@
         listEl.innerHTML = `
           <div class="col-span-full text-center py-16 bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
             <p class="text-slate-300 font-semibold text-base mb-1">You haven't uploaded any games yet</p>
-            <p class="text-slate-400 text-xs mb-5">Click "+ Upload .EXE & Logo" to publish your compiled .exe and logo with zero .bat scripts.</p>
+            <p class="text-slate-400 text-xs mb-5">Click "+ Upload .EXE & Logo" to publish your compiled .exe and logo—your logo will automatically become the game's shop photo.</p>
             <button onclick="openUploadModal()" class="bg-indigo-600 hover:bg-indigo-500 transition px-5 py-2.5 rounded-xl text-sm font-semibold">
               + Upload Your First .EXE Game
             </button>
@@ -1518,14 +1571,16 @@
 
       listEl.innerHTML = myGames.map(game => {
         const bundledList = getCleanBundledFilesLabel(game);
+        const photoInfo = resolveGameLogoPhoto(game);
+        const imgFitClass = photoInfo.isCustomLogo ? "object-contain p-2 bg-slate-950 border border-slate-800" : "object-cover bg-slate-800";
 
         return `
           <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between gap-4 shadow-xl">
             <div class="flex gap-4">
               <img
-                src="${game.cover || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80'}"
+                src="${photoInfo.url}"
                 alt="${game.title}"
-                class="w-28 h-28 rounded-xl object-cover bg-slate-800 shrink-0"
+                class="w-28 h-28 rounded-xl ${imgFitClass} shrink-0"
               />
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
@@ -1597,11 +1652,13 @@
         alert("Only Developer accounts can upload games.");
         return;
       }
-      document.getElementById("modalTitle").textContent = "Upload .EXE & Logo (Zero .BAT Scripts)";
+      document.getElementById("modalTitle").textContent = "Upload .EXE & Logo (Logo Becomes Shop Photo)";
       document.getElementById("editGameId").value = "";
       document.getElementById("uploadForm").reset();
       selectedUploadFiles = [];
       detectedLogoDataUrl = null;
+      detectedLogoFileName = null;
+      document.getElementById("logoPreviewBox").classList.add("hidden");
       document.getElementById("virusScanPanel").classList.add("hidden");
       document.getElementById("selectedFilesList").innerHTML = "";
       document.getElementById("submitBtn").disabled = false;
@@ -1631,12 +1688,15 @@
       document.getElementById("gameTitle").value = game.title;
       document.getElementById("gameVersion").value = nextVersion;
       document.getElementById("gameGenre").value = game.genre;
-      document.getElementById("gameCover").value = game.cover || "";
+      // Only show external URL in the text box if it isn't a long Base64 data URL
+      document.getElementById("gameCover").value = (game.cover && !game.cover.startsWith("data:")) ? game.cover : "";
       document.getElementById("gameDesc").value = game.description;
       document.getElementById("gameFile").value = "";
       document.getElementById("gameFolder").value = "";
       selectedUploadFiles = [];
       detectedLogoDataUrl = null;
+      detectedLogoFileName = null;
+      document.getElementById("logoPreviewBox").classList.add("hidden");
       document.getElementById("virusScanPanel").classList.add("hidden");
       document.getElementById("selectedFilesList").innerHTML = "";
       document.getElementById("submitBtn").disabled = false;
@@ -1656,7 +1716,7 @@
 
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = true;
-      submitBtn.textContent = "Packing Pure .EXE Bundle...";
+      submitBtn.textContent = "Packing .EXE & Logo...";
 
       try {
         const scanResult = await runLiveFileVirusScan();
@@ -1683,9 +1743,11 @@
         const description = document.getElementById("gameDesc").value.trim();
         const files = selectedUploadFiles;
 
-        // If developer didn't paste a Cover URL, automatically use their uploaded logo (.ico/.png)!
-        if (!cover && detectedLogoDataUrl) {
+        // ALWAYS use the uploaded logo as the game's shop photo if a developer uploaded one!
+        if (detectedLogoDataUrl) {
           cover = detectedLogoDataUrl;
+        } else if (!cover && existingGame && existingGame.cover) {
+          cover = existingGame.cover;
         }
 
         let archiveFileName;
@@ -1737,7 +1799,7 @@
         closeUploadModal();
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Publish Pure .EXE Bundle";
+        submitBtn.textContent = "Publish .EXE & Logo";
       }
     }
 
