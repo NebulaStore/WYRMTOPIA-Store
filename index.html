@@ -3,37 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NebulaStore — Pure .EXE & Auto-Logo Game Shop</title>
+  <title>WYRMTOPIA Store — Pure .EXE & Auto-Logo Game Shop</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Supabase Client SDK for Serverless Cloud Sync -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- JSZip for in-browser .ZIP packaging (.exe + .ico logo + assets) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
+<body class="bg-[#0b0514] text-purple-50 min-h-screen font-sans selection:bg-purple-600 selection:text-white">
 
   <!-- =================================================================
        AUTHENTICATION VIEW (LOGIN & REGISTER PAGE)
        ================================================================= -->
-  <section id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-radial from-indigo-950/30 via-slate-950 to-slate-950">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-7 shadow-2xl">
+  <section id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/35 via-[#0b0514] to-[#0b0514]">
+    <div class="max-w-md w-full bg-[#160b29] border border-purple-900/70 rounded-2xl p-7 shadow-2xl shadow-purple-950/60">
       <!-- Brand Header -->
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-indigo-500/30">
-          N
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-800 flex items-center justify-center font-extrabold text-xl text-white shadow-lg shadow-purple-600/30 border border-purple-400/20">
+          W
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight">NebulaStore</h1>
-          <p class="text-xs text-slate-400">Pure .EXE & Auto-Logo Game Distribution</p>
+          <h1 class="text-xl font-bold tracking-tight text-white">WYRMTOPIA Store</h1>
+          <p class="text-xs text-purple-300/70">Pure .EXE & Auto-Logo Game Distribution</p>
         </div>
       </div>
 
       <!-- Mode Switcher Tabs -->
-      <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800 mb-6">
-        <button id="authTabLogin" type="button" onclick="switchAuthMode('login')" class="py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition">
+      <div class="grid grid-cols-2 gap-2 p-1 bg-[#0c0517] rounded-xl border border-purple-900/70 mb-6">
+        <button id="authTabLogin" type="button" onclick="switchAuthMode('login')" class="py-2 rounded-lg text-sm font-semibold bg-purple-700 text-white transition shadow-md shadow-purple-900/40">
           Sign In
         </button>
-        <button id="authTabRegister" type="button" onclick="switchAuthMode('register')" class="py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white transition">
+        <button id="authTabRegister" type="button" onclick="switchAuthMode('register')" class="py-2 rounded-lg text-sm font-semibold text-purple-300/70 hover:text-white transition">
           Register Account
         </button>
       </div>
@@ -44,60 +44,60 @@
       <!-- LOGIN FORM -->
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Username</label>
-          <input id="loginUsername" required type="text" placeholder="Enter your username" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-indigo-500" />
+          <label class="block text-xs text-purple-300/80 mb-1">Username</label>
+          <input id="loginUsername" required type="text" placeholder="Enter your username" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Password</label>
-          <input id="loginPassword" required type="password" placeholder="Enter your password" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-indigo-500" />
+          <label class="block text-xs text-purple-300/80 mb-1">Password</label>
+          <input id="loginPassword" required type="password" placeholder="Enter your password" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
         </div>
-        <button id="loginSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold text-sm shadow-lg shadow-indigo-600/25">
-          Sign In to NebulaStore
+        <button id="loginSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-600 transition font-semibold text-sm text-white shadow-lg shadow-purple-700/30">
+          Sign In to WYRMTOPIA Store
         </button>
       </form>
 
       <!-- REGISTER FORM -->
       <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Choose a Username *</label>
-          <input id="regUsername" required type="text" placeholder="e.g., studio_nova or gamer_max" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-indigo-500" />
+          <label class="block text-xs text-purple-300/80 mb-1">Choose a Username *</label>
+          <input id="regUsername" required type="text" placeholder="e.g., wyrm_dev or gamer_max" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Create Password *</label>
-          <input id="regPassword" required type="password" minlength="3" placeholder="At least 3 characters" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-indigo-500" />
+          <label class="block text-xs text-purple-300/80 mb-1">Create Password *</label>
+          <input id="regPassword" required type="password" minlength="3" placeholder="At least 3 characters" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
         </div>
 
         <!-- Role Selector -->
         <div>
-          <label class="block text-xs text-slate-400 mb-2">Select Account Type *</label>
+          <label class="block text-xs text-purple-300/80 mb-2">Select Account Type *</label>
           <div class="space-y-2">
-            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-indigo-500/60 transition">
-              <input type="radio" name="regRole" value="player" checked class="mt-1 accent-indigo-600" />
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] cursor-pointer hover:border-purple-500/70 transition">
+              <input type="radio" name="regRole" value="player" checked class="mt-1 accent-purple-600" />
               <div>
                 <div class="text-sm font-semibold text-white">Player</div>
-                <div class="text-xs text-slate-400">Browse the store, download clean .EXE game .ZIPs, and receive updates.</div>
+                <div class="text-xs text-purple-300/70">Browse the store, download clean .EXE game .ZIPs, and receive updates.</div>
               </div>
             </label>
 
-            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-indigo-500/60 transition">
-              <input type="radio" name="regRole" value="developer" class="mt-1 accent-indigo-600" />
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] cursor-pointer hover:border-purple-500/70 transition">
+              <input type="radio" name="regRole" value="developer" class="mt-1 accent-purple-600" />
               <div>
-                <div class="text-sm font-semibold text-indigo-400">Developer</div>
-                <div class="text-xs text-slate-400">Upload your .EXE and Logo (.ico / .png)—your logo automatically becomes the shop photo.</div>
+                <div class="text-sm font-semibold text-purple-300">Developer</div>
+                <div class="text-xs text-purple-300/70">Upload your .EXE and Logo (.ico / .png)—your logo automatically becomes the shop photo.</div>
               </div>
             </label>
 
-            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950 cursor-pointer hover:border-indigo-500/60 transition">
-              <input type="radio" name="regRole" value="both" class="mt-1 accent-indigo-600" />
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] cursor-pointer hover:border-purple-500/70 transition">
+              <input type="radio" name="regRole" value="both" class="mt-1 accent-purple-600" />
               <div>
-                <div class="text-sm font-semibold text-emerald-400">Both (Player & Developer)</div>
-                <div class="text-xs text-slate-400">Full access to play/download games and publish/configure your own games.</div>
+                <div class="text-sm font-semibold text-fuchsia-300">Both (Player & Developer)</div>
+                <div class="text-xs text-purple-300/70">Full access to play/download games and publish/configure your own games.</div>
               </div>
             </label>
           </div>
         </div>
 
-        <button id="regSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold text-sm shadow-lg shadow-indigo-600/25">
+        <button id="regSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-600 transition font-semibold text-sm text-white shadow-lg shadow-purple-700/30">
           Create Account & Enter Store
         </button>
       </form>
@@ -110,30 +110,30 @@
   <div id="appScreen" class="hidden min-h-screen flex flex-col">
 
     <!-- Top Navigation -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-30">
+    <header class="border-b border-purple-900/60 bg-[#120822]/90 backdrop-blur sticky top-0 z-30">
       <div class="max-w-6xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-500/30">
-            N
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-600 to-fuchsia-800 flex items-center justify-center font-extrabold text-lg text-white shadow-lg shadow-purple-600/30 border border-purple-400/20">
+            W
           </div>
           <div>
-            <h1 class="text-lg font-bold tracking-tight flex items-center gap-2">
-              NebulaStore
-              <span id="syncBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">
+            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+              WYRMTOPIA Store
+              <span id="syncBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">
                 Supabase Cloud Realtime
               </span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 font-medium">
-                🛡️ Pure .EXE + Auto-Logo Cover
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 font-medium">
+                🛡️ WyrmShield Auto-AV
               </span>
             </h1>
-            <p class="text-xs text-slate-400">Uploaded Game Logo Automatically Becomes the Store Photo • Zero .BAT Scripts</p>
+            <p class="text-xs text-purple-300/70">Uploaded Game Logo Automatically Becomes the Store Photo • Zero .BAT Scripts</p>
           </div>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
           <!-- Logged-In User Badge -->
-          <div class="flex items-center gap-2.5 bg-slate-800/90 px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs">
-            <span class="text-slate-400">Signed in as:</span>
+          <div class="flex items-center gap-2.5 bg-[#1b0d33] px-3.5 py-1.5 rounded-xl border border-purple-800/70 text-xs">
+            <span class="text-purple-300/70">Signed in as:</span>
             <span id="currentUserDisplay" class="font-bold text-white"></span>
             <span id="currentRoleBadge" class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider"></span>
           </div>
@@ -142,7 +142,7 @@
           <button
             id="headerUploadBtn"
             onclick="openUploadModal()"
-            class="hidden bg-indigo-600 hover:bg-indigo-500 transition px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-indigo-600/25"
+            class="hidden bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-purple-700/30"
           >
             + Upload .EXE & Logo
           </button>
@@ -150,7 +150,7 @@
           <!-- Logout Button -->
           <button
             onclick="handleLogout()"
-            class="bg-slate-800 hover:bg-slate-700 text-slate-300 transition px-3.5 py-2 rounded-lg text-xs font-semibold border border-slate-700"
+            class="bg-[#1b0d33] hover:bg-purple-900/60 text-purple-200 transition px-3.5 py-2 rounded-lg text-xs font-semibold border border-purple-800/70"
           >
             Log Out
           </button>
@@ -166,18 +166,18 @@
       <!-- Navigation Tabs & Search -->
       <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div class="flex flex-wrap gap-2">
-          <button onclick="setFilter('all')" id="tab-all" class="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white">
+          <button onclick="setFilter('all')" id="tab-all" class="px-4 py-2 rounded-lg text-sm font-medium bg-purple-700 text-white shadow-md shadow-purple-900/40">
             All Store Games
           </button>
-          <button onclick="setFilter('installed')" id="tab-installed" class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <button onclick="setFilter('installed')" id="tab-installed" class="px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50">
             My Installed Library
           </button>
-          <button onclick="setFilter('updates')" id="tab-updates" class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-2">
+          <button onclick="setFilter('updates')" id="tab-updates" class="px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50 flex items-center gap-2">
             Updates
             <span id="updateCountBadge" class="hidden px-2 py-0.5 text-xs rounded-full bg-amber-500 text-slate-950 font-bold">0</span>
           </button>
           <!-- Dedicated Developer Studio Page Tab -->
-          <button onclick="setFilter('dev_studio')" id="tab-dev_studio" class="hidden px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-indigo-300 border border-indigo-500/30 hover:bg-slate-700 items-center gap-2">
+          <button onclick="setFilter('dev_studio')" id="tab-dev_studio" class="hidden px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-fuchsia-300 border border-purple-600/40 hover:bg-purple-900/50 items-center gap-2">
             <span>🛠️ Developer Studio (My Games)</span>
           </button>
         </div>
@@ -187,7 +187,7 @@
           type="text"
           oninput="renderActiveView()"
           placeholder="Search games or creators..."
-          class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-2 text-sm w-64 focus:outline-none focus:border-indigo-500"
+          class="bg-[#140926] border border-purple-900/70 rounded-lg px-4 py-2 text-sm text-white placeholder-purple-400/50 w-64 focus:outline-none focus:border-purple-500"
         />
       </div>
 
@@ -198,18 +198,18 @@
 
       <!-- VIEW B: DEDICATED DEVELOPER STUDIO PAGE -->
       <div id="devStudioSection" class="hidden space-y-6">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl">
           <div>
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              🛠️ Developer Studio — Pure .EXE & Auto-Logo Publishing
+              🛠️ WYRMTOPIA Developer Studio — Pure .EXE & Auto-Logo Publishing
             </h2>
-            <p class="text-xs text-slate-400 mt-1">
-              Manage the games published under your developer account (<span id="studioOwnerName" class="text-indigo-400 font-semibold"></span>). When you upload a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) with your <code>.exe</code>, it automatically becomes the game's photo in the shop.
+            <p class="text-xs text-purple-300/75 mt-1">
+              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). When you upload a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) with your <code>.exe</code>, it automatically becomes the game's photo in the shop.
             </p>
           </div>
           <button
             onclick="openUploadModal()"
-            class="bg-indigo-600 hover:bg-indigo-500 transition px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-600/25"
+            class="bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30"
           >
             + Upload .EXE & Logo
           </button>
@@ -224,11 +224,11 @@
   <!-- =================================================================
        DEVELOPER UPLOAD / CONFIGURE GAME MODAL (PURE .EXE + AUTO LOGO)
        ================================================================= -->
-  <div id="uploadModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
+  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-[#160b29] border border-purple-800/70 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
-        <h2 id="modalTitle" class="text-lg font-bold">Upload .EXE & Game Logo</h2>
-        <button onclick="closeUploadModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+        <h2 id="modalTitle" class="text-lg font-bold text-white">Upload .EXE & Game Logo</h2>
+        <button onclick="closeUploadModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
       </div>
 
       <form id="uploadForm" onsubmit="handlePublishGame(event)" class="space-y-4">
@@ -236,19 +236,19 @@
 
         <div class="grid grid-cols-3 gap-3">
           <div class="col-span-2">
-            <label class="block text-xs text-slate-400 mb-1">Game Title *</label>
-            <input id="gameTitle" required type="text" placeholder="e.g., Cyber Drift 2099" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500" />
+            <label class="block text-xs text-purple-300/80 mb-1">Game Title *</label>
+            <input id="gameTitle" required type="text" placeholder="e.g., Cyber Drift 2099" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" />
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Version *</label>
-            <input id="gameVersion" required type="text" placeholder="1.0.0" value="1.0.0" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-indigo-500" />
+            <label class="block text-xs text-purple-300/80 mb-1">Version *</label>
+            <input id="gameVersion" required type="text" placeholder="1.0.0" value="1.0.0" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500" />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Genre</label>
-            <select id="gameGenre" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm">
+            <label class="block text-xs text-purple-300/80 mb-1">Genre</label>
+            <select id="gameGenre" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white">
               <option>Action / Arcade</option>
               <option>RPG / Adventure</option>
               <option>Strategy / Puzzle</option>
@@ -256,27 +256,27 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Fallback Cover URL (If No Logo Uploaded)</label>
-            <input id="gameCover" type="url" placeholder="Uploaded logo overrides this automatically" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm" />
+            <label class="block text-xs text-purple-300/80 mb-1">Fallback Cover URL (If No Logo Uploaded)</label>
+            <input id="gameCover" type="url" placeholder="Uploaded logo overrides this automatically" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white" />
           </div>
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Description & Patch Notes *</label>
-          <textarea id="gameDesc" required rows="3" placeholder="Describe the game or what changed in this update..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+          <label class="block text-xs text-purple-300/80 mb-1">Description & Patch Notes *</label>
+          <textarea id="gameDesc" required rows="3" placeholder="Describe the game or what changed in this update..." class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
         </div>
 
         <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL ASSETS -->
-        <div class="space-y-2.5 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800">
-          <label class="block text-xs font-semibold text-slate-300">
+        <div class="space-y-2.5 bg-[#0c0517]/90 p-3.5 rounded-xl border border-purple-900/70">
+          <label class="block text-xs font-semibold text-purple-200">
             Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>)
           </label>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <!-- Option 1: Select .EXE + Logo Files -->
-            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-700 bg-slate-900 hover:border-indigo-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-indigo-300">🎯 Select .EXE + Logo</span>
-              <span class="text-[10px] text-slate-400 mt-0.5">Ctrl+Click your .exe and .ico/.png</span>
+            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-purple-500 cursor-pointer transition text-center">
+              <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE + Logo</span>
+              <span class="text-[10px] text-purple-300/60 mt-0.5">Ctrl+Click your .exe and .ico/.png</span>
               <input
                 id="gameFile"
                 type="file"
@@ -288,9 +288,9 @@
             </label>
 
             <!-- Option 2: Select Whole Folder -->
-            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-700 bg-slate-900 hover:border-emerald-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-emerald-300">📁 Select Game Folder</span>
-              <span class="text-[10px] text-slate-400 mt-0.5">Auto-uses folder's logo as shop photo</span>
+            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-fuchsia-500 cursor-pointer transition text-center">
+              <span class="text-xs font-semibold text-fuchsia-300">📁 Select Game Folder</span>
+              <span class="text-[10px] text-purple-300/60 mt-0.5">Auto-uses folder's logo as shop photo</span>
               <input
                 id="gameFolder"
                 type="file"
@@ -304,42 +304,42 @@
           </div>
 
           <!-- LIVE SHOP PHOTO LOGO PREVIEW -->
-          <div id="logoPreviewBox" class="hidden mt-2 p-3 rounded-xl border border-indigo-500/30 bg-indigo-950/20 flex items-center gap-3">
-            <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-14 h-14 rounded-xl object-contain bg-slate-900 border border-slate-700 p-1 shrink-0" />
+          <div id="logoPreviewBox" class="hidden mt-2 p-3 rounded-xl border border-purple-500/40 bg-purple-950/40 flex items-center gap-3">
+            <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-14 h-14 rounded-xl object-contain bg-[#0c0517] border border-purple-700 p-1 shrink-0" />
             <div class="min-w-0">
-              <div class="text-xs font-bold text-indigo-300">✓ Game Logo Set as Shop Photo</div>
-              <div id="logoPreviewName" class="text-[11px] text-slate-400 truncate"></div>
-              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in NebulaStore and bundled in the .ZIP.</div>
+              <div class="text-xs font-bold text-purple-200">✓ Game Logo Set as WYRMTOPIA Shop Photo</div>
+              <div id="logoPreviewName" class="text-[11px] text-purple-300/70 truncate"></div>
+              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in WYRMTOPIA Store and bundled in the .ZIP.</div>
             </div>
           </div>
 
-          <!-- NEBULASHIELD LIVE VIRUS SCANNER PANEL -->
-          <div id="virusScanPanel" class="hidden mt-2 p-3 rounded-xl border border-slate-800 bg-slate-950 space-y-2">
+          <!-- WYRMSHIELD LIVE VIRUS SCANNER PANEL -->
+          <div id="virusScanPanel" class="hidden mt-2 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] space-y-2">
             <div class="flex items-center justify-between text-xs">
-              <span id="virusScanTitle" class="font-semibold text-sky-300 flex items-center gap-1.5">
-                🛡️ NebulaShield PE32 .EXE & Logo Verifier
+              <span id="virusScanTitle" class="font-semibold text-purple-300 flex items-center gap-1.5">
+                🛡️ WyrmShield PE32 .EXE & Logo Verifier
               </span>
               <span id="virusScanStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase">
                 Scanning...
               </span>
             </div>
-            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-              <div id="virusScanProgressBar" class="h-full bg-sky-500 transition-all duration-300" style="width: 0%"></div>
+            <div class="w-full h-1.5 bg-purple-950 rounded-full overflow-hidden">
+              <div id="virusScanProgressBar" class="h-full bg-purple-500 transition-all duration-300" style="width: 0%"></div>
             </div>
-            <div id="selectedFilesList" class="text-[11px] font-mono text-slate-300 space-y-1 pt-1 max-h-40 overflow-y-auto"></div>
+            <div id="selectedFilesList" class="text-[11px] font-mono text-purple-200 space-y-1 pt-1 max-h-40 overflow-y-auto"></div>
           </div>
 
-          <p id="fileKeepHint" class="text-[11px] text-slate-500 leading-relaxed">
-            ✓ <strong>Auto-Shop Photo:</strong> Uploading a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) automatically sets it as the game's photo in the shop.<br/>
+          <p id="fileKeepHint" class="text-[11px] text-purple-300/60 leading-relaxed">
+            ✓ <strong>Auto-Shop Photo:</strong> Uploading a logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) automatically sets it as the game's photo in WYRMTOPIA Store.<br/>
             ✓ <strong>Zero <code>.bat</code> Scripts:</strong> Only your clean <code>.exe</code>, logo, and assets are packaged into the <code>.ZIP</code>.
           </p>
         </div>
 
         <div class="pt-2 flex justify-end gap-3">
-          <button type="button" onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-sm bg-slate-800 hover:bg-slate-700">
+          <button type="button" onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-sm bg-[#22113d] hover:bg-purple-900/70 text-purple-200">
             Cancel
           </button>
-          <button id="submitBtn" type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-600 hover:bg-indigo-500">
+          <button id="submitBtn" type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-purple-700 hover:bg-purple-600 text-white shadow-lg shadow-purple-700/30">
             Publish .EXE & Logo
           </button>
         </div>
@@ -350,23 +350,23 @@
   <!-- =================================================================
        SECURITY SCAN REPORT MODAL
        ================================================================= -->
-  <div id="securityModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+  <div id="securityModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-[#160b29] border border-purple-800/70 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center gap-2">
           <span class="text-xl">🛡️</span>
           <div>
-            <h3 id="secModalGameTitle" class="text-base font-bold text-white">NebulaShield Pure .EXE Report</h3>
+            <h3 id="secModalGameTitle" class="text-base font-bold text-white">WyrmShield Pure .EXE Report</h3>
             <p class="text-xs text-emerald-400 font-medium">Verified Clean • 0 .BAT Scripts • Direct Windows Executable</p>
           </div>
         </div>
-        <button onclick="closeSecurityModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+        <button onclick="closeSecurityModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
       </div>
 
       <div id="secModalContent" class="space-y-3 text-xs"></div>
 
-      <div class="mt-5 pt-3 border-t border-slate-800 flex justify-end">
-        <button onclick="closeSecurityModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold">
+      <div class="mt-5 pt-3 border-t border-purple-900/70 flex justify-end">
+        <button onclick="closeSecurityModal()" class="px-4 py-2 rounded-lg bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold">
           Close Report
         </button>
       </div>
@@ -413,11 +413,11 @@
     }
 
     /********************************************************************
-     * 2. NEBULASHIELD AUTO VIRUS & PE32 .EXE VERIFIER (BLOCKS .BAT)
+     * 2. WYRMSHIELD AUTO VIRUS & PE32 .EXE VERIFIER (BLOCKS .BAT)
      ********************************************************************/
     const MALWARE_SIGNATURES = [
       {
-        name: "Test Virus Trigger (EICAR / Nebula Test)",
+        name: "Test Virus Trigger (EICAR / WyrmShield Test)",
         regex: /NEBULA_TEST_VIRUS_SIGNATURE|X5O!P%@AP\[4\\PZX54\(P\^\)7CC\)7\}\$EICAR/i,
         severity: "CRITICAL — Test Virus Signature Detected"
       },
@@ -518,7 +518,6 @@
       const logoPreviewImg = document.getElementById("logoPreviewImg");
       const logoPreviewName = document.getElementById("logoPreviewName");
 
-      // Prioritize files with "logo" or "icon" in the name, or any .ico/.png/.jpg/.webp/.svg file
       const imageCandidates = selectedUploadFiles.filter(f => /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name));
       const prioritizedLogo =
         imageCandidates.find(f => /logo|icon/i.test(f.name)) ||
@@ -560,9 +559,9 @@
 
       panel.classList.remove("hidden");
       statusBadge.textContent = "Scanning Files...";
-      statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-sky-500/20 text-sky-300";
+      statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-500/20 text-purple-300";
       progressBar.style.width = "25%";
-      progressBar.className = "h-full bg-sky-500 transition-all duration-300";
+      progressBar.className = "h-full bg-purple-500 transition-all duration-300";
 
       const scannedFiles = [];
       const allThreats = [];
@@ -601,16 +600,16 @@
         : "";
 
       const exeNotice = hasExe
-        ? `<div class="text-indigo-300 bg-indigo-950/40 border border-indigo-500/30 px-2.5 py-1 rounded text-[10px]">
+        ? `<div class="text-purple-200 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded text-[10px]">
              🎯 Native Windows <code>.exe</code> verified — will run directly when extracted (Zero <code>.bat</code> files).
            </div>`
-        : `<div class="text-sky-300 bg-sky-950/40 border border-sky-500/30 px-2.5 py-1 rounded text-[10px]">
-             ℹ️ No <code>.exe</code> selected — NebulaStore will include a standalone native Win32 GUI <code>.exe</code>.
+        : `<div class="text-purple-200 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded text-[10px]">
+             ℹ️ No <code>.exe</code> selected — WYRMTOPIA Store will include a standalone native Win32 GUI <code>.exe</code>.
            </div>`;
 
       const logoNotice = detectedLogoFileName
         ? `<div class="text-emerald-300 bg-emerald-950/30 border border-emerald-500/20 px-2.5 py-1 rounded text-[10px]">
-             🎨 Uploaded Logo (<code>${detectedLogoFileName}</code>) will be used as the Game Photo in the shop!
+             🎨 Uploaded Logo (<code>${detectedLogoFileName}</code>) will be used as the Game Photo in WYRMTOPIA Store!
            </div>`
         : "";
 
@@ -623,13 +622,13 @@
             return `
               <div class="flex items-center justify-between gap-2 text-emerald-300 bg-emerald-950/30 border border-emerald-500/20 px-2.5 py-1 rounded">
                 <span class="truncate">✓ ${f.name} (${f.sizeKB} KB)</span>
-                <span class="text-[10px] text-slate-400 shrink-0">SHA256: ${f.shortHash}…</span>
+                <span class="text-[10px] text-purple-300/60 shrink-0">SHA256: ${f.shortHash}…</span>
               </div>
             `;
           } else {
             return `
               <div class="text-rose-300 bg-rose-950/40 border border-rose-500/30 px-2.5 py-1.5 rounded space-y-0.5">
-                <div class="font-bold">⛔ ${f.name} — BLOCKED BY NEBULASHIELD</div>
+                <div class="font-bold">⛔ ${f.name} — BLOCKED BY WYRMSHIELD</div>
                 <div class="text-[10px] text-rose-200">${f.threats.join(" | ")}</div>
               </div>
             `;
@@ -643,7 +642,7 @@
       const game = gamesCatalog.find(g => g.id === gameId);
       if (!game) return;
 
-      document.getElementById("secModalGameTitle").textContent = `${game.title} (v${game.version}) — Security & EXE Report`;
+      document.getElementById("secModalGameTitle").textContent = `${game.title} (v${game.version}) — WyrmShield Report`;
       const safeName = sanitizeIdentifier(game.title);
       const bundled = Array.isArray(game.bundledFiles) && game.bundledFiles.length > 0
         ? game.bundledFiles.filter(name => !/\.bat\b|\.cmd\b/i.test(name))
@@ -652,17 +651,17 @@
       document.getElementById("secModalContent").innerHTML = `
         <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
           <div class="font-bold mb-0.5">✓ 100% .BAT-Free Native .EXE Package</div>
-          <div class="text-slate-300 text-[11px]">This download contains <strong>zero</strong> <code>.bat</code> or <code>.cmd</code> scripts, preventing false-positive script alerts in Windows and browsers.</div>
+          <div class="text-purple-100 text-[11px]">This download contains <strong>zero</strong> <code>.bat</code> or <code>.cmd</code> scripts, preventing false-positive script alerts in Windows and browsers.</div>
         </div>
 
-        <div class="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300">
+        <div class="p-3 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-200">
           <div class="font-bold mb-0.5">✓ How to Run & Update</div>
-          <div class="text-slate-300 text-[11px]">Extract <code>${safeName}.zip</code> and double-click the <code>.exe</code> file directly to play. When downloading an update, extract to the same folder to replace the old <code>.exe</code>.</div>
+          <div class="text-purple-100 text-[11px]">Extract <code>${safeName}.zip</code> and double-click the <code>.exe</code> file directly to play. When downloading an update, extract to the same folder to replace the old <code>.exe</code>.</div>
         </div>
 
-        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
-          <div class="text-slate-400 font-semibold mb-1.5">Files Included Inside .ZIP Archive:</div>
-          <div class="space-y-1 font-mono text-[11px] text-slate-300 max-h-40 overflow-y-auto">
+        <div class="p-3 rounded-xl bg-[#0c0517] border border-purple-900/70">
+          <div class="text-purple-300 font-semibold mb-1.5">Files Included Inside .ZIP Archive:</div>
+          <div class="space-y-1 font-mono text-[11px] text-purple-100 max-h-40 overflow-y-auto">
             ${bundled.map(item => `<div class="truncate">📄 ${item}</div>`).join("")}
           </div>
         </div>
@@ -714,13 +713,13 @@
       if (mode === "login") {
         loginForm.classList.remove("hidden");
         registerForm.classList.add("hidden");
-        tabLogin.className = "py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition";
-        tabRegister.className = "py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white transition";
+        tabLogin.className = "py-2 rounded-lg text-sm font-semibold bg-purple-700 text-white transition shadow-md shadow-purple-900/40";
+        tabRegister.className = "py-2 rounded-lg text-sm font-semibold text-purple-300/70 hover:text-white transition";
       } else {
         loginForm.classList.add("hidden");
         registerForm.classList.remove("hidden");
-        tabRegister.className = "py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition";
-        tabLogin.className = "py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white transition";
+        tabRegister.className = "py-2 rounded-lg text-sm font-semibold bg-purple-700 text-white transition shadow-md shadow-purple-900/40";
+        tabLogin.className = "py-2 rounded-lg text-sm font-semibold text-purple-300/70 hover:text-white transition";
       }
     }
 
@@ -832,7 +831,7 @@
         completeLoginSession({ username: foundLocal.username, role: foundLocal.role });
       } finally {
         loginBtn.disabled = false;
-        loginBtn.textContent = "Sign In to NebulaStore";
+        loginBtn.textContent = "Sign In to WYRMTOPIA Store";
       }
     }
 
@@ -848,10 +847,10 @@
 
       if (currentUser.role === "player") {
         roleBadge.textContent = "Player";
-        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30";
+        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-200 border border-purple-500/30";
       } else if (currentUser.role === "developer") {
         roleBadge.textContent = "Developer";
-        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-fuchsia-500/20 text-fuchsia-200 border border-fuchsia-500/30";
       } else {
         roleBadge.textContent = "Player & Dev";
         roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
@@ -926,9 +925,7 @@
       });
     }
 
-    // Automatically resolves the game's shop photo:
-    // 1. If a logo file (.ico, .png, .jpg, .webp, .svg) is bundled inside the game package, use that logo!
-    // 2. Otherwise use game.cover (which is also set to the uploaded logo Data URL on publish)
+    // Automatically resolves the game's shop photo from the uploaded logo (.ico, .png, .jpg, .webp, .svg)
     function resolveGameLogoPhoto(game) {
       if (game.launcherScript) {
         try {
@@ -1088,9 +1085,7 @@
           const cleanPath = getNormalizedRelativePath(file);
           const lower = cleanPath.toLowerCase();
 
-          // Never include .bat or .cmd files
           if (lower.endsWith(".bat") || lower.endsWith(".cmd")) continue;
-
           if (lower.endsWith(".exe")) hasUploadedExe = true;
 
           const b64 = await readFileAsBase64(file);
@@ -1328,7 +1323,7 @@
         return;
       }
 
-      if (!confirm(`Are you sure you want to permanently delete "${game.title}" from NebulaStore?`)) {
+      if (!confirm(`Are you sure you want to permanently delete "${game.title}" from WYRMTOPIA Store?`)) {
         return;
       }
 
@@ -1444,8 +1439,8 @@
 
       if (filtered.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-16 bg-slate-900/40 border border-slate-800/80 rounded-2xl">
-            <p class="text-slate-400 text-sm">No games match this view.</p>
+          <div class="col-span-full text-center py-16 bg-[#160b29]/60 border border-purple-900/60 rounded-2xl">
+            <p class="text-purple-300/70 text-sm">No games match this view.</p>
           </div>
         `;
         return;
@@ -1460,12 +1455,11 @@
         const bundledList = getCleanBundledFilesLabel(game);
         const photoInfo = resolveGameLogoPhoto(game);
 
-        // If the game uses an uploaded .ico/.png logo, frame it nicely so square icons look sharp and never get cropped
         const cardPhotoHtml = photoInfo.isCustomLogo
           ? `
             <img src="${photoInfo.url}" alt="" class="w-full h-full object-cover blur-xl opacity-35 scale-125" />
             <div class="absolute inset-0 flex items-center justify-center p-5">
-              <img src="${photoInfo.url}" alt="${game.title} Logo" class="max-h-28 max-w-28 w-24 h-24 object-contain rounded-2xl shadow-2xl border border-white/10 bg-slate-950/60 p-2" />
+              <img src="${photoInfo.url}" alt="${game.title} Logo" class="max-h-28 max-w-28 w-24 h-24 object-contain rounded-2xl shadow-2xl border border-purple-400/20 bg-[#0b0514]/70 p-2" />
             </div>
           `
           : `<img src="${photoInfo.url}" alt="${game.title}" class="w-full h-full object-cover" />`;
@@ -1473,7 +1467,7 @@
         let actionButtonHtml = "";
         if (!isInstalled) {
           actionButtonHtml = `
-            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
+            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-purple-700 hover:bg-purple-600 text-white transition flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30">
               <span>📦 Download .EXE Bundle (v${game.version})</span>
             </button>
           `;
@@ -1485,30 +1479,30 @@
           `;
         } else {
           actionButtonHtml = `
-            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition flex items-center justify-center gap-2">
+            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition flex items-center justify-center gap-2">
               <span>✓ Installed (v${game.version}) — Download .ZIP Again</span>
             </button>
           `;
         }
 
         const ownerBadgeOrButton = isOwner
-          ? `<button onclick="openConfigureModalForGame('${game.id}')" class="text-xs px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/30 whitespace-nowrap font-medium">
+          ? `<button onclick="openConfigureModalForGame('${game.id}')" class="text-xs px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-200 border border-purple-500/30 hover:bg-purple-500/30 whitespace-nowrap font-medium">
                ⚙️ Configure
              </button>`
           : "";
 
         return `
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-slate-700 transition shadow-xl">
+          <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-purple-600/70 transition shadow-xl shadow-purple-950/40">
             <div>
-              <div class="h-44 bg-slate-950 relative overflow-hidden">
+              <div class="h-44 bg-[#0c0517] relative overflow-hidden">
                 ${cardPhotoHtml}
-                <div class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur px-2.5 py-1 rounded-md text-xs font-medium text-slate-300">
+                <div class="absolute top-3 left-3 bg-[#0b0514]/80 backdrop-blur px-2.5 py-1 rounded-md text-xs font-medium text-purple-200 border border-purple-800/40">
                   ${game.genre}
                 </div>
-                <div class="absolute top-3 right-3 bg-indigo-600/90 backdrop-blur px-2.5 py-1 rounded-md text-xs font-mono font-bold text-white">
+                <div class="absolute top-3 right-3 bg-purple-700/90 backdrop-blur px-2.5 py-1 rounded-md text-xs font-mono font-bold text-white">
                   v${game.version}
                 </div>
-                <!-- Clickable NebulaShield Antivirus Badge -->
+                <!-- Clickable WyrmShield Antivirus Badge -->
                 <button
                   onclick="openSecurityModal('${game.id}')"
                   class="absolute bottom-3 left-3 bg-emerald-950/90 hover:bg-emerald-900/90 border border-emerald-500/40 backdrop-blur px-2.5 py-1 rounded-md text-[11px] font-semibold text-emerald-300 flex items-center gap-1 transition"
@@ -1523,13 +1517,13 @@
                   <h3 class="font-bold text-base text-white">${game.title}</h3>
                   ${ownerBadgeOrButton}
                 </div>
-                <p class="text-xs text-slate-400 mb-2">
-                  By <span class="text-slate-300 font-medium">${game.author}</span>
-                  <span class="text-slate-600 mx-1">•</span>
-                  <span class="text-slate-400">${game.fileSize || "Pure .EXE Bundle"}</span>
+                <p class="text-xs text-purple-300/70 mb-2">
+                  By <span class="text-purple-200 font-medium">${game.author}</span>
+                  <span class="text-purple-700 mx-1">•</span>
+                  <span class="text-purple-300/70">${game.fileSize || "Pure .EXE Bundle"}</span>
                 </p>
-                <p class="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-3">${game.description}</p>
-                <div class="bg-slate-950/80 border border-slate-800/90 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-400 font-mono truncate" title="${bundledList}">
+                <p class="text-xs text-purple-100/80 leading-relaxed line-clamp-3 mb-3">${game.description}</p>
+                <div class="bg-[#0c0517] border border-purple-900/70 rounded-lg px-2.5 py-1.5 text-[11px] text-purple-300/80 font-mono truncate" title="${bundledList}">
                   📦 Inside ZIP: ${bundledList}
                 </div>
               </div>
@@ -1558,10 +1552,10 @@
 
       if (myGames.length === 0) {
         listEl.innerHTML = `
-          <div class="col-span-full text-center py-16 bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
-            <p class="text-slate-300 font-semibold text-base mb-1">You haven't uploaded any games yet</p>
-            <p class="text-slate-400 text-xs mb-5">Click "+ Upload .EXE & Logo" to publish your compiled .exe and logo—your logo will automatically become the game's shop photo.</p>
-            <button onclick="openUploadModal()" class="bg-indigo-600 hover:bg-indigo-500 transition px-5 py-2.5 rounded-xl text-sm font-semibold">
+          <div class="col-span-full text-center py-16 bg-[#160b29]/70 border border-purple-900/70 rounded-2xl p-6">
+            <p class="text-white font-semibold text-base mb-1">You haven't uploaded any games yet</p>
+            <p class="text-purple-300/70 text-xs mb-5">Click "+ Upload .EXE & Logo" to publish your compiled .exe and logo—your logo will automatically become the game's shop photo.</p>
+            <button onclick="openUploadModal()" class="bg-purple-700 hover:bg-purple-600 text-white transition px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30">
               + Upload Your First .EXE Game
             </button>
           </div>
@@ -1572,10 +1566,10 @@
       listEl.innerHTML = myGames.map(game => {
         const bundledList = getCleanBundledFilesLabel(game);
         const photoInfo = resolveGameLogoPhoto(game);
-        const imgFitClass = photoInfo.isCustomLogo ? "object-contain p-2 bg-slate-950 border border-slate-800" : "object-cover bg-slate-800";
+        const imgFitClass = photoInfo.isCustomLogo ? "object-contain p-2 bg-[#0c0517] border border-purple-900/70" : "object-cover bg-[#0c0517]";
 
         return `
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between gap-4 shadow-xl">
+          <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-5 flex flex-col justify-between gap-4 shadow-xl">
             <div class="flex gap-4">
               <img
                 src="${photoInfo.url}"
@@ -1585,33 +1579,33 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-1.5">
-                    <span class="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono font-semibold">
+                    <span class="text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-200 font-mono font-semibold">
                       v${game.version}
                     </span>
                     <button onclick="openSecurityModal('${game.id}')" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
                       🛡️ Pure .EXE (0 .BAT)
                     </button>
                   </div>
-                  <span class="text-xs text-slate-400">${game.genre}</span>
+                  <span class="text-xs text-purple-300/70">${game.genre}</span>
                 </div>
                 <h3 class="text-base font-bold text-white mt-1 truncate">${game.title}</h3>
-                <p class="text-xs text-slate-300 mt-1 line-clamp-2">${game.description}</p>
-                <div class="mt-2 text-[11px] text-slate-400 font-mono truncate">
+                <p class="text-xs text-purple-100/80 mt-1 line-clamp-2">${game.description}</p>
+                <div class="mt-2 text-[11px] text-purple-300/70 font-mono truncate">
                   📦 Inside ZIP: ${bundledList}
                 </div>
               </div>
             </div>
 
-            <div class="border-t border-slate-800 pt-3 flex flex-wrap items-center justify-between gap-2">
+            <div class="border-t border-purple-900/60 pt-3 flex flex-wrap items-center justify-between gap-2">
               <button
                 onclick="openConfigureModalForGame('${game.id}')"
-                class="flex-1 py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition text-center"
+                class="flex-1 py-2 px-3 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold transition text-center"
               >
                 ⚙️ Configure & Push Update
               </button>
               <button
                 onclick="downloadGameFolderZip('${game.id}')"
-                class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition"
+                class="py-2 px-3 rounded-lg bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold transition"
               >
                 📦 Test .ZIP
               </button>
@@ -1637,11 +1631,11 @@
         if (!btn || btn.classList.contains("hidden")) return;
 
         if (tab === filterName) {
-          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white flex items-center gap-2";
+          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-purple-700 text-white flex items-center gap-2 shadow-md shadow-purple-900/40";
         } else if (tab === "dev_studio") {
-          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-indigo-300 border border-indigo-500/30 hover:bg-slate-700 flex items-center gap-2";
+          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-fuchsia-300 border border-purple-600/40 hover:bg-purple-900/50 flex items-center gap-2";
         } else {
-          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-2";
+          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50 flex items-center gap-2";
         }
       });
       renderActiveView();
@@ -1688,7 +1682,6 @@
       document.getElementById("gameTitle").value = game.title;
       document.getElementById("gameVersion").value = nextVersion;
       document.getElementById("gameGenre").value = game.genre;
-      // Only show external URL in the text box if it isn't a long Base64 data URL
       document.getElementById("gameCover").value = (game.cover && !game.cover.startsWith("data:")) ? game.cover : "";
       document.getElementById("gameDesc").value = game.description;
       document.getElementById("gameFile").value = "";
@@ -1722,7 +1715,7 @@
         const scanResult = await runLiveFileVirusScan();
         if (!scanResult.passed) {
           alert(
-            "⛔ NebulaShield Antivirus Blocked Upload:\n\n" +
+            "⛔ WyrmShield Antivirus Blocked Upload:\n\n" +
             scanResult.threats.join("\n")
           );
           return;
@@ -1743,7 +1736,6 @@
         const description = document.getElementById("gameDesc").value.trim();
         const files = selectedUploadFiles;
 
-        // ALWAYS use the uploaded logo as the game's shop photo if a developer uploaded one!
         if (detectedLogoDataUrl) {
           cover = detectedLogoDataUrl;
         } else if (!cover && existingGame && existingGame.cover) {
