@@ -222,311 +222,172 @@
   </div>
 
   <!-- =================================================================
-       DEVELOPER UPLOAD / CONFIGURE GAME MODAL (.EXE + LOGO + REDIRECT URL)
+       DEVELOPER UPLOAD / CONFIGURE GAME MODAL
+       (FIXED: PINNED HEADER & PINNED FOOTER SO UPLOAD BUTTON NEVER DISAPPEARS)
        ================================================================= -->
-  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-[#160b29] border border-purple-800/70 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h2 id="modalTitle" class="text-lg font-bold text-white">Upload Game, Logo & Website Link</h2>
-        <button onclick="closeUploadModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
+  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-3 sm:p-4">
+    <div class="bg-[#160b29] border border-purple-700/80 rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+
+      <!-- PINNED MODAL HEADER (Always Visible + Quick Publish Button) -->
+      <div class="px-6 py-4 border-b border-purple-900/80 flex justify-between items-center gap-3 shrink-0 bg-[#120822]">
+        <h2 id="modalTitle" class="text-base sm:text-lg font-bold text-white truncate">
+          Upload Game, Logo & Website Redirect
+        </h2>
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            id="topSubmitBtn"
+            type="submit"
+            form="uploadForm"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-md shadow-purple-700/30 transition"
+          >
+            🚀 Publish
+          </button>
+          <button
+            type="button"
+            onclick="closeUploadModal()"
+            class="w-8 h-8 rounded-lg bg-[#22113d] text-purple-300 hover:text-white flex items-center justify-center text-lg"
+          >
+            &times;
+          </button>
+        </div>
       </div>
 
-      <form id="uploadForm" onsubmit="handlePublishGame(event)" class="space-y-4">
-        <input type="hidden" id="editGameId" value="" />
+      <!-- SCROLLABLE FORM BODY -->
+      <form id="uploadForm" onsubmit="handlePublishGame(event)" class="flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div class="p-6 space-y-4 overflow-y-auto flex-1">
+          <input type="hidden" id="editGameId" value="" />
 
-        <div class="grid grid-cols-3 gap-3">
-          <div class="col-span-2">
-            <label class="block text-xs text-purple-300/80 mb-1">Game Title *</label>
-            <input id="gameTitle" required type="text" placeholder="e.g., Cyber Drift 2099" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" />
-          </div>
-          <div>
-            <label class="block text-xs text-purple-300/80 mb-1">Version *</label>
-            <input id="gameVersion" required type="text" placeholder="1.0.0" value="1.0.0" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-purple-300/80 mb-1">Genre</label>
-            <select id="gameGenre" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white">
-              <option>Action / Arcade</option>
-              <option>RPG / Adventure</option>
-              <option>Strategy / Puzzle</option>
-              <option>Sandbox / Sim</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-purple-300/80 mb-1">Fallback Cover URL (If No Logo Uploaded)</label>
-            <input id="gameCover" type="url" placeholder="Uploaded logo overrides this automatically" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white" />
-          </div>
-        </div>
-
-        <!-- NEW: WEBSITE REDIRECT URL INPUT -->
-        <div class="bg-[#0c0517]/90 p-3.5 rounded-xl border border-fuchsia-700/40">
-          <label class="block text-xs font-semibold text-fuchsia-300 mb-1">
-            🌐 Website / Redirect URL (Optional — Let Players Click & Redirect to Website)
-          </label>
-          <input
-            id="gameRedirectUrl"
-            type="text"
-            placeholder="https://your-game-site.com, itch.io, Google Drive, or WebGL link..."
-            class="w-full bg-[#160b29] border border-purple-800/80 rounded-lg px-3 py-2 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-fuchsia-500"
-          />
-          <p class="text-[11px] text-purple-300/60 mt-1">
-            If you enter a URL here, players will see a <strong>🌐 Open Game Website ↗</strong> button on your game card that redirects them straight to this website.
-          </p>
-        </div>
-
-        <div>
-          <label class="block text-xs text-purple-300/80 mb-1">Description & Patch Notes *</label>
-          <textarea id="gameDesc" required rows="3" placeholder="Describe the game or what changed in this update..." class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
-        </div>
-
-        <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL ASSETS -->
-        <div class="space-y-2.5 bg-[#0c0517]/90 p-3.5 rounded-xl border border-purple-900/70">
-          <label class="block text-xs font-semibold text-purple-200">
-            Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) — Or Upload Just a Logo for Web Games
-          </label>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <!-- Option 1: Select .EXE + Logo Files -->
-            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-purple-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE & Logo</span>
-              <span class="text-[10px] text-purple-300/60 mt-0.5">Ctrl+Click your .exe and .ico/.png</span>
-              <input
-                id="gameFile"
-                type="file"
-                multiple
-                accept=".exe,.ico,.png,.jpg,.jpeg,.webp,.svg,.dll,.txt,.json,.wav,.mp3,.cs"
-                onchange="handleFileSelection(this.files)"
-                class="hidden"
-              />
-            </label>
-
-            <!-- Option 2: Select Whole Folder -->
-            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-fuchsia-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-fuchsia-300">📁 Select Game Folder</span>
-              <span class="text-[10px] text-purple-300/60 mt-0.5">Auto-uses folder's logo as shop photo</span>
-              <input
-                id="gameFolder"
-                type="file"
-                webkitdirectory
-                directory
-                multiple
-                onchange="handleFileSelection(this.files)"
-                class="hidden"
-              />
-            </label>
-          </div>
-
-          <!-- LIVE SHOP PHOTO LOGO PREVIEW -->
-          <div id="logoPreviewBox" class="hidden mt-2 p-3 rounded-xl border border-purple-500/40 bg-purple-950/40 flex items-center gap-3">
-            <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-14 h-14 rounded-xl object-contain bg-[#0c0517] border border-purple-700 p-1 shrink-0" />
-            <div class="min-w-0">
-              <div class="text-xs font-bold text-purple-200">✓ Game Logo Set as WYRMTOPIA Shop Photo</div>
-              <div id="logoPreviewName" class="text-[11px] text-purple-300/70 truncate"></div>
-              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in WYRMTOPIA Store.</div>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="col-span-2">
+              <label class="block text-xs text-purple-300/80 mb-1">Game Title *</label>
+              <input id="gameTitle" required type="text" placeholder="e.g., Cyber Drift 2099" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" />
+            </div>
+            <div>
+              <label class="block text-xs text-purple-300/80 mb-1">Version *</label>
+              <input id="gameVersion" required type="text" placeholder="1.0.0" value="1.0.0" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500" />
             </div>
           </div>
 
-          <!-- WYRMSHIELD LIVE VIRUS SCANNER PANEL -->
-          <div id="virusScanPanel" class="hidden mt-2 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span id="virusScanTitle" class="font-semibold text-purple-300 flex items-center gap-1.5">
-                🛡️ WyrmShield PE32 .EXE & Logo Verifier
-              </ext-white shadow-md shadow-purple-900/40">
-            All Store Games
-          </button>
-          <button onclick="setFilter('installed')" id="tab-installed" class="px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50">
-            My Installed Library
-          </button>
-          <button onclick="setFilter('updates')" id="tab-updates" class="px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50 flex items-center gap-2">
-            Updates
-            <span id="updateCountBadge" class="hidden px-2 py-0.5 text-xs rounded-full bg-amber-500 text-slate-950 font-bold">0</span>
-          </button>
-          <!-- Dedicated Developer Studio Page Tab -->
-          <button onclick="setFilter('dev_studio')" id="tab-dev_studio" class="hidden px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-fuchsia-300 border border-purple-600/40 hover:bg-purple-900/50 items-center gap-2">
-            <span>🛠️ Developer Studio (My Games)</span>
-          </button>
-        </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-purple-300/80 mb-1">Genre</label>
+              <select id="gameGenre" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white">
+                <option>Action / Arcade</option>
+                <option>RPG / Adventure</option>
+                <option>Strategy / Puzzle</option>
+                <option>Sandbox / Sim</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-purple-300/80 mb-1">Fallback Cover URL (Optional)</label>
+              <input id="gameCover" type="url" placeholder="Uploaded logo overrides this" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white" />
+            </div>
+          </div>
 
-        <input
-          id="searchInput"
-          type="text"
-          oninput="renderActiveView()"
-          placeholder="Search games or creators..."
-          class="bg-[#140926] border border-purple-900/70 rounded-lg px-4 py-2 text-sm text-white placeholder-purple-400/50 w-64 focus:outline-none focus:border-purple-500"
-        />
-      </div>
-
-      <!-- VIEW A: PLAYER STOREFRONT GRID -->
-      <div id="storefrontSection">
-        <div id="gamesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </div>
-
-      <!-- VIEW B: DEDICATED DEVELOPER STUDIO PAGE -->
-      <div id="devStudioSection" class="hidden space-y-6">
-        <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl">
-          <div>
-            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              🛠️ WYRMTOPIA Developer Studio — .EXE, Logo & Website Redirect Publishing
-            </h2>
-            <p class="text-xs text-purple-300/75 mt-1">
-              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). Upload your <code>.exe</code> and logo, or add a Website Redirect URL so players can open your game link directly.
+          <!-- WEBSITE REDIRECT URL INPUT -->
+          <div class="bg-[#0c0517]/90 p-3.5 rounded-xl border border-fuchsia-700/40">
+            <label class="block text-xs font-semibold text-fuchsia-300 mb-1">
+              🌐 Website / Redirect URL (Optional — Let Players Click & Redirect to Website)
+            </label>
+            <input
+              id="gameRedirectUrl"
+              type="text"
+              placeholder="https://your-game-site.com, itch.io, Google Drive, or WebGL link..."
+              class="w-full bg-[#160b29] border border-purple-800/80 rounded-lg px-3 py-2 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-fuchsia-500"
+            />
+            <p class="text-[11px] text-purple-300/60 mt-1">
+              Players will see an <strong>🌐 Open Game Website / Play ↗</strong> button on your game card that redirects them straight to this URL.
             </p>
           </div>
+
+          <div>
+            <label class="block text-xs text-purple-300/80 mb-1">Description & Patch Notes *</label>
+            <textarea id="gameDesc" required rows="2" placeholder="Describe the game or what changed in this update..." class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+          </div>
+
+          <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL ASSETS -->
+          <div class="space-y-2.5 bg-[#0c0517]/90 p-3.5 rounded-xl border border-purple-900/70">
+            <label class="block text-xs font-semibold text-purple-200">
+              Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>)
+            </label>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <!-- Option 1: Select .EXE + Logo Files -->
+              <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-purple-500 cursor-pointer transition text-center">
+                <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE & Logo</span>
+                <span class="text-[10px] text-purple-300/60 mt-0.5">Ctrl+Click your .exe and .ico/.png</span>
+                <input
+                  id="gameFile"
+                  type="file"
+                  multiple
+                  accept=".exe,.ico,.png,.jpg,.jpeg,.webp,.svg,.dll,.txt,.json,.wav,.mp3,.cs"
+                  onchange="handleFileSelection(this.files)"
+                  class="hidden"
+                />
+              </label>
+
+              <!-- Option 2: Select Whole Folder -->
+              <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-fuchsia-500 cursor-pointer transition text-center">
+                <span class="text-xs font-semibold text-fuchsia-300">📁 Select Game Folder</span>
+                <span class="text-[10px] text-purple-300/60 mt-0.5">Auto-uses folder's logo as shop photo</span>
+                <input
+                  id="gameFolder"
+                  type="file"
+                  webkitdirectory
+                  directory
+                  multiple
+                  onchange="handleFileSelection(this.files)"
+                  class="hidden"
+                />
+              </label>
+            </div>
+
+            <!-- LIVE SHOP PHOTO LOGO PREVIEW -->
+            <div id="logoPreviewBox" class="hidden mt-2 p-2.5 rounded-xl border border-purple-500/40 bg-purple-950/40 flex items-center gap-3">
+              <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-12 h-12 rounded-xl object-contain bg-[#0c0517] border border-purple-700 p-1 shrink-0" />
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-purple-200">✓ Game Logo Set as WYRMTOPIA Shop Photo</div>
+                <div id="logoPreviewName" class="text-[11px] text-purple-300/70 truncate"></div>
+              </div>
+            </div>
+
+            <!-- WYRMSHIELD LIVE VIRUS SCANNER PANEL -->
+            <div id="virusScanPanel" class="hidden mt-2 p-2.5 rounded-xl border border-purple-900/70 bg-[#0c0517] space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span id="virusScanTitle" class="font-semibold text-purple-300 flex items-center gap-1.5">
+                  🛡️ WyrmShield PE32 .EXE & Logo Verifier
+                </span>
+                <span id="virusScanStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase">
+                  Scanning...
+                </span>
+              </div>
+              <div class="w-full h-1.5 bg-purple-950 rounded-full overflow-hidden">
+                <div id="virusScanProgressBar" class="h-full bg-purple-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <div id="selectedFilesList" class="text-[11px] font-mono text-purple-200 space-y-1 pt-1 max-h-28 overflow-y-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PINNED MODAL FOOTER (ALWAYS VISIBLE AT BOTTOM OF POPUP) -->
+        <div class="px-6 py-4 border-t border-purple-900/80 bg-[#120822] flex items-center justify-between gap-3 shrink-0">
           <button
-            onclick="openUploadModal()"
-            class="bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30"
+            type="button"
+            onclick="closeUploadModal()"
+            class="px-4 py-2.5 rounded-xl text-sm font-medium bg-[#22113d] hover:bg-purple-900/70 text-purple-200 transition"
           >
-            + Upload Game / Link
-          </button>
-        </div>
-
-        <!-- Developer Studio Games List -->
-        <div id="devGamesList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-      </div>
-    </main>
-  </div>
-
-  <!-- =================================================================
-       DEVELOPER UPLOAD / CONFIGURE GAME MODAL (.EXE + LOGO + REDIRECT URL)
-       ================================================================= -->
-  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-[#160b29] border border-purple-800/70 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h2 id="modalTitle" class="text-lg font-bold text-white">Upload Game, Logo & Website Link</h2>
-        <button onclick="closeUploadModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
-      </div>
-
-      <form id="uploadForm" onsubmit="handlePublishGame(event)" class="space-y-4">
-        <input type="hidden" id="editGameId" value="" />
-
-        <div class="grid grid-cols-3 gap-3">
-          <div class="col-span-2">
-            <label class="block text-xs text-purple-300/80 mb-1">Game Title *</label>
-            <input id="gameTitle" required type="text" placeholder="e.g., Cyber Drift 2099" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" />
-          </div>
-          <div>
-            <label class="block text-xs text-purple-300/80 mb-1">Version *</label>
-            <input id="gameVersion" required type="text" placeholder="1.0.0" value="1.0.0" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-purple-300/80 mb-1">Genre</label>
-            <select id="gameGenre" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white">
-              <option>Action / Arcade</option>
-              <option>RPG / Adventure</option>
-              <option>Strategy / Puzzle</option>
-              <option>Sandbox / Sim</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-purple-300/80 mb-1">Fallback Cover URL (If No Logo Uploaded)</label>
-            <input id="gameCover" type="url" placeholder="Uploaded logo overrides this automatically" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white" />
-          </div>
-        </div>
-
-        <!-- NEW: WEBSITE REDIRECT URL INPUT -->
-        <div class="bg-[#0c0517]/90 p-3.5 rounded-xl border border-fuchsia-700/40">
-          <label class="block text-xs font-semibold text-fuchsia-300 mb-1">
-            🌐 Website / Redirect URL (Optional — Let Players Click & Redirect to Website)
-          </label>
-          <input
-            id="gameRedirectUrl"
-            type="text"
-            placeholder="https://your-game-site.com, itch.io, Google Drive, or WebGL link..."
-            class="w-full bg-[#160b29] border border-purple-800/80 rounded-lg px-3 py-2 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-fuchsia-500"
-          />
-          <p class="text-[11px] text-purple-300/60 mt-1">
-            If you enter a URL here, players will see a <strong>🌐 Open Game Website ↗</strong> button on your game card that redirects them straight to this website.
-          </p>
-        </div>
-
-        <div>
-          <label class="block text-xs text-purple-300/80 mb-1">Description & Patch Notes *</label>
-          <textarea id="gameDesc" required rows="3" placeholder="Describe the game or what changed in this update..." class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
-        </div>
-
-        <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL ASSETS -->
-        <div class="space-y-2.5 bg-[#0c0517]/90 p-3.5 rounded-xl border border-purple-900/70">
-          <label class="block text-xs font-semibold text-purple-200">
-            Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) — Or Upload Just a Logo for Web Games
-          </label>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <!-- Option 1: Select .EXE + Logo Files -->
-            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-purple-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE & Logo</span>
-              <span class="text-[10px] text-purple-300/60 mt-0.5">Ctrl+Click your .exe and .ico/.png</span>
-              <input
-                id="gameFile"
-                type="file"
-                multiple
-                accept=".exe,.ico,.png,.jpg,.jpeg,.webp,.svg,.dll,.txt,.json,.wav,.mp3,.cs"
-                onchange="handleFileSelection(this.files)"
-                class="hidden"
-              />
-            </label>
-
-            <!-- Option 2: Select Whole Folder -->
-            <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-fuchsia-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-fuchsia-300">📁 Select Game Folder</span>
-              <span class="text-[10px] text-purple-300/60 mt-0.5">Auto-uses folder's logo as shop photo</span>
-              <input
-                id="gameFolder"
-                type="file"
-                webkitdirectory
-                directory
-                multiple
-                onchange="handleFileSelection(this.files)"
-                class="hidden"
-              />
-            </label>
-          </div>
-
-          <!-- LIVE SHOP PHOTO LOGO PREVIEW -->
-          <div id="logoPreviewBox" class="hidden mt-2 p-3 rounded-xl border border-purple-500/40 bg-purple-950/40 flex items-center gap-3">
-            <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-14 h-14 rounded-xl object-contain bg-[#0c0517] border border-purple-700 p-1 shrink-0" />
-            <div class="min-w-0">
-              <div class="text-xs font-bold text-purple-200">✓ Game Logo Set as WYRMTOPIA Shop Photo</div>
-              <div id="logoPreviewName" class="text-[11px] text-purple-300/70 truncate"></div>
-              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in WYRMTOPIA Store.</div>
-            </div>
-          </div>
-
-          <!-- WYRMSHIELD LIVE VIRUS SCANNER PANEL -->
-          <div id="virusScanPanel" class="hidden mt-2 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span id="virusScanTitle" class="font-semibold text-purple-300 flex items-center gap-1.5">
-                🛡️ WyrmShield PE32 .EXE & Logo Verifier
-              </span>
-              <span id="virusScanStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase">
-                Scanning...
-              </span>
-            </div>
-            <div class="w-full h-1.5 bg-purple-950 rounded-full overflow-hidden">
-              <div id="virusScanProgressBar" class="h-full bg-purple-500 transition-all duration-300" style="width: 0%"></div>
-            </div>
-            <div id="selectedFilesList" class="text-[11px] font-mono text-purple-200 space-y-1 pt-1 max-h-40 overflow-y-auto"></div>
-          </div>
-
-          <p id="fileKeepHint" class="text-[11px] text-purple-300/60 leading-relaxed">
-            ✓ <strong>Flexible Publishing:</strong> You can publish a downloadable <code>.exe</code> bundle, an external <strong>Website Redirect URL</strong>, or both together!
-          </p>
-        </div>
-
-        <div class="pt-2 flex justify-end gap-3">
-          <button type="button" onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-sm bg-[#22113d] hover:bg-purple-900/70 text-purple-200">
             Cancel
           </button>
-          <button id="submitBtn" type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-purple-700 hover:bg-purple-600 text-white shadow-lg shadow-purple-700/30">
-            Publish to WYRMTOPIA Store
+          <button
+            id="submitBtn"
+            type="submit"
+            class="flex-1 py-2.5 px-5 rounded-xl text-sm font-bold bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-lg shadow-purple-700/40 transition"
+          >
+            🚀 Upload & Publish to WYRMTOPIA Store
           </button>
         </div>
       </form>
+
     </div>
   </div>
 
@@ -595,12 +456,24 @@
       }
     }
 
-    // Normalizes any user-entered URL so it always starts with https:// or http://
     function normalizeExternalUrl(rawUrl) {
       const trimmed = (rawUrl || "").trim();
       if (!trimmed) return "";
       if (/^https?:\/\//i.test(trimmed)) return trimmed;
       return `https://${trimmed}`;
+    }
+
+    function setSubmitButtonsState(disabled, mainText, topText = "🚀 Publish") {
+      const submitBtn = document.getElementById("submitBtn");
+      const topSubmitBtn = document.getElementById("topSubmitBtn");
+      if (submitBtn) {
+        submitBtn.disabled = disabled;
+        if (mainText) submitBtn.textContent = mainText;
+      }
+      if (topSubmitBtn) {
+        topSubmitBtn.disabled = disabled;
+        if (topText) topSubmitBtn.textContent = topText;
+      }
     }
 
     /********************************************************************
@@ -735,14 +608,13 @@
       const previewEl = document.getElementById("selectedFilesList");
       const statusBadge = document.getElementById("virusScanStatusBadge");
       const progressBar = document.getElementById("virusScanProgressBar");
-      const submitBtn = document.getElementById("submitBtn");
 
       const files = selectedUploadFiles;
       if (files.length === 0) {
         panel.classList.add("hidden");
         previewEl.innerHTML = "";
         lastScanResult = { passed: true, files: [], threats: [] };
-        submitBtn.disabled = false;
+        setSubmitButtonsState(false);
         return lastScanResult;
       }
 
@@ -774,12 +646,12 @@
         statusBadge.textContent = "✓ Verified Clean";
         statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
         progressBar.className = "h-full bg-emerald-500 transition-all duration-300";
-        submitBtn.disabled = false;
+        setSubmitButtonsState(false);
       } else {
         statusBadge.textContent = "⛔ Threat Blocked";
         statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30";
         progressBar.className = "h-full bg-rose-500 transition-all duration-300";
-        submitBtn.disabled = true;
+        setSubmitButtonsState(true);
       }
 
       const skippedNotice = skippedBatCount > 0
@@ -1127,7 +999,6 @@
       });
     }
 
-    // Extracts the developer's configured Website Redirect URL from a game record
     function getGameRedirectUrl(game) {
       if (!game) return "";
       if (game.launcherScript) {
@@ -1141,11 +1012,10 @@
       return "";
     }
 
-    // Checks whether a game has downloadable build files or is a pure Website Redirect entry
     function hasDownloadableBuildFiles(game) {
       if (!game) return true;
       const redirectUrl = getGameRedirectUrl(game);
-      if (!redirectUrl) return true; // Always show download button if no redirect URL exists
+      if (!redirectUrl) return true;
 
       if (game.launcherScript) {
         try {
@@ -1278,7 +1148,6 @@
       };
     }
 
-    // Updates the redirectUrl inside an existing game's launcherScript JSON when no new files were uploaded
     function updateExistingPackageRedirectUrl(existingGame, newTitle, newVersion, newRedirectUrl) {
       const safeName = sanitizeIdentifier(newTitle);
       const cleanRedirect = normalizeExternalUrl(newRedirectUrl);
@@ -1371,10 +1240,7 @@
       const targetUrl = getGameRedirectUrl(game);
       if (!targetUrl) return;
 
-      // Record version in player's library so they also get notified of future updates
       setInstalledVersion(game.id, game.version);
-
-      // Open/redirect to the external website safely
       window.open(targetUrl, "_blank", "noopener,noreferrer");
     }
 
@@ -1706,7 +1572,6 @@
           `
           : `<img src="${photoInfo.url}" alt="${game.title}" class="w-full h-full object-cover" />`;
 
-        // Redirect Button (Shown whenever developer added a Website / Redirect URL)
         const redirectButtonHtml = redirectUrl
           ? `
             <button
@@ -1719,7 +1584,6 @@
           `
           : "";
 
-        // ZIP Download Button (Shown when downloadable files exist or when no redirect URL is set)
         let zipButtonHtml = "";
         if (showZipDownload) {
           const btnStyleClass = redirectUrl
@@ -1749,7 +1613,7 @@
 
         const ownerBadgeOrButton = isOwner
           ? `<button onclick="openConfigureModalForGame('${game.id}')" class="text-xs px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-200 border border-purple-500/30 hover:bg-purple-500/30 whitespace-nowrap font-medium">
-               ⚙️ Configure
+               ⚙️ Configure / Update
              </button>`
           : "";
 
@@ -1928,8 +1792,9 @@
       document.getElementById("logoPreviewBox").classList.add("hidden");
       document.getElementById("virusScanPanel").classList.add("hidden");
       document.getElementById("selectedFilesList").innerHTML = "";
-      document.getElementById("submitBtn").disabled = false;
       document.getElementById("gameVersion").value = "1.0.0";
+      setSubmitButtonsState(false, "🚀 Upload & Publish to WYRMTOPIA Store", "🚀 Publish");
+
       document.getElementById("uploadModal").classList.remove("hidden");
       document.getElementById("uploadModal").classList.add("flex");
     }
@@ -1950,7 +1815,7 @@
       }
       const nextVersion = parts.join(".");
 
-      document.getElementById("modalTitle").textContent = `Configure / Push Update for "${game.title}"`;
+      document.getElementById("modalTitle").textContent = `Push Update for "${game.title}"`;
       document.getElementById("editGameId").value = game.id;
       document.getElementById("gameTitle").value = game.title;
       document.getElementById("gameVersion").value = nextVersion;
@@ -1966,7 +1831,7 @@
       document.getElementById("logoPreviewBox").classList.add("hidden");
       document.getElementById("virusScanPanel").classList.add("hidden");
       document.getElementById("selectedFilesList").innerHTML = "";
-      document.getElementById("submitBtn").disabled = false;
+      setSubmitButtonsState(false, `🚀 Push Update (v${nextVersion}) to Store`, "🚀 Push Update");
 
       document.getElementById("uploadModal").classList.remove("hidden");
       document.getElementById("uploadModal").classList.add("flex");
@@ -1981,9 +1846,7 @@
       e.preventDefault();
       if (!isDeveloperRole()) return;
 
-      const submitBtn = document.getElementById("submitBtn");
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Publishing to Store...";
+      setSubmitButtonsState(true, "Publishing to WYRMTOPIA Store...", "Saving...");
 
       try {
         const scanResult = await runLiveFileVirusScan();
@@ -2073,8 +1936,7 @@
         await saveGameToCatalog(gameObj);
         closeUploadModal();
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Publish to WYRMTOPIA Store";
+        setSubmitButtonsState(false, "🚀 Upload & Publish to WYRMTOPIA Store", "🚀 Publish");
       }
     }
 
