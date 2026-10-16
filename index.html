@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WYRMTOPIA Store — Pure .EXE & Auto-Logo Game Shop</title>
+  <title>WYRMTOPIA Store — Pure .EXE, Auto-Logo & Web Redirect Game Shop</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Supabase Client SDK for Serverless Cloud Sync & HTTPS File Storage -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -24,7 +24,7 @@
         </div>
         <div>
           <h1 class="text-xl font-bold tracking-tight text-white">WYRMTOPIA Store</h1>
-          <p class="text-xs text-purple-300/70">Direct HTTPS Cloud Storage • Auto-Logo Game Shop</p>
+          <p class="text-xs text-purple-300/70">Direct HTTPS Cloud Storage • Web Redirects • Auto-Logo Shop</p>
         </div>
       </div>
 
@@ -75,7 +75,7 @@
               <input type="radio" name="regRole" value="player" checked class="mt-1 accent-purple-600" />
               <div>
                 <div class="text-sm font-semibold text-white">Player</div>
-                <div class="text-xs text-purple-300/70">Browse the store, download game .ZIPs via HTTPS Cloud Storage, and receive updates.</div>
+                <div class="text-xs text-purple-300/70">Browse the store, download game .ZIPs, or launch game websites directly.</div>
               </div>
             </label>
 
@@ -83,7 +83,7 @@
               <input type="radio" name="regRole" value="developer" class="mt-1 accent-purple-600" />
               <div>
                 <div class="text-sm font-semibold text-purple-300">Developer</div>
-                <div class="text-xs text-purple-300/70">Upload your .EXE and Logo (.ico / .png)—your logo automatically becomes the shop photo.</div>
+                <div class="text-xs text-purple-300/70">Upload .EXE + Logo bundles and add external Website / Redirect links.</div>
               </div>
             </label>
 
@@ -123,10 +123,10 @@
                 Supabase Cloud Realtime
               </span>
               <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 font-medium">
-                🛡️ WyrmShield HTTPS Storage
+                🛡️ WyrmShield HTTPS + Web Links
               </span>
             </h1>
-            <p class="text-xs text-purple-300/70">Direct HTTPS Cloud ZIP Hosting • Auto-Logo Shop Cover • Zero Synthetic Shellcode</p>
+            <p class="text-xs text-purple-300/70">Direct HTTPS Cloud ZIPs • Instant Website Redirects • Auto-Logo Shop Cover</p>
           </div>
         </div>
 
@@ -144,7 +144,7 @@
             onclick="openUploadModal()"
             class="hidden bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-purple-700/30"
           >
-            + Upload .EXE & Logo
+            + Upload Game / Link
           </button>
 
           <!-- Logout Button -->
@@ -201,17 +201,17 @@
         <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl">
           <div>
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              🛠️ WYRMTOPIA Developer Studio — Pure .EXE & Auto-Logo Publishing
+              🛠️ WYRMTOPIA Developer Studio — .EXE, Logo & Website Redirect Publishing
             </h2>
             <p class="text-xs text-purple-300/75 mt-1">
-              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). Your uploaded <code>.ZIP</code> is hosted on Supabase HTTPS Storage so browsers download it from a verified cloud domain.
+              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). Upload your <code>.exe</code> and logo, or add a Website Redirect URL so players can open your game link directly.
             </p>
           </div>
           <button
             onclick="openUploadModal()"
             class="bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30"
           >
-            + Upload .EXE & Logo
+            + Upload Game / Link
           </button>
         </div>
 
@@ -222,12 +222,12 @@
   </div>
 
   <!-- =================================================================
-       DEVELOPER UPLOAD / CONFIGURE GAME MODAL (PURE .EXE + AUTO LOGO)
+       DEVELOPER UPLOAD / CONFIGURE GAME MODAL (.EXE + LOGO + REDIRECT URL)
        ================================================================= -->
   <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
     <div class="bg-[#160b29] border border-purple-800/70 rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
-        <h2 id="modalTitle" class="text-lg font-bold text-white">Upload .EXE & Game Logo</h2>
+        <h2 id="modalTitle" class="text-lg font-bold text-white">Upload Game, Logo & Website Link</h2>
         <button onclick="closeUploadModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
       </div>
 
@@ -261,6 +261,22 @@
           </div>
         </div>
 
+        <!-- NEW: WEBSITE REDIRECT URL INPUT -->
+        <div class="bg-[#0c0517]/90 p-3.5 rounded-xl border border-fuchsia-700/40">
+          <label class="block text-xs font-semibold text-fuchsia-300 mb-1">
+            🌐 Website / Redirect URL (Optional — Let Players Click & Redirect to Website)
+          </label>
+          <input
+            id="gameRedirectUrl"
+            type="text"
+            placeholder="https://your-game-site.com, itch.io, Google Drive, or WebGL link..."
+            class="w-full bg-[#160b29] border border-purple-800/80 rounded-lg px-3 py-2 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-fuchsia-500"
+          />
+          <p class="text-[11px] text-purple-300/60 mt-1">
+            If you enter a URL here, players will see a <strong>🌐 Open Game Website ↗</strong> button on your game card that redirects them straight to this website.
+          </p>
+        </div>
+
         <div>
           <label class="block text-xs text-purple-300/80 mb-1">Description & Patch Notes *</label>
           <textarea id="gameDesc" required rows="3" placeholder="Describe the game or what changed in this update..." class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
@@ -269,13 +285,13 @@
         <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL ASSETS -->
         <div class="space-y-2.5 bg-[#0c0517]/90 p-3.5 rounded-xl border border-purple-900/70">
           <label class="block text-xs font-semibold text-purple-200">
-            Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>)
+            Select Your <code>.exe</code> File & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>) — Or Upload Just a Logo for Web Games
           </label>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <!-- Option 1: Select .EXE + Logo Files -->
             <label class="flex flex-col items-center justify-center p-3 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-purple-500 cursor-pointer transition text-center">
-              <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE + Logo</span>
+              <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE & Logo</span>
               <span class="text-[10px] text-purple-300/60 mt-0.5">Ctrl+Click your .exe and .ico/.png</span>
               <input
                 id="gameFile"
@@ -309,7 +325,7 @@
             <div class="min-w-0">
               <div class="text-xs font-bold text-purple-200">✓ Game Logo Set as WYRMTOPIA Shop Photo</div>
               <div id="logoPreviewName" class="text-[11px] text-purple-300/70 truncate"></div>
-              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in WYRMTOPIA Store and bundled in the .ZIP.</div>
+              <div class="text-[10px] text-emerald-400 mt-0.5">This logo will be displayed on your game card in WYRMTOPIA Store.</div>
             </div>
           </div>
 
@@ -330,8 +346,7 @@
           </div>
 
           <p id="fileKeepHint" class="text-[11px] text-purple-300/60 leading-relaxed">
-            ✓ <strong>Supabase HTTPS Cloud Hosting:</strong> Your <code>.ZIP</code> is uploaded directly to your Supabase Storage bucket so Chrome downloads it from a verified HTTPS URL instead of a local <code>blob:</code> link.<br/>
-            ✓ <strong>No Synthetic Shellcode:</strong> Only your real uploaded files are packaged inside the archive.
+            ✓ <strong>Flexible Publishing:</strong> You can publish a downloadable <code>.exe</code> bundle, an external <strong>Website Redirect URL</strong>, or both together!
           </p>
         </div>
 
@@ -340,7 +355,7 @@
             Cancel
           </button>
           <button id="submitBtn" type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-purple-700 hover:bg-purple-600 text-white shadow-lg shadow-purple-700/30">
-            Publish .EXE & Logo
+            Publish to WYRMTOPIA Store
           </button>
         </div>
       </form>
@@ -356,8 +371,8 @@
         <div class="flex items-center gap-2">
           <span class="text-xl">🛡️</span>
           <div>
-            <h3 id="secModalGameTitle" class="text-base font-bold text-white">WyrmShield Pure .EXE Report</h3>
-            <p class="text-xs text-emerald-400 font-medium">Verified Clean • 0 .BAT Scripts • Supabase HTTPS Cloud ZIP</p>
+            <h3 id="secModalGameTitle" class="text-base font-bold text-white">WyrmShield Security & Link Report</h3>
+            <p class="text-xs text-emerald-400 font-medium">Verified Clean • 0 .BAT Scripts • Direct HTTPS & Web Link Ready</p>
           </div>
         </div>
         <button onclick="closeSecurityModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
@@ -410,6 +425,14 @@
           ? "mb-6 p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs leading-relaxed"
           : "mb-6 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs leading-relaxed";
       }
+    }
+
+    // Normalizes any user-entered URL so it always starts with https:// or http://
+    function normalizeExternalUrl(rawUrl) {
+      const trimmed = (rawUrl || "").trim();
+      if (!trimmed) return "";
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      return `https://${trimmed}`;
     }
 
     /********************************************************************
@@ -640,15 +663,25 @@
 
       document.getElementById("secModalGameTitle").textContent = `${game.title} (v${game.version}) — WyrmShield Report`;
       const safeName = sanitizeIdentifier(game.title);
+      const redirectUrl = getGameRedirectUrl(game);
       const bundled = Array.isArray(game.bundledFiles) && game.bundledFiles.length > 0
         ? game.bundledFiles.filter(name => !/\.bat\b|\.cmd\b/i.test(name))
         : [`${safeName}_ReadMe.txt (Clean Bundle)`];
+
+      const redirectReportHtml = redirectUrl
+        ? `<div class="p-3 rounded-xl bg-fuchsia-500/15 border border-fuchsia-500/30 text-fuchsia-200">
+             <div class="font-bold mb-0.5">🌐 External Website Redirect Configured</div>
+             <div class="text-purple-100 text-[11px] break-all">Clicking the website button redirects to: <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="underline text-fuchsia-300">${redirectUrl}</a></div>
+           </div>`
+        : "";
 
       document.getElementById("secModalContent").innerHTML = `
         <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
           <div class="font-bold mb-0.5">✓ 100% .BAT-Free & Zero Synthetic Shellcode</div>
           <div class="text-purple-100 text-[11px]">This archive contains only the developer's verified files with zero <code>.bat</code> scripts or synthetic PE headers.</div>
         </div>
+
+        ${redirectReportHtml}
 
         <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200">
           <div class="font-bold mb-0.5">💡 Why Chrome Prompts on Indie .EXE Games</div>
@@ -885,9 +918,7 @@
     }
 
     /********************************************************************
-     * 4. CLEAN ZIP PACKAGER & SUPABASE HTTPS STORAGE UPLOADER
-     * - NO 1KB synthetic shellcode .EXE generator (prevents Chrome false-positives!)
-     * - Packages only the exact files uploaded by the developer
+     * 4. CLEAN ZIP PACKAGER, REDIRECT URL MANAGER & SUPABASE STORAGE
      ********************************************************************/
     function sanitizeIdentifier(str) {
       return (str || "Game").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
@@ -926,6 +957,40 @@
         reader.onerror = reject;
         reader.readAsArrayBuffer(file);
       });
+    }
+
+    // Extracts the developer's configured Website Redirect URL from a game record
+    function getGameRedirectUrl(game) {
+      if (!game) return "";
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && parsed.redirectUrl) {
+            return normalizeExternalUrl(parsed.redirectUrl);
+          }
+        } catch (_) {}
+      }
+      return "";
+    }
+
+    // Checks whether a game has downloadable build files or is a pure Website Redirect entry
+    function hasDownloadableBuildFiles(game) {
+      if (!game) return true;
+      const redirectUrl = getGameRedirectUrl(game);
+      if (!redirectUrl) return true; // Always show download button if no redirect URL exists
+
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && typeof parsed.hasExecutableOrBuild === "boolean") {
+            return parsed.hasExecutableOrBuild;
+          }
+          if (parsed && Array.isArray(parsed.files)) {
+            return parsed.files.some(f => /\.(exe|dll|zip|cs|py|html)$/i.test(f.name));
+          }
+        } catch (_) {}
+      }
+      return true;
     }
 
     function resolveGameLogoPhoto(game) {
@@ -967,33 +1032,35 @@
       };
     }
 
-    // Clean, non-executable ReadMe fallback when no .exe was uploaded (so Chrome NEVER flags starter/demo games!)
-    function createCleanFallbackFiles(title, version, author, description) {
+    function createCleanFallbackFiles(title, version, author, description, redirectUrl = "") {
       const safeName = sanitizeIdentifier(title);
       const readmeText = [
         `==================================================`,
         `  WYRMTOPIA STORE — ${title} (v${version})`,
         `  Developer: ${author}`,
         `==================================================`,
+        redirectUrl ? `Official Website / Redirect URL: ${redirectUrl}` : ``,
         ``,
         `Description / Patch Notes:`,
         `${description || "No description provided."}`,
         ``,
         `Package Integrity: Verified Clean by WyrmShield.`
-      ].join("\r\n");
+      ].filter(Boolean).join("\r\n");
 
       return [
         {
           name: `${safeName}_ReadMe.txt`,
-          label: `${safeName}_ReadMe.txt (Verified Info)`,
+          label: redirectUrl ? `🌐 Redirect Link + ReadMe` : `${safeName}_ReadMe.txt (Verified Info)`,
           base64: stringToBase64(readmeText)
         }
       ];
     }
 
-    async function buildWebFolderPackage(fileList, title, version, author, description, scanMetaList = []) {
+    async function buildWebFolderPackage(fileList, title, version, author, description, scanMetaList = [], redirectUrl = "") {
       const safeName = sanitizeIdentifier(title);
       const encodedFiles = [];
+      const cleanRedirect = normalizeExternalUrl(redirectUrl);
+      let hasExecutableOrBuild = false;
 
       if (fileList && fileList.length > 0) {
         const filesArr = Array.from(fileList);
@@ -1004,6 +1071,9 @@
           const lower = cleanPath.toLowerCase();
 
           if (lower.endsWith(".bat") || lower.endsWith(".cmd")) continue;
+          if (/\.(exe|dll|zip|cs|py|html)$/i.test(lower)) {
+            hasExecutableOrBuild = true;
+          }
 
           const b64 = await readFileAsBase64(file);
           const hashInfo = scanMetaList[i] ? ` (SHA256: ${scanMetaList[i].shortHash})` : " (SHA256: Verified)";
@@ -1016,20 +1086,63 @@
       }
 
       if (encodedFiles.length === 0) {
-        encodedFiles.push(...createCleanFallbackFiles(title, version, author, description));
+        encodedFiles.push(...createCleanFallbackFiles(title, version, author, description, cleanRedirect));
       }
 
       const folderPayload = {
-        format: "wyrmtopia_clean_v6",
+        format: "wyrmtopia_clean_v7",
         folderName: safeName,
         version: version,
+        redirectUrl: cleanRedirect,
+        hasExecutableOrBuild: hasExecutableOrBuild,
         files: encodedFiles.map(f => ({ name: f.name, base64: f.base64 }))
       };
+
+      const bundledLabels = encodedFiles.map(f => f.label);
+      if (cleanRedirect) {
+        bundledLabels.unshift(`🌐 Web Link (${cleanRedirect})`);
+      }
 
       return {
         archiveFileName: `${safeName}_v${version}.zip`,
         launcherScript: JSON.stringify(folderPayload),
-        bundledFiles: encodedFiles.map(f => f.label)
+        bundledFiles: bundledLabels
+      };
+    }
+
+    // Updates the redirectUrl inside an existing game's launcherScript JSON when no new files were uploaded
+    function updateExistingPackageRedirectUrl(existingGame, newTitle, newVersion, newRedirectUrl) {
+      const safeName = sanitizeIdentifier(newTitle);
+      const cleanRedirect = normalizeExternalUrl(newRedirectUrl);
+
+      let parsed = null;
+      try {
+        parsed = JSON.parse(existingGame.launcherScript);
+      } catch (_) {}
+
+      if (parsed && Array.isArray(parsed.files)) {
+        parsed.folderName = safeName;
+        parsed.version = newVersion;
+        parsed.redirectUrl = cleanRedirect;
+
+        const baseBundled = Array.isArray(existingGame.bundledFiles)
+          ? existingGame.bundledFiles.filter(label => !label.startsWith("🌐 Web Link"))
+          : [];
+        if (cleanRedirect) {
+          baseBundled.unshift(`🌐 Web Link (${cleanRedirect})`);
+        }
+
+        return {
+          archiveFileName: `${safeName}_v${newVersion}.zip`,
+          launcherScript: JSON.stringify(parsed),
+          bundledFiles: baseBundled
+        };
+      }
+
+      return {
+        archiveFileName: `${safeName}_v${newVersion}.zip`,
+        launcherScript: existingGame.launcherScript,
+        bundledFiles: existingGame.bundledFiles
       };
     }
 
@@ -1039,7 +1152,6 @@
         try {
           const parsed = JSON.parse(game.launcherScript);
           if (parsed && Array.isArray(parsed.files)) {
-            // Strip any .bat, .cmd, or old 1,024-byte synthetic PE32 files (base64 length == 1368) that triggered Chrome
             const cleanFiles = parsed.files.filter(f => {
               const lower = f.name.toLowerCase();
               if (lower.endsWith(".bat") || lower.endsWith(".cmd")) return false;
@@ -1057,7 +1169,7 @@
         } catch (_) {}
       }
 
-      const fallbackFiles = createCleanFallbackFiles(game.title, game.version, game.author, game.description);
+      const fallbackFiles = createCleanFallbackFiles(game.title, game.version, game.author, game.description, getGameRedirectUrl(game));
       return {
         folderName: safeName,
         files: fallbackFiles.map(f => ({ name: f.name, base64: f.base64 }))
@@ -1082,18 +1194,28 @@
     }
 
     /********************************************************************
-     * 5. HTTPS CLOUD ZIP DOWNLOADER (AVOIDS BLOB: URL BLOCKS WHEN POSSIBLE)
+     * 5. WEBSITE REDIRECT HANDLER & HTTPS CLOUD ZIP DOWNLOADER
      ********************************************************************/
+    function openGameRedirectWebsite(gameId) {
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      const targetUrl = getGameRedirectUrl(game);
+      if (!targetUrl) return;
+
+      // Record version in player's library so they also get notified of future updates
+      setInstalledVersion(game.id, game.version);
+
+      // Open/redirect to the external website safely
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    }
+
     async function downloadGameFolderZip(gameId) {
       const game = gamesCatalog.find(g => g.id === gameId);
       if (!game) return;
 
-      const installedLib = getInstalledLibrary();
-      const wasInstalled = Boolean(installedLib[game.id]);
-      const prevVersion = wasInstalled ? installedLib[game.id].installedVersion : null;
       const safeName = sanitizeIdentifier(game.title);
 
-      // Prefer real HTTPS Supabase Cloud URL if available (reduces Chrome blob: suspicion)
       if (game.fileUrl && game.fileUrl.startsWith("https://")) {
         const link = document.createElement("a");
         link.href = `${game.fileUrl}?download=${encodeURIComponent(game.fileName || safeName + ".zip")}`;
@@ -1115,7 +1237,7 @@
 
       showStatusBanner(
         `<strong>✓ Downloading <code>${safeName}.zip</code> (v${game.version})!</strong><br/>` +
-        `💡 <strong>If Chrome says "Suspicious download blocked" or "Uncommonly downloaded":</strong> Chrome shows this for all new indie <code>.exe</code> games that don't have a paid Microsoft certificate. Press <strong>Ctrl + J</strong> in Chrome (or click the top-right Downloads icon), click the <strong>three dots (⋮)</strong> on the file, and select <strong>Download suspicious file / Keep anyway</strong>.`,
+        `💡 <strong>If Chrome says "Suspicious download blocked" or "Uncommonly downloaded":</strong> Chrome shows this for all new indie <code>.exe</code> games without a paid Microsoft certificate. Press <strong>Ctrl + J</strong> in Chrome, click the <strong>three dots (⋮)</strong> on the file, and select <strong>Download suspicious file / Keep anyway</strong>.`,
         true
       );
     }
@@ -1149,7 +1271,7 @@
       ];
 
       for (const g of baseCatalog) {
-        const pkg = await buildWebFolderPackage([], g.title, g.version, g.author, g.description);
+        const pkg = await buildWebFolderPackage([], g.title, g.version, g.author, g.description, [], "");
         g.launcherScript = pkg.launcherScript;
         g.fileName = pkg.archiveFileName;
         g.bundledFiles = pkg.bundledFiles;
@@ -1222,7 +1344,6 @@
 
     async function saveGameToCatalog(gameObj) {
       if (useCloudSupabase) {
-        // Upload the actual .ZIP file to Supabase HTTPS Storage so Chrome downloads from a real HTTPS URL instead of a blob: URL
         try {
           const { zipBlob } = await createZipBlobFromGame(gameObj);
           const storagePath = `${gameObj.id}/${gameObj.fileName || sanitizeIdentifier(gameObj.title) + ".zip"}`;
@@ -1405,6 +1526,8 @@
 
         const bundledList = getCleanBundledFilesLabel(game);
         const photoInfo = resolveGameLogoPhoto(game);
+        const redirectUrl = getGameRedirectUrl(game);
+        const showZipDownload = hasDownloadableBuildFiles(game);
 
         const cardPhotoHtml = photoInfo.isCustomLogo
           ? `
@@ -1415,25 +1538,45 @@
           `
           : `<img src="${photoInfo.url}" alt="${game.title}" class="w-full h-full object-cover" />`;
 
-        let actionButtonHtml = "";
-        if (!isInstalled) {
-          actionButtonHtml = `
-            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-purple-700 hover:bg-purple-600 text-white transition flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30">
-              <span>📦 Download Game .ZIP (v${game.version})</span>
+        // Redirect Button (Shown whenever developer added a Website / Redirect URL)
+        const redirectButtonHtml = redirectUrl
+          ? `
+            <button
+              onclick="openGameRedirectWebsite('${game.id}')"
+              title="${redirectUrl}"
+              class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white transition flex items-center justify-center gap-2 shadow-lg shadow-fuchsia-700/25"
+            >
+              <span>🌐 Open Game Website / Play ↗</span>
             </button>
-          `;
-        } else if (hasUpdate) {
-          actionButtonHtml = `
-            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
-              <span>🔄 Download Update .ZIP (v${localEntry.installedVersion} → v${game.version})</span>
-            </button>
-          `;
-        } else {
-          actionButtonHtml = `
-            <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition flex items-center justify-center gap-2">
-              <span>✓ Installed (v${game.version}) — Download .ZIP Again</span>
-            </button>
-          `;
+          `
+          : "";
+
+        // ZIP Download Button (Shown when downloadable files exist or when no redirect URL is set)
+        let zipButtonHtml = "";
+        if (showZipDownload) {
+          const btnStyleClass = redirectUrl
+            ? "w-full py-2 px-3 rounded-xl font-semibold text-xs bg-[#22113d] hover:bg-purple-900/80 text-purple-200 border border-purple-700/60 transition flex items-center justify-center gap-2"
+            : "w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-purple-700 hover:bg-purple-600 text-white transition flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30";
+
+          if (!isInstalled) {
+            zipButtonHtml = `
+              <button onclick="downloadGameFolderZip('${game.id}')" class="${btnStyleClass}">
+                <span>📦 Download Game .ZIP (v${game.version})</span>
+              </button>
+            `;
+          } else if (hasUpdate) {
+            zipButtonHtml = `
+              <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                <span>🔄 Download Update .ZIP (v${localEntry.installedVersion} → v${game.version})</span>
+              </button>
+            `;
+          } else {
+            zipButtonHtml = `
+              <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2 px-4 rounded-xl font-semibold text-xs bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition flex items-center justify-center gap-2">
+                <span>✓ Installed (v${game.version}) — Download .ZIP Again</span>
+              </button>
+            `;
+          }
         }
 
         const ownerBadgeOrButton = isOwner
@@ -1469,17 +1612,18 @@
                 <p class="text-xs text-purple-300/70 mb-2">
                   By <span class="text-purple-200 font-medium">${game.author}</span>
                   <span class="text-purple-700 mx-1">•</span>
-                  <span class="text-purple-300/70">${game.fileSize || "ZIP Bundle"}</span>
+                  <span class="text-purple-300/70">${game.fileSize || "ZIP / Web Link"}</span>
                 </p>
                 <p class="text-xs text-purple-100/80 leading-relaxed line-clamp-3 mb-3">${game.description}</p>
                 <div class="bg-[#0c0517] border border-purple-900/70 rounded-lg px-2.5 py-1.5 text-[11px] text-purple-300/80 font-mono truncate" title="${bundledList}">
-                  📦 Inside ZIP: ${bundledList}
+                  📦 Content: ${bundledList}
                 </div>
               </div>
             </div>
 
-            <div class="p-5 pt-0">
-              ${actionButtonHtml}
+            <div class="p-5 pt-0 space-y-2">
+              ${redirectButtonHtml}
+              ${zipButtonHtml}
             </div>
           </div>
         `;
@@ -1503,9 +1647,9 @@
         listEl.innerHTML = `
           <div class="col-span-full text-center py-16 bg-[#160b29]/70 border border-purple-900/70 rounded-2xl p-6">
             <p class="text-white font-semibold text-base mb-1">You haven't uploaded any games yet</p>
-            <p class="text-purple-300/70 text-xs mb-5">Click "+ Upload .EXE & Logo" to publish your compiled .exe and logo—your logo will automatically become the game's shop photo.</p>
+            <p class="text-purple-300/70 text-xs mb-5">Click "+ Upload Game / Link" to publish an .exe bundle, logo, or Website Redirect URL.</p>
             <button onclick="openUploadModal()" class="bg-purple-700 hover:bg-purple-600 text-white transition px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30">
-              + Upload Your First .EXE Game
+              + Upload Your First Game
             </button>
           </div>
         `;
@@ -1515,7 +1659,17 @@
       listEl.innerHTML = myGames.map(game => {
         const bundledList = getCleanBundledFilesLabel(game);
         const photoInfo = resolveGameLogoPhoto(game);
+        const redirectUrl = getGameRedirectUrl(game);
         const imgFitClass = photoInfo.isCustomLogo ? "object-contain p-2 bg-[#0c0517] border border-purple-900/70" : "object-cover bg-[#0c0517]";
+
+        const testLinkBtn = redirectUrl
+          ? `<button
+               onclick="openGameRedirectWebsite('${game.id}')"
+               class="py-2 px-3 rounded-lg bg-fuchsia-700/30 hover:bg-fuchsia-700/50 text-fuchsia-200 border border-fuchsia-500/40 text-xs font-semibold transition"
+             >
+               🌐 Test Link ↗
+             </button>`
+          : "";
 
         return `
           <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-5 flex flex-col justify-between gap-4 shadow-xl">
@@ -1532,7 +1686,7 @@
                       v${game.version}
                     </span>
                     <button onclick="openSecurityModal('${game.id}')" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                      🛡️ HTTPS Cloud ZIP
+                      🛡️ Verified
                     </button>
                   </div>
                   <span class="text-xs text-purple-300/70">${game.genre}</span>
@@ -1540,7 +1694,7 @@
                 <h3 class="text-base font-bold text-white mt-1 truncate">${game.title}</h3>
                 <p class="text-xs text-purple-100/80 mt-1 line-clamp-2">${game.description}</p>
                 <div class="mt-2 text-[11px] text-purple-300/70 font-mono truncate">
-                  📦 Inside ZIP: ${bundledList}
+                  📦 Content: ${bundledList}
                 </div>
               </div>
             </div>
@@ -1552,6 +1706,7 @@
               >
                 ⚙️ Configure & Push Update
               </button>
+              ${testLinkBtn}
               <button
                 onclick="downloadGameFolderZip('${game.id}')"
                 class="py-2 px-3 rounded-lg bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold transition"
@@ -1595,9 +1750,10 @@
         alert("Only Developer accounts can upload games.");
         return;
       }
-      document.getElementById("modalTitle").textContent = "Upload .EXE & Logo (Logo Becomes Shop Photo)";
+      document.getElementById("modalTitle").textContent = "Upload Game, Logo & Website Redirect";
       document.getElementById("editGameId").value = "";
       document.getElementById("uploadForm").reset();
+      document.getElementById("gameRedirectUrl").value = "";
       selectedUploadFiles = [];
       detectedLogoDataUrl = null;
       detectedLogoFileName = null;
@@ -1632,6 +1788,7 @@
       document.getElementById("gameVersion").value = nextVersion;
       document.getElementById("gameGenre").value = game.genre;
       document.getElementById("gameCover").value = (game.cover && !game.cover.startsWith("data:")) ? game.cover : "";
+      document.getElementById("gameRedirectUrl").value = getGameRedirectUrl(game);
       document.getElementById("gameDesc").value = game.description;
       document.getElementById("gameFile").value = "";
       document.getElementById("gameFolder").value = "";
@@ -1658,7 +1815,7 @@
 
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = true;
-      submitBtn.textContent = "Uploading HTTPS .ZIP...";
+      submitBtn.textContent = "Publishing to Store...";
 
       try {
         const scanResult = await runLiveFileVirusScan();
@@ -1682,6 +1839,7 @@
         const version = document.getElementById("gameVersion").value.trim();
         const genre = document.getElementById("gameGenre").value;
         let cover = document.getElementById("gameCover").value.trim();
+        const redirectUrl = normalizeExternalUrl(document.getElementById("gameRedirectUrl").value);
         const description = document.getElementById("gameDesc").value.trim();
         const files = selectedUploadFiles;
 
@@ -1697,15 +1855,22 @@
         let fileSize;
 
         if (existingGame && files.length === 0 && existingGame.launcherScript) {
-          archiveFileName = `${sanitizeIdentifier(title)}_v${version}.zip`;
-          launcherScript = existingGame.launcherScript;
-          bundledFiles = existingGame.bundledFiles;
-          fileSize = existingGame.fileSize || "HTTPS .ZIP Bundle";
+          const updatedPkg = updateExistingPackageRedirectUrl(existingGame, title, version, redirectUrl);
+          archiveFileName = updatedPkg.archiveFileName;
+          launcherScript = updatedPkg.launcherScript;
+          bundledFiles = updatedPkg.bundledFiles;
+          fileSize = existingGame.fileSize || (redirectUrl ? "Website Link + Bundle" : "HTTPS .ZIP Bundle");
         } else {
           const totalBytes = files.reduce((acc, f) => acc + f.size, 0);
-          fileSize = files.length > 0
-            ? `HTTPS .ZIP • ${files.length} file(s) (${(totalBytes / 1024).toFixed(1)} KB)`
-            : "Verified .ZIP Bundle";
+          if (files.length > 0 && redirectUrl) {
+            fileSize = `Web Link + .ZIP (${(totalBytes / 1024).toFixed(1)} KB)`;
+          } else if (files.length > 0) {
+            fileSize = `HTTPS .ZIP • ${files.length} file(s) (${(totalBytes / 1024).toFixed(1)} KB)`;
+          } else if (redirectUrl) {
+            fileSize = "🌐 Direct Website Redirect";
+          } else {
+            fileSize = "Verified .ZIP Bundle";
+          }
 
           const pkg = await buildWebFolderPackage(
             files,
@@ -1713,7 +1878,8 @@
             version,
             currentUser.username,
             description,
-            scanResult.files
+            scanResult.files,
+            redirectUrl
           );
           archiveFileName = pkg.archiveFileName;
           launcherScript = pkg.launcherScript;
@@ -1740,7 +1906,7 @@
         closeUploadModal();
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Publish .EXE & Logo";
+        submitBtn.textContent = "Publish to WYRMTOPIA Store";
       }
     }
 
