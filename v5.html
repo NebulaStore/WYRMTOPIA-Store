@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WYRMTOPIA Store — Desktop App, In-Store Player & Game Shop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase Client SDK for Serverless Cloud Sync & HTTPS File Storage -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- JSZip for packaging .exe + .ico logo + assets -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body class="bg-[#0b0514] text-purple-50 min-h-screen font-sans selection:bg-purple-600 selection:text-white">
+
+  <!-- =================================================================
+       AUTHENTICATION VIEW (LOGIN & REGISTER PAGE)
+       ================================================================= -->
+  <section id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/35 via-[#0b0514] to-[#0b0514]">
+    <div class="max-w-md w-full bg-[#160b29] border border-purple-900/70 rounded-2xl p-7 shadow-2xl shadow-purple-950/60">
+      <!-- Brand Header -->
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-800 flex items-center justify-center font-extrabold text-xl text-white shadow-lg shadow-purple-600/30 border border-purple-400/20">
+            W
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-white">WYRMTOPIA Store</h1>
+            <p class="text-xs text-purple-300/70">Play in Store • Desktop App • Auto-Logo Shop</p>
+          </div>
+        </div>
+
+        <!-- Quick Desktop App Button on Login Screen -->
+        <button
+          type="button"
+          onclick="downloadDesktopLauncherExe()"
+          class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-md shadow-emerald-700/30 shrink-0"
+          title="Download WyrmtopiaStore.exe Desktop Launcher"
+        >
+          💻 Desktop .EXE
+        </button>
+      </div>
+
+      <!-- Mode Switcher Tabs -->
+      <div class="grid grid-cols-2 gap-2 p-1 bg-[#0c0517] rounded-xl border border-purple-900/70 mb-6">
+        <button id="authTabLogin" type="button" onclick="switchAuthMode('login')" class="py-2 rounded-lg text-sm font-semibold bg-purple-700 text-white transition shadow-md shadow-purple-900/40">
+          Sign In
+        </button>
+        <button id="authTabRegister" type="button" onclick="switchAuthMode('register')" class="py-2 rounded-lg text-sm font-semibold text-purple-300/70 hover:text-white transition">
+          Register Account
+        </button>
+      </div>
+
+      <!-- Auth Error / Info Alert -->
+      <div id="authMessage" class="hidden mb-4 p-3 rounded-lg text-xs font-medium"></div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-purple-300/80 mb-1">Username</label>
+          <input id="loginUsername" required type="text" placeholder="Enter your username" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label class="block text-xs text-purple-300/80 mb-1">Password</label>
+          <input id="loginPassword" required type="password" placeholder="Enter your password" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
+        </div>
+        <button id="loginSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-600 transition font-semibold text-sm text-white shadow-lg shadow-purple-700/30">
+          Sign In to WYRMTOPIA Store
+        </button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs text-purple-300/80 mb-1">Choose a Username *</label>
+          <input id="regUsername" required type="text" placeholder="e.g., wyrm_dev or gamer_max" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label class="block text-xs text-purple-300/80 mb-1">Create Password *</label>
+          <input id="regPassword" required type="password" minlength="3" placeholder="At least 3 characters" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-purple-500" />
+        </div>
+
+        <!-- Role Selector -->
+        <div>
+          <label class="block text-xs text-purple-300/80 mb-2">Select Account Type *</label>
+          <div class="space-y-2">
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] cursor-pointer hover:border-purple-500/70 transition">
+              <input type="radio" name="regRole" value="player" checked class="mt-1 accent-purple-600" />
+              <div>
+                <div class="text-sm font-semibold text-white">Player</div>
+                <div class="text-xs text-purple-300/70">Play web games inside the store, open external links, or download .EXE .ZIPs.</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] cursor-pointer hover:border-purple-500/70 transition">
+              <input type="radio" name="regRole" value="developer" class="mt-1 accent-purple-600" />
+              <div>
+                <div class="text-sm font-semibold text-purple-300">Developer</div>
+                <div class="text-xs text-purple-300/70">Upload .EXE + Logo bundles, HTML5 games, and Website Redirect links.</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-purple-900/70 bg-[#0c0517] cursor-pointer hover:border-purple-500/70 transition">
+              <input type="radio" name="regRole" value="both" class="mt-1 accent-purple-600" />
+              <div>
+                <div class="text-sm font-semibold text-fuchsia-300">Both (Player & Developer)</div>
+                <div class="text-xs text-purple-300/70">Full access to play/download games and publish/configure your own games.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button id="regSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-600 transition font-semibold text-sm text-white shadow-lg shadow-purple-700/30">
+          Create Account & Enter Store
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MAIN APPLICATION VIEW (STOREFRONT + DEVELOPER STUDIO)
+       ================================================================= -->
+  <div id="appScreen" class="hidden min-h-screen flex flex-col">
+
+    <!-- Top Navigation -->
+    <header class="border-b border-purple-900/60 bg-[#120822]/90 backdrop-blur sticky top-0 z-30">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-600 to-fuchsia-800 flex items-center justify-center font-extrabold text-lg text-white shadow-lg shadow-purple-600/30 border border-purple-400/20">
+            W
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+              WYRMTOPIA Store
+              <span id="syncBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">
+                Supabase Cloud Realtime
+              </span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 font-medium">
+                🎮 Play in Store + Desktop App
+              </span>
+            </h1>
+            <p class="text-xs text-purple-300/70">Play Web Games in Fullscreen Modal • Zero-Block Desktop Launcher • Auto-Logo Cover</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Logged-In User Badge -->
+          <div class="flex items-center gap-2 bg-[#1b0d33] px-3 py-1.5 rounded-xl border border-purple-800/70 text-xs">
+            <span class="text-purple-300/70">Signed in as:</span>
+            <span id="currentUserDisplay" class="font-bold text-white"></span>
+            <span id="currentRoleBadge" class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider"></span>
+          </div>
+
+          <!-- Desktop Launcher .EXE Download Button -->
+          <button
+            type="button"
+            onclick="downloadDesktopLauncherExe()"
+            class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold shadow-lg shadow-emerald-700/30 flex items-center gap-1.5"
+          >
+            <span>💻 Get Desktop App (.EXE)</span>
+          </button>
+
+          <!-- Developer-Only Upload Button -->
+          <button
+            id="headerUploadBtn"
+            onclick="openUploadModal()"
+            class="hidden bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-lg shadow-purple-700/30"
+          >
+            + Upload Game / Link
+          </button>
+
+          <!-- Logout Button -->
+          <button
+            onclick="handleLogout()"
+            class="bg-[#1b0d33] hover:bg-purple-900/60 text-purple-200 transition px-3.5 py-2 rounded-lg text-xs font-semibold border border-purple-800/70"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-8 flex-1 w-full">
+      <!-- Cloud Status / Notification Banner -->
+      <div id="statusBanner" class="hidden mb-6 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs leading-relaxed"></div>
+
+      <!-- Navigation Tabs & Search -->
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setFilter('all')" id="tab-all" class="px-4 py-2 rounded-lg text-sm font-medium bg-purple-700 text-white shadow-md shadow-purple-900/40">
+            All Store Games
+          </button>
+          <button onclick="setFilter('installed')" id="tab-installed" class="px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50">
+            My Installed Library
+          </button>
+          <button onclick="setFilter('updates')" id="tab-updates" class="px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50 flex items-center gap-2">
+            Updates
+            <span id="updateCountBadge" class="hidden px-2 py-0.5 text-xs rounded-full bg-amber-500 text-slate-950 font-bold">0</span>
+          </button>
+          <!-- Dedicated Developer Studio Page Tab -->
+          <button onclick="setFilter('dev_studio')" id="tab-dev_studio" class="hidden px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-fuchsia-300 border border-purple-600/40 hover:bg-purple-900/50 items-center gap-2">
+            <span>🛠️ Developer Studio (My Games)</span>
+          </button>
+        </div>
+
+        <input
+          id="searchInput"
+          type="text"
+          oninput="renderActiveView()"
+          placeholder="Search games or creators..."
+          class="bg-[#140926] border border-purple-900/70 rounded-lg px-4 py-2 text-sm text-white placeholder-purple-400/50 w-64 focus:outline-none focus:border-purple-500"
+        />
+      </div>
+
+      <!-- VIEW A: PLAYER STOREFRONT GRID -->
+      <div id="storefrontSection">
+        <div id="gamesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+
+      <!-- VIEW B: DEDICATED DEVELOPER STUDIO PAGE -->
+      <div id="devStudioSection" class="hidden space-y-6">
+        <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              🛠️ WYRMTOPIA Developer Studio — .EXE, Logo & In-Store Web Game Publishing
+            </h2>
+            <p class="text-xs text-purple-300/75 mt-1">
+              Manage the games published under your developer account (<span id="studioOwnerName" class="text-fuchsia-300 font-semibold"></span>). Add a Website Redirect URL or upload an <code>.html</code> file so players can either <strong>Play in Store</strong> or open the website in a new tab.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button
+              onclick="openLauncherModalOnly()"
+              class="bg-emerald-700/40 hover:bg-emerald-700/60 border border-emerald-500/40 text-emerald-200 transition px-3.5 py-2.5 rounded-xl text-xs font-semibold"
+            >
+              💻 Manage Desktop App .EXE
+            </button>
+            <button
+              onclick="openUploadModal()"
+              class="bg-purple-700 hover:bg-purple-600 text-white transition px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30"
+            >
+              + Upload Game / Link
+            </button>
+          </div>
+        </div>
+
+        <!-- Developer Studio Games List -->
+        <div id="devGamesList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- =================================================================
+       PLAY IN STORE FULLSCREEN IFRAME MODAL
+       ================================================================= -->
+  <div id="playInStoreModal" class="fixed inset-0 bg-[#07030d]/95 backdrop-blur-md hidden flex-col z-50">
+    <!-- Top Arcade Control Bar -->
+    <div class="bg-[#120822] border-b border-purple-800/80 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-fuchsia-600 to-purple-700 flex items-center justify-center font-bold text-sm text-white shrink-0 shadow">
+          🎮
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <h3 id="inStorePlayerTitle" class="text-sm sm:text-base font-bold text-white truncate">Playing Game</h3>
+            <span id="inStorePlayerVersion" class="text-[11px] px-2 py-0.5 rounded bg-purple-600/30 text-purple-200 font-mono font-semibold border border-purple-500/30">
+              v1.0.0
+            </span>
+          </div>
+          <p class="text-[11px] text-purple-300/70 truncate">
+            If an external site refuses to embed inside this frame, click <strong>Open in New Tab ↗</strong> on the right.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onclick="reloadInStoreGame()"
+          class="px-3 py-1.5 rounded-lg bg-[#22113d] hover:bg-purple-900/80 text-purple-200 border border-purple-700/60 text-xs font-semibold transition"
+          title="Reload Game"
+        >
+          🔄 Reload
+        </button>
+        <button
+          type="button"
+          onclick="toggleInStoreFullscreen()"
+          class="px-3 py-1.5 rounded-lg bg-purple-700/40 hover:bg-purple-700/70 text-purple-100 border border-purple-500/50 text-xs font-semibold transition"
+          title="Toggle Fullscreen"
+        >
+          ⛶ Fullscreen
+        </button>
+        <button
+          id="inStoreNewTabBtn"
+          type="button"
+          onclick="openCurrentInStoreGameNewTab()"
+          class="px-3 py-1.5 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-semibold transition shadow-md shadow-fuchsia-700/30"
+        >
+          🌐 Open in New Tab ↗
+        </button>
+        <button
+          type="button"
+          onclick="closePlayInStoreModal()"
+          class="px-3 py-1.5 rounded-lg bg-rose-600/25 hover:bg-rose-600/40 text-rose-200 border border-rose-500/40 text-xs font-bold transition"
+        >
+          ✕ Quit Game
+        </button>
+      </div>
+    </div>
+
+    <!-- Interactive Game Iframe Container -->
+    <div id="inStoreStageContainer" class="flex-1 w-full bg-black relative overflow-hidden">
+      <iframe
+        id="inStoreGameIframe"
+        src="about:blank"
+        class="w-full h-full border-0"
+        allow="autoplay; fullscreen; gamepad; pointer-lock; clipboard-read; clipboard-write"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       DESKTOP LAUNCHER (.EXE) DOWNLOAD & SETUP MODAL
+       ================================================================= -->
+  <div id="launcherDownloadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-[#160b29] border border-emerald-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          💻 WYRMTOPIA Desktop App (WyrmtopiaStore.exe)
+        </h3>
+        <button onclick="closeLauncherModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
+      </div>
+
+      <p class="text-xs text-purple-200 leading-relaxed mb-4">
+        With the <strong>WYRMTOPIA Desktop App</strong> installed, every game and update you download inside the app installs, updates shortcuts in-place, and launches with <strong>zero browser or Windows SmartScreen blocks</strong>!
+      </p>
+
+      <div class="bg-[#0c0517] border border-purple-900/80 rounded-xl p-3.5 space-y-2 text-xs text-purple-100 mb-4">
+        <div class="font-bold text-emerald-400">First-Time Setup (One Time Only):</div>
+        <div>1. Open <code>WyrmtopiaStore.exe</code> from your Downloads folder.</div>
+        <div>2. If Chrome prompts on download, press <strong>Ctrl + J</strong> and click <strong>Keep anyway</strong>.</div>
+        <div>3. If Windows shows a blue box, click <strong>More info</strong> → <strong>Run anyway</strong>.</div>
+        <div>4. All games downloaded inside the Desktop App will run cleanly with zero popups!</div>
+      </div>
+
+      <!-- Developer-Only Box: Upload compiled WyrmtopiaStore.exe directly to Supabase Cloud Storage -->
+      <div id="devLauncherUploadBox" class="hidden mb-4 p-3.5 rounded-xl bg-purple-950/40 border border-purple-700/60 space-y-2">
+        <div class="text-xs font-bold text-fuchsia-300">🛠️ Developer: Host WyrmtopiaStore.exe on Supabase</div>
+        <p class="text-[11px] text-purple-300/80">
+          Select your compiled <code>WyrmtopiaStore.exe</code> file below to upload it to your Supabase <code>game-builds</code> bucket so the download button serves it directly:
+        </p>
+        <input
+          id="launcherExeFileInput"
+          type="file"
+          accept=".exe,.zip"
+          onchange="uploadDesktopLauncherToSupabase(this.files)"
+          class="w-full text-xs text-purple-200 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600/30 file:text-emerald-200 hover:file:bg-emerald-600/50 cursor-pointer"
+        />
+        <div id="launcherUploadStatus" class="text-[11px] text-emerald-300 font-mono"></div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onclick="triggerDirectLauncherDownload()"
+          class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-700/30 transition"
+        >
+          ⬇ Download WyrmtopiaStore.exe Again
+        </button>
+        <button
+          type="button"
+          onclick="closeLauncherModal()"
+          class="px-4 py-2.5 rounded-xl bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold transition"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       DEVELOPER UPLOAD / CONFIGURE GAME MODAL
+       (PINNED HEADER & PINNED FOOTER SO UPLOAD BUTTON NEVER DISAPPEARS)
+       ================================================================= -->
+  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-3 sm:p-4">
+    <div class="bg-[#160b29] border border-purple-700/80 rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+
+      <!-- PINNED MODAL HEADER -->
+      <div class="px-6 py-4 border-b border-purple-900/80 flex justify-between items-center gap-3 shrink-0 bg-[#120822]">
+        <h2 id="modalTitle" class="text-base sm:text-lg font-bold text-white truncate">
+          Upload Game, Logo & Website Redirect
+        </h2>
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            id="topSubmitBtn"
+            type="submit"
+            form="uploadForm"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-md shadow-purple-700/30 transition"
+          >
+            🚀 Publish
+          </button>
+          <button
+            type="button"
+            onclick="closeUploadModal()"
+            class="w-8 h-8 rounded-lg bg-[#22113d] text-purple-300 hover:text-white flex items-center justify-center text-lg"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- SCROLLABLE FORM BODY -->
+      <form id="uploadForm" onsubmit="handlePublishGame(event)" class="flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div class="p-6 space-y-4 overflow-y-auto flex-1">
+          <input type="hidden" id="editGameId" value="" />
+
+          <div class="grid grid-cols-3 gap-3">
+            <div class="col-span-2">
+              <label class="block text-xs text-purple-300/80 mb-1">Game Title *</label>
+              <input id="gameTitle" required type="text" placeholder="e.g., Cyber Drift 2099" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" />
+            </div>
+            <div>
+              <label class="block text-xs text-purple-300/80 mb-1">Version *</label>
+              <input id="gameVersion" required type="text" placeholder="1.0.0" value="1.0.0" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-purple-300/80 mb-1">Genre</label>
+              <select id="gameGenre" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white">
+                <option>Action / Arcade</option>
+                <option>RPG / Adventure</option>
+                <option>Strategy / Puzzle</option>
+                <option>Sandbox / Sim</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-purple-300/80 mb-1">Fallback Cover URL (Optional)</label>
+              <input id="gameCover" type="url" placeholder="Uploaded logo overrides this" class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white" />
+            </div>
+          </div>
+
+          <!-- WEBSITE REDIRECT & PLAY IN STORE URL INPUT -->
+          <div class="bg-[#0c0517]/90 p-3.5 rounded-xl border border-fuchsia-700/40">
+            <label class="block text-xs font-semibold text-fuchsia-300 mb-1">
+              🌐 Website / Web Game URL (Enables "🎮 Play in Store" & "🌐 Open in New Tab")
+            </label>
+            <input
+              id="gameRedirectUrl"
+              type="text"
+              placeholder="https://your-game-site.com, GitHub Pages, itch.io, or WebGL link..."
+              class="w-full bg-[#160b29] border border-purple-800/80 rounded-lg px-3 py-2 text-sm text-white placeholder-purple-400/40 focus:outline-none focus:border-fuchsia-500"
+            />
+            <p class="text-[11px] text-purple-300/60 mt-1">
+              Players get both a <strong>🎮 Play in Store</strong> fullscreen modal button and an <strong>🌐 Open in New Tab ↗</strong> redirect button.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-xs text-purple-300/80 mb-1">Description & Patch Notes *</label>
+            <textarea id="gameDesc" required rows="2" placeholder="Describe the game or what changed in this update..." class="w-full bg-[#0c0517] border border-purple-900/70 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+          </div>
+
+          <!-- UPLOAD .EXE + LOGO (.ICO / .PNG) + OPTIONAL HTML5 / ASSETS -->
+          <div class="space-y-2.5 bg-[#0c0517]/90 p-3.5 rounded-xl border border-purple-900/70">
+            <label class="block text-xs font-semibold text-purple-200">
+              Select Your <code>.exe</code>, <code>.html</code>, & Logo (<code>.ico</code>, <code>.png</code>, <code>.jpg</code>)
+            </label>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <!-- Option 1: Select Individual Files -->
+              <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-purple-500 cursor-pointer transition text-center">
+                <span class="text-xs font-semibold text-purple-300">🎯 Select .EXE / .HTML & Logo</span>
+                <span class="text-[10px] text-purple-300/60 mt-0.5">Ctrl+Click your files and .ico/.png</span>
+                <input
+                  id="gameFile"
+                  type="file"
+                  multiple
+                  accept=".exe,.ico,.png,.jpg,.jpeg,.webp,.svg,.html,.dll,.txt,.json,.wav,.mp3,.cs"
+                  onchange="handleFileSelection(this.files)"
+                  class="hidden"
+                />
+              </label>
+
+              <!-- Option 2: Select Whole Folder -->
+              <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-purple-800/80 bg-[#160b29] hover:border-fuchsia-500 cursor-pointer transition text-center">
+                <span class="text-xs font-semibold text-fuchsia-300">📁 Select Game Folder</span>
+                <span class="text-[10px] text-purple-300/60 mt-0.5">Auto-uses folder's logo as shop photo</span>
+                <input
+                  id="gameFolder"
+                  type="file"
+                  webkitdirectory
+                  directory
+                  multiple
+                  onchange="handleFileSelection(this.files)"
+                  class="hidden"
+                />
+              </label>
+            </div>
+
+            <!-- LIVE SHOP PHOTO LOGO PREVIEW -->
+            <div id="logoPreviewBox" class="hidden mt-2 p-2.5 rounded-xl border border-purple-500/40 bg-purple-950/40 flex items-center gap-3">
+              <img id="logoPreviewImg" src="" alt="Uploaded Game Logo" class="w-12 h-12 rounded-xl object-contain bg-[#0c0517] border border-purple-700 p-1 shrink-0" />
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-purple-200">✓ Game Logo Set as WYRMTOPIA Shop Photo</div>
+                <div id="logoPreviewName" class="text-[11px] text-purple-300/70 truncate"></div>
+              </div>
+            </div>
+
+            <!-- WYRMSHIELD LIVE VIRUS SCANNER PANEL -->
+            <div id="virusScanPanel" class="hidden mt-2 p-2.5 rounded-xl border border-purple-900/70 bg-[#0c0517] space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span id="virusScanTitle" class="font-semibold text-purple-300 flex items-center gap-1.5">
+                  🛡️ WyrmShield PE32 .EXE & Logo Verifier
+                </span>
+                <span id="virusScanStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase">
+                  Scanning...
+                </span>
+              </div>
+              <div class="w-full h-1.5 bg-purple-950 rounded-full overflow-hidden">
+                <div id="virusScanProgressBar" class="h-full bg-purple-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <div id="selectedFilesList" class="text-[11px] font-mono text-purple-200 space-y-1 pt-1 max-h-28 overflow-y-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PINNED MODAL FOOTER -->
+        <div class="px-6 py-4 border-t border-purple-900/80 bg-[#120822] flex items-center justify-between gap-3 shrink-0">
+          <button
+            type="button"
+            onclick="closeUploadModal()"
+            class="px-4 py-2.5 rounded-xl text-sm font-medium bg-[#22113d] hover:bg-purple-900/70 text-purple-200 transition"
+          >
+            Cancel
+          </button>
+          <button
+            id="submitBtn"
+            type="submit"
+            class="flex-1 py-2.5 px-5 rounded-xl text-sm font-bold bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white shadow-lg shadow-purple-700/40 transition"
+          >
+            🚀 Upload & Publish to WYRMTOPIA Store
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =================================================================
+       SECURITY SCAN REPORT MODAL
+       ================================================================= -->
+  <div id="securityModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-[#160b29] border border-purple-800/70 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🛡️</span>
+          <div>
+            <h3 id="secModalGameTitle" class="text-base font-bold text-white">WyrmShield Security & Link Report</h3>
+            <p class="text-xs text-emerald-400 font-medium">Verified Clean • 0 .BAT Scripts • In-Store Player Ready</p>
+          </div>
+        </div>
+        <button onclick="closeSecurityModal()" class="text-purple-300 hover:text-white text-xl">&times;</button>
+      </div>
+
+      <div id="secModalContent" class="space-y-3 text-xs"></div>
+
+      <div class="mt-5 pt-3 border-t border-purple-900/70 flex justify-end">
+        <button onclick="closeSecurityModal()" class="px-4 py-2 rounded-lg bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold">
+          Close Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /********************************************************************
+     * 1. SERVERLESS CONFIGURATION (CONNECTED TO YOUR SUPABASE PROJECT)
+     ********************************************************************/
+    const SUPABASE_URL = "https://oirhhzmhkomcqbffqfny.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_5bEZnUlGpFbjrSg8wtvmbw_vCMagphO";
+
+    // Default URL points to your Supabase Storage 'game-builds/launcher/WyrmtopiaStore.exe'
+    // (Or you can paste a GitHub Releases URL here if you prefer)
+    let DESKTOP_LAUNCHER_EXE_URL = `${SUPABASE_URL}/storage/v1/object/public/game-builds/launcher/WyrmtopiaStore.exe`;
+
+    const useCloudSupabase = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+    const supabaseClient = useCloudSupabase
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    const syncChannel = new BroadcastChannel("nebula_store_realtime_sync");
+
+    let gamesCatalog = [];
+    let activeFilter = "all";
+    let currentUser = null;
+    let selectedUploadFiles = [];
+    let detectedLogoDataUrl = null;
+    let detectedLogoFileName = null;
+    let lastScanResult = { passed: true, files: [], threats: [] };
+    let activeInStoreGameId = null;
+    let activeInStoreBlobUrl = null;
+
+    function isDeveloperRole() {
+      return currentUser && (currentUser.role === "developer" || currentUser.role === "both");
+    }
+
+    function showStatusBanner(htmlMessage, isSuccess = false) {
+      const banner = document.getElementById("statusBanner");
+      if (!htmlMessage) {
+        banner.classList.add("hidden");
+        banner.innerHTML = "";
+      } else {
+        banner.innerHTML = htmlMessage;
+        banner.className = isSuccess
+          ? "mb-6 p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs leading-relaxed"
+          : "mb-6 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs leading-relaxed";
+      }
+    }
+
+    function normalizeExternalUrl(rawUrl) {
+      const trimmed = (rawUrl || "").trim();
+      if (!trimmed) return "";
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      return `https://${trimmed}`;
+    }
+
+    function setSubmitButtonsState(disabled, mainText, topText = "🚀 Publish") {
+      const submitBtn = document.getElementById("submitBtn");
+      const topSubmitBtn = document.getElementById("topSubmitBtn");
+      if (submitBtn) {
+        submitBtn.disabled = disabled;
+        if (mainText) submitBtn.textContent = mainText;
+      }
+      if (topSubmitBtn) {
+        topSubmitBtn.disabled = disabled;
+        if (topText) topSubmitBtn.textContent = topText;
+      }
+    }
+
+    /********************************************************************
+     * 2. DESKTOP LAUNCHER (.EXE) DOWNLOAD & CLOUD UPLOAD HANDLER
+     ********************************************************************/
+    function triggerDirectLauncherDownload() {
+      const link = document.createElement("a");
+      link.href = `${DESKTOP_LAUNCHER_EXE_URL}?download=WyrmtopiaStore.exe`;
+      link.download = "WyrmtopiaStore.exe";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function downloadDesktopLauncherExe() {
+      triggerDirectLauncherDownload();
+      openLauncherModalOnly();
+    }
+
+    function openLauncherModalOnly() {
+      const devUploadBox = document.getElementById("devLauncherUploadBox");
+      if (isDeveloperRole()) {
+        devUploadBox.classList.remove("hidden");
+      } else {
+        devUploadBox.classList.add("hidden");
+      }
+      const modal = document.getElementById("launcherDownloadModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeLauncherModal() {
+      const modal = document.getElementById("launcherDownloadModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    async function uploadDesktopLauncherToSupabase(fileList) {
+      if (!useCloudSupabase || !isDeveloperRole()) return;
+      const file = fileList && fileList[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById("launcherUploadStatus");
+      statusEl.textContent = `⏳ Uploading ${file.name} (${(file.size / 1024).toFixed(1)} KB) to Supabase Storage...`;
+
+      try {
+        const storagePath = `launcher/WyrmtopiaStore.exe`;
+        const { error } = await supabaseClient.storage
+          .from("game-builds")
+          .upload(storagePath, file, {
+            upsert: true,
+            contentType: "application/octet-stream"
+          });
+
+        if (error) {
+          statusEl.textContent = `❌ Upload error: ${error.message}`;
+          return;
+        }
+
+        const { data: pubData } = supabaseClient.storage
+          .from("game-builds")
+          .getPublicUrl(storagePath);
+
+        if (pubData && pubData.publicUrl) {
+          DESKTOP_LAUNCHER_EXE_URL = pubData.publicUrl;
+        }
+        statusEl.textContent = `✓ WyrmtopiaStore.exe is now live on Supabase Cloud Storage!`;
+      } catch (err) {
+        statusEl.textContent = `❌ Upload failed: ${err.message}`;
+      }
+    }
+
+    /********************************************************************
+     * 3. WYRMSHIELD AUTO VIRUS & PE32 .EXE VERIFIER
+     ********************************************************************/
+    const MALWARE_SIGNATURES = [
+      {
+        name: "Test Virus Trigger (EICAR / WyrmShield Test)",
+        regex: /NEBULA_TEST_VIRUS_SIGNATURE|X5O!P%@AP\[4\\PZX54\(P\^\)7CC\)7\}\$EICAR/i,
+        severity: "CRITICAL — Test Virus Signature Detected"
+      },
+      {
+        name: "Destructive Disk Format Command",
+        regex: /\bformat\s+[a-z]:\s*(\/q|\/y|\/fs)/i,
+        severity: "CRITICAL — Unauthorized Drive Format Command"
+      },
+      {
+        name: "Recursive System Root Wipe",
+        regex: /\b(rd|rmdir|del|erase)\s+\/[sSqQ]+\s+.*[cC]:\\(Windows|System32|Users)/i,
+        severity: "CRITICAL — Destructive System File Deletion"
+      },
+      {
+        name: "Obfuscated Hidden PowerShell Payload",
+        regex: /powershell.*(-enc|-encodedcommand)\s+[A-Za-z0-9+/=]{20,}/i,
+        severity: "HIGH — Obfuscated Encoded PowerShell Payload"
+      }
+    ];
+
+    async function computeFileSHA256(arrayBuffer) {
+      const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function getNormalizedRelativePath(file) {
+      if (file.webkitRelativePath && file.webkitRelativePath.includes("/")) {
+        const parts = file.webkitRelativePath.split("/");
+        const innerPath = parts.slice(1).join("/");
+        return innerPath.replace(/[^a-zA-Z0-9._/-]/g, "_");
+      }
+      return file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function scanSingleFile(file) {
+      const buffer = await file.arrayBuffer();
+      const sha256 = await computeFileSHA256(buffer);
+      const shortHash = sha256.slice(0, 12);
+      const relPath = getNormalizedRelativePath(file);
+      const ext = (relPath.split(".").pop() || "").toLowerCase();
+      const threatsFound = [];
+
+      if (["cs", "py", "html", "txt", "js", "json"].includes(ext)) {
+        const textContent = new TextDecoder("utf-8", { fatal: false }).decode(buffer);
+        for (const sig of MALWARE_SIGNATURES) {
+          if (sig.regex.test(textContent)) {
+            threatsFound.push(`${sig.name} (${sig.severity})`);
+          }
+        }
+      }
+
+      if (ext === "exe" || ext === "dll") {
+        const bytes = new Uint8Array(buffer);
+        if (bytes.length < 2 || bytes[0] !== 0x4D || bytes[1] !== 0x5A) {
+          threatsFound.push("Invalid Windows PE Binary (Missing 'MZ' Executable Header)");
+        }
+        const rawText = new TextDecoder("utf-8", { fatal: false }).decode(buffer);
+        for (const sig of MALWARE_SIGNATURES) {
+          if (sig.regex.test(rawText)) {
+            threatsFound.push(`${sig.name} (${sig.severity})`);
+          }
+        }
+      }
+
+      return {
+        name: relPath,
+        ext,
+        sizeKB: (file.size / 1024).toFixed(1),
+        sha256,
+        shortHash,
+        clean: threatsFound.length === 0,
+        threats: threatsFound
+      };
+    }
+
+    async function handleFileSelection(fileListObj) {
+      const rawFiles = Array.from(fileListObj || []);
+      selectedUploadFiles = rawFiles.filter(f => {
+        const lower = f.name.toLowerCase();
+        return !lower.endsWith(".bat") && !lower.endsWith(".cmd");
+      });
+
+      detectedLogoDataUrl = null;
+      detectedLogoFileName = null;
+      const logoPreviewBox = document.getElementById("logoPreviewBox");
+      const logoPreviewImg = document.getElementById("logoPreviewImg");
+      const logoPreviewName = document.getElementById("logoPreviewName");
+
+      const imageCandidates = selectedUploadFiles.filter(f => /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name));
+      const prioritizedLogo =
+        imageCandidates.find(f => /logo|icon/i.test(f.name)) ||
+        imageCandidates.find(f => /\.ico$/i.test(f.name)) ||
+        imageCandidates[0];
+
+      if (prioritizedLogo) {
+        try {
+          detectedLogoDataUrl = await readFileAsDataURL(prioritizedLogo);
+          detectedLogoFileName = getNormalizedRelativePath(prioritizedLogo);
+          logoPreviewImg.src = detectedLogoDataUrl;
+          logoPreviewName.textContent = `Source file: ${detectedLogoFileName}`;
+          logoPreviewBox.classList.remove("hidden");
+        } catch (_) {
+          logoPreviewBox.classList.add("hidden");
+        }
+      } else {
+        logoPreviewBox.classList.add("hidden");
+      }
+
+      await runLiveFileVirusScan(rawFiles.length - selectedUploadFiles.length);
+    }
+
+    async function runLiveFileVirusScan(skippedBatCount = 0) {
+      const panel = document.getElementById("virusScanPanel");
+      const previewEl = document.getElementById("selectedFilesList");
+      const statusBadge = document.getElementById("virusScanStatusBadge");
+      const progressBar = document.getElementById("virusScanProgressBar");
+
+      const files = selectedUploadFiles;
+      if (files.length === 0) {
+        panel.classList.add("hidden");
+        previewEl.innerHTML = "";
+        lastScanResult = { passed: true, files: [], threats: [] };
+        setSubmitButtonsState(false);
+        return lastScanResult;
+      }
+
+      panel.classList.remove("hidden");
+      statusBadge.textContent = "Scanning Files...";
+      statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-500/20 text-purple-300";
+      progressBar.style.width = "25%";
+      progressBar.className = "h-full bg-purple-500 transition-all duration-300";
+
+      const scannedFiles = [];
+      const allThreats = [];
+      let hasExe = false;
+      let hasHtml = false;
+
+      for (let i = 0; i < files.length; i++) {
+        const res = await scanSingleFile(files[i]);
+        if (res.ext === "exe") hasExe = true;
+        if (res.ext === "html") hasHtml = true;
+
+        scannedFiles.push(res);
+        if (!res.clean) {
+          allThreats.push(...res.threats.map(t => `${res.name}:${t}`));
+        }
+        progressBar.style.width = `${Math.round(((i + 1) / files.length) * 100)}%`;
+      }
+
+      const passed = allThreats.length === 0;
+      lastScanResult = { passed, files: scannedFiles, threats: allThreats };
+
+      if (passed) {
+        statusBadge.textContent = "✓ Verified Clean";
+        statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        progressBar.className = "h-full bg-emerald-500 transition-all duration-300";
+        setSubmitButtonsState(false);
+      } else {
+        statusBadge.textContent = "⛔ Threat Blocked";
+        statusBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        progressBar.className = "h-full bg-rose-500 transition-all duration-300";
+        setSubmitButtonsState(true);
+      }
+
+      const skippedNotice = skippedBatCount > 0
+        ? `<div class="text-amber-300 bg-amber-950/40 border border-amber-500/30 px-2.5 py-1 rounded text-[10px]">
+             🛡️ Auto-excluded ${skippedBatCount} <code>.bat/.cmd</code> file(s) so Windows Defender never blocks your game!
+           </div>`
+        : "";
+
+      const exeNotice = hasExe
+        ? `<div class="text-purple-200 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded text-[10px]">
+             🎯 Native Windows <code>.exe</code> verified — synced with Desktop App & Supabase HTTPS Storage.
+           </div>`
+        : "";
+
+      const htmlNotice = hasHtml
+        ? `<div class="text-fuchsia-200 bg-fuchsia-950/50 border border-fuchsia-500/30 px-2.5 py-1 rounded text-[10px]">
+             🎮 HTML5 game file detected — enables instant <strong>Play in Store</strong> modal!
+           </div>`
+        : "";
+
+      const logoNotice = detectedLogoFileName
+        ? `<div class="text-emerald-300 bg-emerald-950/30 border border-emerald-500/20 px-2.5 py-1 rounded text-[10px]">
+             🎨 Uploaded Logo (<code>${detectedLogoFileName}</code>) will be used as the Game Photo in WYRMTOPIA Store!
+           </div>`
+        : "";
+
+      previewEl.innerHTML =
+        skippedNotice +
+        exeNotice +
+        htmlNotice +
+        logoNotice +
+        scannedFiles.map(f => {
+          if (f.clean) {
+            return `
+              <div class="flex items-center justify-between gap-2 text-emerald-300 bg-emerald-950/30 border border-emerald-500/20 px-2.5 py-1 rounded">
+                <span class="truncate">✓ ${f.name} (${f.sizeKB} KB)</span>
+                <span class="text-[10px] text-purple-300/60 shrink-0">SHA256: ${f.shortHash}…</span>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="text-rose-300 bg-rose-950/40 border border-rose-500/30 px-2.5 py-1.5 rounded space-y-0.5">
+                <div class="font-bold">⛔ ${f.name} — BLOCKED BY WYRMSHIELD</div>
+                <div class="text-[10px] text-rose-200">${f.threats.join(" | ")}</div>
+              </div>
+            `;
+          }
+        }).join("");
+
+      return lastScanResult;
+    }
+
+    function openSecurityModal(gameId) {
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      document.getElementById("secModalGameTitle").textContent = `${game.title} (v${game.version}) — WyrmShield Report`;
+      const safeName = sanitizeIdentifier(game.title);
+      const redirectUrl = getGameRedirectUrl(game);
+      const bundled = Array.isArray(game.bundledFiles) && game.bundledFiles.length > 0
+        ? game.bundledFiles.filter(name => !/\.bat\b|\.cmd\b/i.test(name))
+        : [`${safeName}_ReadMe.txt (Clean Bundle)`];
+
+      const redirectReportHtml = redirectUrl
+        ? `<div class="p-3 rounded-xl bg-fuchsia-500/15 border border-fuchsia-500/30 text-fuchsia-200">
+             <div class="font-bold mb-0.5">🎮 In-Store Player & Website Redirect Enabled</div>
+             <div class="text-purple-100 text-[11px] break-all">Source URL: <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="underline text-fuchsia-300">${redirectUrl}</a></div>
+           </div>`
+        : "";
+
+      document.getElementById("secModalContent").innerHTML = `
+        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
+          <div class="font-bold mb-0.5">✓ 100% .BAT-Free & Zero Synthetic Shellcode</div>
+          <div class="text-purple-100 text-[11px]">This archive contains only the developer's verified files with zero <code>.bat</code> scripts or synthetic PE headers.</div>
+        </div>
+
+        ${redirectReportHtml}
+
+        <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200">
+          <div class="font-bold mb-0.5">💻 Want Zero Browser & SmartScreen Popups?</div>
+          <div class="text-purple-100 text-[11px]">Click <strong>💻 Get Desktop App (.EXE)</strong> in the top bar! Downloading games inside <code>WyrmtopiaStore.exe</code> installs and updates them directly on Windows without Chrome or SmartScreen warnings.</div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#0c0517] border border-purple-900/70">
+          <div class="text-purple-300 font-semibold mb-1.5">Files Included Inside .ZIP Archive:</div>
+          <div class="space-y-1 font-mono text-[11px] text-purple-100 max-h-40 overflow-y-auto">
+            ${bundled.map(item => `<div class="truncate">📄 ${item}</div>`).join("")}
+          </div>
+        </div>
+      `;
+
+      document.getElementById("securityModal").classList.remove("hidden");
+      document.getElementById("securityModal").classList.add("flex");
+    }
+
+    function closeSecurityModal() {
+      document.getElementById("securityModal").classList.add("hidden");
+      document.getElementById("securityModal").classList.remove("flex");
+    }
+
+    /********************************************************************
+     * 4. USER AUTHENTICATION (LOGIN, REGISTER & ROLE MANAGEMENT)
+     ********************************************************************/
+    function getLocalUsersMap() {
+      const raw = localStorage.getItem("nebula_registered_users");
+      return raw ? JSON.parse(raw) : {};
+    }
+
+    function saveLocalUser(userObj) {
+      const map = getLocalUsersMap();
+      map[userObj.username.toLowerCase()] = userObj;
+      localStorage.setItem("nebula_registered_users", JSON.stringify(map));
+    }
+
+    function showAuthMessage(msg, isError = true) {
+      const box = document.getElementById("authMessage");
+      if (!msg) {
+        box.classList.add("hidden");
+        box.textContent = "";
+        return;
+      }
+      box.textContent = msg;
+      box.className = isError
+        ? "mb-4 p-3 rounded-lg text-xs font-medium bg-rose-500/15 text-rose-300 border border-rose-500/30"
+        : "mb-4 p-3 rounded-lg text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30";
+    }
+
+    function switchAuthMode(mode) {
+      showAuthMessage("");
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+      const tabLogin = document.getElementById("authTabLogin");
+      const tabRegister = document.getElementById("authTabRegister");
+
+      if (mode === "login") {
+        loginForm.classList.remove("hidden");
+        registerForm.classList.add("hidden");
+        tabLogin.className = "py-2 rounded-lg text-sm font-semibold bg-purple-700 text-white transition shadow-md shadow-purple-900/40";
+        tabRegister.className = "py-2 rounded-lg text-sm font-semibold text-purple-300/70 hover:text-white transition";
+      } else {
+        loginForm.classList.add("hidden");
+        registerForm.classList.remove("hidden");
+        tabRegister.className = "py-2 rounded-lg text-sm font-semibold bg-purple-700 text-white transition shadow-md shadow-purple-900/40";
+        tabLogin.className = "py-2 rounded-lg text-sm font-semibold text-purple-300/70 hover:text-white transition";
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      showAuthMessage("");
+
+      const username = document.getElementById("regUsername").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const role = document.querySelector('input[name="regRole"]:checked').value;
+
+      if (!username || !password) {
+        showAuthMessage("Please enter both a username and password.");
+        return;
+      }
+
+      const regBtn = document.getElementById("regSubmitBtn");
+      regBtn.disabled = true;
+      regBtn.textContent = "Creating Account...";
+
+      try {
+        const normalizedUsername = username;
+
+        if (useCloudSupabase) {
+          const { data: existingCloud, error: checkErr } = await supabaseClient
+            .from("store_users")
+            .select("username")
+            .ilike("username", normalizedUsername)
+            .maybeSingle();
+
+          if (!checkErr && existingCloud) {
+            showAuthMessage("That username is already taken. Please choose another or sign in.");
+            return;
+          }
+
+          if (!checkErr) {
+            const { error: insertErr } = await supabaseClient
+              .from("store_users")
+              .insert({
+                username: normalizedUsername,
+                password: password,
+                role: role
+              });
+
+            if (insertErr) {
+              showAuthMessage("Registration error: " + insertErr.message);
+              return;
+            }
+          }
+        }
+
+        const localUsers = getLocalUsersMap();
+        if (localUsers[normalizedUsername.toLowerCase()]) {
+          showAuthMessage("That username is already registered.");
+          return;
+        }
+
+        const newUser = { username: normalizedUsername, password, role };
+        saveLocalUser(newUser);
+
+        completeLoginSession({ username: normalizedUsername, role });
+      } finally {
+        regBtn.disabled = false;
+        regBtn.textContent = "Create Account & Enter Store";
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      showAuthMessage("");
+
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const loginBtn = document.getElementById("loginSubmitBtn");
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Signing In...";
+
+      try {
+        if (useCloudSupabase) {
+          const { data: cloudUser, error } = await supabaseClient
+            .from("store_users")
+            .select("*")
+            .ilike("username", username)
+            .maybeSingle();
+
+          if (!error && cloudUser) {
+            if (cloudUser.password !== password) {
+              showAuthMessage("Incorrect password. Please try again.");
+              return;
+            }
+            saveLocalUser(cloudUser);
+            completeLoginSession({ username: cloudUser.username, role: cloudUser.role });
+            return;
+          }
+        }
+
+        const localUsers = getLocalUsersMap();
+        const foundLocal = localUsers[username.toLowerCase()];
+        if (!foundLocal) {
+          showAuthMessage("Account not found. Click 'Register Account' above to create one.");
+          return;
+        }
+        if (foundLocal.password !== password) {
+          showAuthMessage("Incorrect password. Please try again.");
+          return;
+        }
+
+        completeLoginSession({ username: foundLocal.username, role: foundLocal.role });
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Sign In to WYRMTOPIA Store";
+      }
+    }
+
+    function completeLoginSession(userSession) {
+      currentUser = userSession;
+      localStorage.setItem("nebula_active_session", JSON.stringify(userSession));
+
+      document.getElementById("authScreen").classList.add("hidden");
+      document.getElementById("appScreen").classList.remove("hidden");
+
+      document.getElementById("currentUserDisplay").textContent = currentUser.username;
+      const roleBadge = document.getElementById("currentRoleBadge");
+
+      if (currentUser.role === "player") {
+        roleBadge.textContent = "Player";
+        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-200 border border-purple-500/30";
+      } else if (currentUser.role === "developer") {
+        roleBadge.textContent = "Developer";
+        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-fuchsia-500/20 text-fuchsia-200 border border-fuchsia-500/30";
+      } else {
+        roleBadge.textContent = "Player & Dev";
+        roleBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+      }
+
+      const uploadBtn = document.getElementById("headerUploadBtn");
+      const devTab = document.getElementById("tab-dev_studio");
+
+      if (isDeveloperRole()) {
+        uploadBtn.classList.remove("hidden");
+        devTab.classList.remove("hidden");
+        devTab.classList.add("flex");
+        document.getElementById("studioOwnerName").textContent = currentUser.username;
+      } else {
+        uploadBtn.classList.add("hidden");
+        devTab.classList.add("hidden");
+        devTab.classList.remove("flex");
+      }
+
+      if (currentUser.role === "developer") {
+        setFilter("dev_studio");
+      } else {
+        setFilter("all");
+      }
+
+      loadCatalog();
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      localStorage.removeItem("nebula_active_session");
+      document.getElementById("appScreen").classList.add("hidden");
+      document.getElementById("authScreen").classList.remove("hidden");
+      document.getElementById("loginForm").reset();
+      showAuthMessage("");
+    }
+
+    /********************************************************************
+     * 5. CLEAN ZIP PACKAGER, REDIRECT URL & IN-STORE PLAYER ENGINE
+     ********************************************************************/
+    function sanitizeIdentifier(str) {
+      return (str || "Game").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
+    }
+
+    function arrayBufferToBase64(buffer) {
+      let binary = "";
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      const chunkSize = 0x8000;
+      for (let i = 0; i < len; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+      }
+      return btoa(binary);
+    }
+
+    function base64ToUint8Array(base64) {
+      const binaryString = atob(base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    function stringToBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      return arrayBufferToBase64(bytes.buffer);
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(arrayBufferToBase64(reader.result));
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    function getGameRedirectUrl(game) {
+      if (!game) return "";
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && parsed.redirectUrl) {
+            return normalizeExternalUrl(parsed.redirectUrl);
+          }
+        } catch (_) {}
+      }
+      return "";
+    }
+
+    function getBundledHtmlFileObject(game) {
+      if (!game || !game.launcherScript) return null;
+      try {
+        const parsed = JSON.parse(game.launcherScript);
+        if (parsed && Array.isArray(parsed.files)) {
+          return parsed.files.find(f => /\.html?$/i.test(f.name) && f.base64) || null;
+        }
+      } catch (_) {}
+      return null;
+    }
+
+    function canPlayGameInStore(game) {
+      return Boolean(getGameRedirectUrl(game) || getBundledHtmlFileObject(game));
+    }
+
+    function hasDownloadableBuildFiles(game) {
+      if (!game) return true;
+      const redirectUrl = getGameRedirectUrl(game);
+      if (!redirectUrl) return true;
+
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && typeof parsed.hasExecutableOrBuild === "boolean") {
+            return parsed.hasExecutableOrBuild;
+          }
+          if (parsed && Array.isArray(parsed.files)) {
+            return parsed.files.some(f => /\.(exe|dll|zip|cs|py|html)$/i.test(f.name));
+          }
+        } catch (_) {}
+      }
+      return true;
+    }
+
+    function resolveGameLogoPhoto(game) {
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && Array.isArray(parsed.files)) {
+            const logoFile =
+              parsed.files.find(f => /logo|icon/i.test(f.name) && /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name)) ||
+              parsed.files.find(f => /\.(ico|png|jpg|jpeg|webp|svg)$/i.test(f.name));
+
+            if (logoFile && logoFile.base64) {
+              const ext = (logoFile.name.split(".").pop() || "png").toLowerCase();
+              const mimeMap = {
+                ico: "image/x-icon",
+                png: "image/png",
+                jpg: "image/jpeg",
+                jpeg: "image/jpeg",
+                webp: "image/webp",
+                svg: "image/svg+xml"
+              };
+              const mime = mimeMap[ext] || "image/png";
+              return {
+                url: `data:${mime};base64,${logoFile.base64}`,
+                isCustomLogo: true
+              };
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (game.cover && game.cover.startsWith("data:image/")) {
+        return { url: game.cover, isCustomLogo: true };
+      }
+
+      return {
+        url: game.cover || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+        isCustomLogo: false
+      };
+    }
+
+    function createCleanFallbackFiles(title, version, author, description, redirectUrl = "") {
+      const safeName = sanitizeIdentifier(title);
+      const readmeText = [
+        `==================================================`,
+        `  WYRMTOPIA STORE — ${title} (v${version})`,
+        `  Developer: ${author}`,
+        `==================================================`,
+        redirectUrl ? `Official Website / Redirect URL: ${redirectUrl}` : ``,
+        ``,
+        `Description / Patch Notes:`,
+        `${description || "No description provided."}`,
+        ``,
+        `Package Integrity: Verified Clean by WyrmShield.`
+      ].filter(Boolean).join("\r\n");
+
+      return [
+        {
+          name: `${safeName}_ReadMe.txt`,
+          label: redirectUrl ? `🌐 Redirect Link + ReadMe` : `${safeName}_ReadMe.txt (Verified Info)`,
+          base64: stringToBase64(readmeText)
+        }
+      ];
+    }
+
+    async function buildWebFolderPackage(fileList, title, version, author, description, scanMetaList = [], redirectUrl = "") {
+      const safeName = sanitizeIdentifier(title);
+      const encodedFiles = [];
+      const cleanRedirect = normalizeExternalUrl(redirectUrl);
+      let hasExecutableOrBuild = false;
+
+      if (fileList && fileList.length > 0) {
+        const filesArr = Array.from(fileList);
+
+        for (let i = 0; i < filesArr.length; i++) {
+          const file = filesArr[i];
+          const cleanPath = getNormalizedRelativePath(file);
+          const lower = cleanPath.toLowerCase();
+
+          if (lower.endsWith(".bat") || lower.endsWith(".cmd")) continue;
+          if (/\.(exe|dll|zip|cs|py|html)$/i.test(lower)) {
+            hasExecutableOrBuild = true;
+          }
+
+          const b64 = await readFileAsBase64(file);
+          const hashInfo = scanMetaList[i] ? ` (SHA256: ${scanMetaList[i].shortHash})` : " (SHA256: Verified)";
+          encodedFiles.push({
+            name: cleanPath,
+            label: `${cleanPath}${hashInfo}`,
+            base64: b64
+          });
+        }
+      }
+
+      if (encodedFiles.length === 0) {
+        encodedFiles.push(...createCleanFallbackFiles(title, version, author, description, cleanRedirect));
+      }
+
+      const folderPayload = {
+        format: "wyrmtopia_clean_v7",
+        folderName: safeName,
+        version: version,
+        redirectUrl: cleanRedirect,
+        hasExecutableOrBuild: hasExecutableOrBuild,
+        files: encodedFiles.map(f => ({ name: f.name, base64: f.base64 }))
+      };
+
+      const bundledLabels = encodedFiles.map(f => f.label);
+      if (cleanRedirect) {
+        bundledLabels.unshift(`🌐 Web Link (${cleanRedirect})`);
+      }
+
+      return {
+        archiveFileName: `${safeName}_v${version}.zip`,
+        launcherScript: JSON.stringify(folderPayload),
+        bundledFiles: bundledLabels
+      };
+    }
+
+    function updateExistingPackageRedirectUrl(existingGame, newTitle, newVersion, newRedirectUrl) {
+      const safeName = sanitizeIdentifier(newTitle);
+      const cleanRedirect = normalizeExternalUrl(newRedirectUrl);
+
+      let parsed = null;
+      try {
+        parsed = JSON.parse(existingGame.launcherScript);
+      } catch (_) {}
+
+      if (parsed && Array.isArray(parsed.files)) {
+        parsed.folderName = safeName;
+        parsed.version = newVersion;
+        parsed.redirectUrl = cleanRedirect;
+
+        const baseBundled = Array.isArray(existingGame.bundledFiles)
+          ? existingGame.bundledFiles.filter(label => !label.startsWith("🌐 Web Link"))
+          : [];
+        if (cleanRedirect) {
+          baseBundled.unshift(`🌐 Web Link (${cleanRedirect})`);
+        }
+
+        return {
+          archiveFileName: `${safeName}_v${newVersion}.zip`,
+          launcherScript: JSON.stringify(parsed),
+          bundledFiles: baseBundled
+        };
+      }
+
+      return {
+        archiveFileName: `${safeName}_v${newVersion}.zip`,
+        launcherScript: existingGame.launcherScript,
+        bundledFiles: existingGame.bundledFiles
+      };
+    }
+
+    function getFolderFilesFromGame(game) {
+      const safeName = sanitizeIdentifier(game.title);
+      if (game.launcherScript) {
+        try {
+          const parsed = JSON.parse(game.launcherScript);
+          if (parsed && Array.isArray(parsed.files)) {
+            const cleanFiles = parsed.files.filter(f => {
+              const lower = f.name.toLowerCase();
+              if (lower.endsWith(".bat") || lower.endsWith(".cmd")) return false;
+              if (lower.endsWith(".exe") && f.base64 && f.base64.length === 1368) return false;
+              return true;
+            });
+
+            if (cleanFiles.length > 0) {
+              return {
+                folderName: safeName,
+                files: cleanFiles
+              };
+            }
+          }
+        } catch (_) {}
+      }
+
+      const fallbackFiles = createCleanFallbackFiles(game.title, game.version, game.author, game.description, getGameRedirectUrl(game));
+      return {
+        folderName: safeName,
+        files: fallbackFiles.map(f => ({ name: f.name, base64: f.base64 }))
+      };
+    }
+
+    async function createZipBlobFromGame(game) {
+      const { folderName, files } = getFolderFilesFromGame(game);
+      const zip = new JSZip();
+      const folder = zip.folder(folderName);
+
+      for (const fileObj of files) {
+        const binaryBytes = base64ToUint8Array(fileObj.base64);
+        folder.file(fileObj.name, binaryBytes);
+      }
+
+      return {
+        folderName,
+        files,
+        zipBlob: await zip.generateAsync({ type: "blob", compression: "DEFLATE" })
+      };
+    }
+
+    /********************************************************************
+     * 6. IN-STORE FULLSCREEN IFRAME PLAYER & WEBSITE REDIRECT HANDLERS
+     ********************************************************************/
+    function resolvePlayableUrlForGame(game) {
+      if (activeInStoreBlobUrl) {
+        URL.revokeObjectURL(activeInStoreBlobUrl);
+        activeInStoreBlobUrl = null;
+      }
+
+      const redirectUrl = getGameRedirectUrl(game);
+      if (redirectUrl) {
+        return redirectUrl;
+      }
+
+      const htmlFileObj = getBundledHtmlFileObject(game);
+      if (htmlFileObj) {
+        const bytes = base64ToUint8Array(htmlFileObj.base64);
+        const blob = new Blob([bytes], { type: "text/html;charset=utf-8" });
+        activeInStoreBlobUrl = URL.createObjectURL(blob);
+        return activeInStoreBlobUrl;
+      }
+
+      return "";
+    }
+
+    function openPlayInStoreModal(gameId) {
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      const targetUrl = resolvePlayableUrlForGame(game);
+      if (!targetUrl) return;
+
+      activeInStoreGameId = game.id;
+      setInstalledVersion(game.id, game.version);
+
+      document.getElementById("inStorePlayerTitle").textContent = game.title;
+      document.getElementById("inStorePlayerVersion").textContent = `v${game.version}`;
+
+      const iframe = document.getElementById("inStoreGameIframe");
+      iframe.src = targetUrl;
+
+      const modal = document.getElementById("playInStoreModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      setTimeout(() => {
+        try {
+          iframe.focus();
+        } catch (_) {}
+      }, 150);
+    }
+
+    function reloadInStoreGame() {
+      if (!activeInStoreGameId) return;
+      const game = gamesCatalog.find(g => g.id === activeInStoreGameId);
+      if (!game) return;
+
+      const iframe = document.getElementById("inStoreGameIframe");
+      const targetUrl = resolvePlayableUrlForGame(game);
+      if (targetUrl) {
+        iframe.src = targetUrl;
+        setTimeout(() => {
+          try {
+            iframe.focus();
+          } catch (_) {}
+        }, 100);
+      }
+    }
+
+    function toggleInStoreFullscreen() {
+      const stage = document.getElementById("inStoreStageContainer");
+      if (!stage) return;
+
+      if (!document.fullscreenElement) {
+        if (stage.requestFullscreen) {
+          stage.requestFullscreen().catch(() => {});
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    }
+
+    function openCurrentInStoreGameNewTab() {
+      if (!activeInStoreGameId) return;
+      openGameRedirectWebsite(activeInStoreGameId);
+    }
+
+    function closePlayInStoreModal() {
+      const iframe = document.getElementById("inStoreGameIframe");
+      if (iframe) {
+        iframe.src = "about:blank";
+      }
+      if (activeInStoreBlobUrl) {
+        URL.revokeObjectURL(activeInStoreBlobUrl);
+        activeInStoreBlobUrl = null;
+      }
+      activeInStoreGameId = null;
+
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+
+      const modal = document.getElementById("playInStoreModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function openGameRedirectWebsite(gameId) {
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      const targetUrl = getGameRedirectUrl(game) || resolvePlayableUrlForGame(game);
+      if (!targetUrl) return;
+
+      setInstalledVersion(game.id, game.version);
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    }
+
+    async function downloadGameFolderZip(gameId) {
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      const safeName = sanitizeIdentifier(game.title);
+
+      if (game.fileUrl && game.fileUrl.startsWith("https://")) {
+        const link = document.createElement("a");
+        link.href = `${game.fileUrl}?download=${encodeURIComponent(game.fileName || safeName + ".zip")}`;
+        link.download = game.fileName || `${safeName}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        const { folderName, zipBlob } = await createZipBlobFromGame(game);
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(zipBlob);
+        link.download = `${folderName}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      setInstalledVersion(game.id, game.version);
+
+      showStatusBanner(
+        `<strong>✓ Downloading <code>${safeName}.zip</code> (v${game.version})!</strong><br/>` +
+        `💡 <strong>Want Zero Chrome & Windows SmartScreen Warnings?</strong> Click <strong>💻 Get Desktop App (.EXE)</strong> in the top bar to install and update all games directly without browser blocks!`,
+        true
+      );
+    }
+
+    async function buildStarterCatalogWithScripts() {
+      const baseCatalog = [
+        {
+          id: "game_starfighter",
+          title: "Starfighter Odyssey",
+          author: "studio_alice",
+          genre: "Action / Arcade",
+          version: "1.2.0",
+          description: "Fast-paced retro space dogfighter. v1.2.0 adds boss rush mode and gamepad support.",
+          cover: "https://images.unsplash.com/photo-1614732414444-096e5f1122d5?auto=format&fit=crop&w=800&q=80",
+          fileSize: "Verified ZIP Bundle",
+          fileUrl: null,
+          updatedAt: new Date(Date.now() - 3600 * 1000 * 5).toISOString()
+        },
+        {
+          id: "game_dungeon",
+          title: "Crypt of the Echoes",
+          author: "studio_bob",
+          genre: "RPG / Adventure",
+          version: "1.0.4",
+          description: "Procedural roguelike dungeon crawler with dynamic lighting and 80+ relics.",
+          cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
+          fileSize: "Verified ZIP Bundle",
+          fileUrl: null,
+          updatedAt: new Date(Date.now() - 3600 * 1000 * 24).toISOString()
+        }
+      ];
+
+      for (const g of baseCatalog) {
+        const pkg = await buildWebFolderPackage([], g.title, g.version, g.author, g.description, [], "");
+        g.launcherScript = pkg.launcherScript;
+        g.fileName = pkg.archiveFileName;
+        g.bundledFiles = pkg.bundledFiles;
+      }
+      return baseCatalog;
+    }
+
+    /********************************************************************
+     * 7. LOCAL INSTALLED LIBRARY TRACKER (PER LOGGED-IN USERNAME)
+     ********************************************************************/
+    function getInstalledLibrary() {
+      if (!currentUser) return {};
+      const raw = localStorage.getItem(`nebula_installed_${currentUser.username}`);
+      return raw ? JSON.parse(raw) : {};
+    }
+
+    function setInstalledVersion(gameId, version) {
+      if (!currentUser) return;
+      const lib = getInstalledLibrary();
+      lib[gameId] = {
+        installedVersion: version,
+        installedAt: new Date().toISOString()
+      };
+      localStorage.setItem(`nebula_installed_${currentUser.username}`, JSON.stringify(lib));
+      renderActiveView();
+    }
+
+    /********************************************************************
+     * 8. DATA LAYER: SUPABASE CLOUD + HTTPS ZIP STORAGE UPLOAD
+     ********************************************************************/
+    async function loadCatalog() {
+      if (useCloudSupabase) {
+        const { data, error } = await supabaseClient
+          .from("games")
+          .select("*")
+          .order("updatedAt", { ascending: false });
+
+        if (error) {
+          showStatusBanner(
+            `<strong>Supabase Notice:</strong> Could not query <code>public.games</code> (${error.message}). Using local catalog fallback.`
+          );
+          await loadLocalCatalog();
+          renderActiveView();
+          return;
+        }
+
+        if (data && data.length === 0) {
+          const starter = await buildStarterCatalogWithScripts();
+          await supabaseClient.from("games").upsert(starter);
+          gamesCatalog = starter;
+        } else {
+          gamesCatalog = data;
+        }
+      } else {
+        await loadLocalCatalog();
+      }
+      renderActiveView();
+    }
+
+    async function loadLocalCatalog() {
+      const raw = localStorage.getItem("nebula_shared_catalog");
+      if (!raw) {
+        const starter = await buildStarterCatalogWithScripts();
+        localStorage.setItem("nebula_shared_catalog", JSON.stringify(starter));
+        gamesCatalog = starter;
+      } else {
+        gamesCatalog = JSON.parse(raw);
+      }
+    }
+
+    async function saveGameToCatalog(gameObj) {
+      if (useCloudSupabase) {
+        try {
+          const { zipBlob } = await createZipBlobFromGame(gameObj);
+          const storagePath = `${gameObj.id}/${gameObj.fileName || sanitizeIdentifier(gameObj.title) + ".zip"}`;
+          const { error: uploadErr } = await supabaseClient.storage
+            .from("game-builds")
+            .upload(storagePath, zipBlob, {
+              upsert: true,
+              contentType: "application/zip"
+            });
+
+          if (!uploadErr) {
+            const { data: pubUrlData } = supabaseClient.storage
+              .from("game-builds")
+              .getPublicUrl(storagePath);
+            if (pubUrlData && pubUrlData.publicUrl) {
+              gameObj.fileUrl = pubUrlData.publicUrl;
+            }
+          }
+        } catch (storageEx) {
+          console.warn("Supabase storage upload fallback:", storageEx);
+        }
+
+        const { error } = await supabaseClient.from("games").upsert(gameObj);
+        if (error) {
+          alert("Supabase Save Error: " + error.message);
+        } else {
+          await loadCatalog();
+        }
+      } else {
+        const existingIndex = gamesCatalog.findIndex(g => g.id === gameObj.id);
+        if (existingIndex !== -1) {
+          gamesCatalog[existingIndex] = gameObj;
+        } else {
+          gamesCatalog.unshift(gameObj);
+        }
+        localStorage.setItem("nebula_shared_catalog", JSON.stringify(gamesCatalog));
+        syncChannel.postMessage({ type: "CATALOG_UPDATED", catalog: gamesCatalog });
+        renderActiveView();
+      }
+    }
+
+    async function deleteGameFromCatalog(gameId) {
+      if (!currentUser || !isDeveloperRole()) return;
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      if (game.author.toLowerCase() !== currentUser.username.toLowerCase()) {
+        alert("Permission Denied: You can only delete games that you uploaded.");
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to permanently delete "${game.title}" from WYRMTOPIA Store?`)) {
+        return;
+      }
+
+      if (useCloudSupabase) {
+        const { error } = await supabaseClient
+          .from("games")
+          .delete()
+          .eq("id", gameId);
+        if (error) {
+          alert("Failed to delete game: " + error.message);
+          return;
+        }
+        await loadCatalog();
+      } else {
+        gamesCatalog = gamesCatalog.filter(g => g.id !== gameId);
+        localStorage.setItem("nebula_shared_catalog", JSON.stringify(gamesCatalog));
+        syncChannel.postMessage({ type: "CATALOG_UPDATED", catalog: gamesCatalog });
+        renderActiveView();
+      }
+    }
+
+    /********************************************************************
+     * 9. REAL-TIME SUBSCRIPTIONS
+     ********************************************************************/
+    function initRealtimeSync() {
+      const badge = document.getElementById("syncBadge");
+      if (useCloudSupabase) {
+        badge.textContent = "Supabase Cloud Realtime";
+        supabaseClient
+          .channel("public:games")
+          .on("postgres_changes", { event: "*", schema: "public", table: "games" }, () => {
+            loadCatalog();
+          })
+          .subscribe();
+      } else {
+        badge.textContent = "Multi-Tab Live Sync (Local)";
+      }
+
+      syncChannel.onmessage = (event) => {
+        if (event.data && event.data.type === "CATALOG_UPDATED") {
+          gamesCatalog = event.data.catalog;
+          renderActiveView();
+        }
+      };
+    }
+
+    /********************************************************************
+     * 10. UI RENDERING (PLAYER STOREFRONT & DEVELOPER STUDIO)
+     ********************************************************************/
+    function renderActiveView() {
+      if (!currentUser) return;
+      updatePendingBadgeCount();
+
+      const storefrontSection = document.getElementById("storefrontSection");
+      const devStudioSection = document.getElementById("devStudioSection");
+
+      if (activeFilter === "dev_studio" && isDeveloperRole()) {
+        storefrontSection.classList.add("hidden");
+        devStudioSection.classList.remove("hidden");
+        renderDeveloperStudio();
+      } else {
+        devStudioSection.classList.add("hidden");
+        storefrontSection.classList.remove("hidden");
+        renderStorefrontGrid();
+      }
+    }
+
+    function updatePendingBadgeCount() {
+      const installedLib = getInstalledLibrary();
+      let pendingUpdates = 0;
+      gamesCatalog.forEach(game => {
+        const localEntry = installedLib[game.id];
+        if (localEntry && localEntry.installedVersion !== game.version) {
+          pendingUpdates++;
+        }
+      });
+
+      const updateBadge = document.getElementById("updateCountBadge");
+      if (pendingUpdates > 0) {
+        updateBadge.textContent = pendingUpdates;
+        updateBadge.classList.remove("hidden");
+      } else {
+        updateBadge.classList.add("hidden");
+      }
+    }
+
+    function getCleanBundledFilesLabel(game) {
+      const safeName = sanitizeIdentifier(game.title);
+      if (Array.isArray(game.bundledFiles) && game.bundledFiles.length > 0) {
+        const filtered = game.bundledFiles.filter(f => !/\.bat\b|\.cmd\b|Web-Built/i.test(f));
+        if (filtered.length > 0) return filtered.join(", ");
+      }
+      return `${safeName}.zip (Verified Bundle)`;
+    }
+
+    function renderStorefrontGrid() {
+      const grid = document.getElementById("gamesGrid");
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const installedLib = getInstalledLibrary();
+
+      const filtered = gamesCatalog.filter(game => {
+        const matchesSearch =
+          (game.title || "").toLowerCase().includes(query) ||
+          (game.author || "").toLowerCase().includes(query) ||
+          (game.genre || "").toLowerCase().includes(query);
+        if (!matchesSearch) return false;
+
+        const localEntry = installedLib[game.id];
+        if (activeFilter === "installed") return Boolean(localEntry);
+        if (activeFilter === "updates") return Boolean(localEntry && localEntry.installedVersion !== game.version);
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-16 bg-[#160b29]/60 border border-purple-900/60 rounded-2xl">
+            <p class="text-purple-300/70 text-sm">No games match this view.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(game => {
+        const localEntry = installedLib[game.id];
+        const isInstalled = Boolean(localEntry);
+        const hasUpdate = isInstalled && localEntry.installedVersion !== game.version;
+        const isOwner = isDeveloperRole() && game.author.toLowerCase() === currentUser.username.toLowerCase();
+
+        const bundledList = getCleanBundledFilesLabel(game);
+        const photoInfo = resolveGameLogoPhoto(game);
+        const redirectUrl = getGameRedirectUrl(game);
+        const isPlayableInStore = canPlayGameInStore(game);
+        const showZipDownload = hasDownloadableBuildFiles(game);
+
+        const cardPhotoHtml = photoInfo.isCustomLogo
+          ? `
+            <img src="${photoInfo.url}" alt="" class="w-full h-full object-cover blur-xl opacity-35 scale-125" />
+            <div class="absolute inset-0 flex items-center justify-center p-5">
+              <img src="${photoInfo.url}" alt="${game.title} Logo" class="max-h-28 max-w-28 w-24 h-24 object-contain rounded-2xl shadow-2xl border border-purple-400/20 bg-[#0b0514]/70 p-2" />
+            </div>
+          `
+          : `<img src="${photoInfo.url}" alt="${game.title}" class="w-full h-full object-cover" />`;
+
+        const webPlayButtonsHtml = isPlayableInStore
+          ? `
+            <div class="grid grid-cols-5 gap-2">
+              <button
+                onclick="openPlayInStoreModal('${game.id}')"
+                class="col-span-3 py-2.5 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white transition flex items-center justify-center gap-1.5 shadow-lg shadow-fuchsia-700/25"
+              >
+                <span>🎮 Play in Store</span>
+              </button>
+              <button
+                onclick="openGameRedirectWebsite('${game.id}')"
+                title="${redirectUrl || 'Open in new browser tab'}"
+                class="col-span-2 py-2.5 px-3 rounded-xl font-semibold text-xs bg-[#241142] hover:bg-purple-800/70 text-fuchsia-200 border border-fuchsia-500/40 transition flex items-center justify-center gap-1"
+              >
+                <span>🌐 New Tab ↗</span>
+              </button>
+            </div>
+          `
+          : "";
+
+        let zipButtonHtml = "";
+        if (showZipDownload) {
+          const btnStyleClass = isPlayableInStore
+            ? "w-full py-2 px-3 rounded-xl font-semibold text-xs bg-[#22113d] hover:bg-purple-900/80 text-purple-200 border border-purple-700/60 transition flex items-center justify-center gap-2"
+            : "w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-purple-700 hover:bg-purple-600 text-white transition flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30";
+
+          if (!isInstalled) {
+            zipButtonHtml = `
+              <button onclick="downloadGameFolderZip('${game.id}')" class="${btnStyleClass}">
+                <span>📦 Download Game .ZIP (v${game.version})</span>
+              </button>
+            `;
+          } else if (hasUpdate) {
+            zipButtonHtml = `
+              <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                <span>🔄 Download Update .ZIP (v${localEntry.installedVersion} → v${game.version})</span>
+              </button>
+            `;
+          } else {
+            zipButtonHtml = `
+              <button onclick="downloadGameFolderZip('${game.id}')" class="w-full py-2 px-4 rounded-xl font-semibold text-xs bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition flex items-center justify-center gap-2">
+                <span>✓ Installed (v${game.version}) — Download .ZIP Again</span>
+              </button>
+            `;
+          }
+        }
+
+        const ownerBadgeOrButton = isOwner
+          ? `<button onclick="openConfigureModalForGame('${game.id}')" class="text-xs px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-200 border border-purple-500/30 hover:bg-purple-500/30 whitespace-nowrap font-medium">
+               ⚙️ Configure / Update
+             </button>`
+          : "";
+
+        return `
+          <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-purple-600/70 transition shadow-xl shadow-purple-950/40">
+            <div>
+              <div class="h-44 bg-[#0c0517] relative overflow-hidden">
+                ${cardPhotoHtml}
+                <div class="absolute top-3 left-3 bg-[#0b0514]/80 backdrop-blur px-2.5 py-1 rounded-md text-xs font-medium text-purple-200 border border-purple-800/40">
+                  ${game.genre}
+                </div>
+                <div class="absolute top-3 right-3 bg-purple-700/90 backdrop-blur px-2.5 py-1 rounded-md text-xs font-mono font-bold text-white">
+                  v${game.version}
+                </div>
+                <button
+                  onclick="openSecurityModal('${game.id}')"
+                  class="absolute bottom-3 left-3 bg-emerald-950/90 hover:bg-emerald-900/90 border border-emerald-500/40 backdrop-blur px-2.5 py-1 rounded-md text-[11px] font-semibold text-emerald-300 flex items-center gap-1 transition"
+                >
+                  <span>🛡️ WyrmShield Verified (View Info)</span>
+                </button>
+              </div>
+
+              <div class="p-5">
+                <div class="flex items-start justify-between gap-2 mb-1">
+                  <h3 class="font-bold text-base text-white">${game.title}</h3>
+                  ${ownerBadgeOrButton}
+                </div>
+                <p class="text-xs text-purple-300/70 mb-2">
+                  By <span class="text-purple-200 font-medium">${game.author}</span>
+                  <span class="text-purple-700 mx-1">•</span>
+                  <span class="text-purple-300/70">${game.fileSize || "ZIP / Web Link"}</span>
+                </p>
+                <p class="text-xs text-purple-100/80 leading-relaxed line-clamp-3 mb-3">${game.description}</p>
+                <div class="bg-[#0c0517] border border-purple-900/70 rounded-lg px-2.5 py-1.5 text-[11px] text-purple-300/80 font-mono truncate" title="${bundledList}">
+                  📦 Content: ${bundledList}
+                </div>
+              </div>
+            </div>
+
+            <div class="p-5 pt-0 space-y-2">
+              ${webPlayButtonsHtml}
+              ${zipButtonHtml}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderDeveloperStudio() {
+      const listEl = document.getElementById("devGamesList");
+      const query = document.getElementById("searchInput").value.toLowerCase();
+
+      const myGames = gamesCatalog.filter(game => {
+        const isMine = (game.author || "").toLowerCase() === currentUser.username.toLowerCase();
+        if (!isMine) return false;
+        return (
+          (game.title || "").toLowerCase().includes(query) ||
+          (game.genre || "").toLowerCase().includes(query)
+        );
+      });
+
+      if (myGames.length === 0) {
+        listEl.innerHTML = `
+          <div class="col-span-full text-center py-16 bg-[#160b29]/70 border border-purple-900/70 rounded-2xl p-6">
+            <p class="text-white font-semibold text-base mb-1">You haven't uploaded any games yet</p>
+            <p class="text-purple-300/70 text-xs mb-5">Click "+ Upload Game / Link" to publish an .exe bundle, logo, or Website Redirect URL.</p>
+            <button onclick="openUploadModal()" class="bg-purple-700 hover:bg-purple-600 text-white transition px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-purple-700/30">
+              + Upload Your First Game
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = myGames.map(game => {
+        const bundledList = getCleanBundledFilesLabel(game);
+        const photoInfo = resolveGameLogoPhoto(game);
+        const isPlayableInStore = canPlayGameInStore(game);
+        const imgFitClass = photoInfo.isCustomLogo ? "object-contain p-2 bg-[#0c0517] border border-purple-900/70" : "object-cover bg-[#0c0517]";
+
+        const testPlayBtns = isPlayableInStore
+          ? `
+            <button
+              onclick="openPlayInStoreModal('${game.id}')"
+              class="py-2 px-3 rounded-lg bg-fuchsia-700/30 hover:bg-fuchsia-700/50 text-fuchsia-200 border border-fuchsia-500/40 text-xs font-semibold transition"
+            >
+              🎮 Play in Store
+            </button>
+            <button
+              onclick="openGameRedirectWebsite('${game.id}')"
+              class="py-2 px-3 rounded-lg bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold transition"
+            >
+              🌐 New Tab ↗
+            </button>
+          `
+          : "";
+
+        return `
+          <div class="bg-[#160b29] border border-purple-900/70 rounded-2xl p-5 flex flex-col justify-between gap-4 shadow-xl">
+            <div class="flex gap-4">
+              <img
+                src="${photoInfo.url}"
+                alt="${game.title}"
+                class="w-28 h-28 rounded-xl ${imgFitClass} shrink-0"
+              />
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-200 font-mono font-semibold">
+                      v${game.version}
+                    </span>
+                    <button onclick="openSecurityModal('${game.id}')" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                      🛡️ Verified
+                    </button>
+                  </div>
+                  <span class="text-xs text-purple-300/70">${game.genre}</span>
+                </div>
+                <h3 class="text-base font-bold text-white mt-1 truncate">${game.title}</h3>
+                <p class="text-xs text-purple-100/80 mt-1 line-clamp-2">${game.description}</p>
+                <div class="mt-2 text-[11px] text-purple-300/70 font-mono truncate">
+                  📦 Content: ${bundledList}
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-purple-900/60 pt-3 flex flex-wrap items-center justify-between gap-2">
+              <button
+                onclick="openConfigureModalForGame('${game.id}')"
+                class="flex-1 py-2 px-3 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold transition text-center"
+              >
+                ⚙️ Configure & Push Update
+              </button>
+              ${testPlayBtns}
+              <button
+                onclick="downloadGameFolderZip('${game.id}')"
+                class="py-2 px-3 rounded-lg bg-[#22113d] hover:bg-purple-900/70 text-purple-200 text-xs font-semibold transition"
+              >
+                📦 .ZIP
+              </button>
+              <button
+                onclick="deleteGameFromCatalog('${game.id}')"
+                class="py-2 px-3 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold transition"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    /********************************************************************
+     * 11. MODAL & DEVELOPER CONFIGURATION CONTROLS
+     ********************************************************************/
+    function setFilter(filterName) {
+      activeFilter = filterName;
+      ["all", "installed", "updates", "dev_studio"].forEach(tab => {
+        const btn = document.getElementById(`tab-${tab}`);
+        if (!btn || btn.classList.contains("hidden")) return;
+
+        if (tab === filterName) {
+          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-purple-700 text-white flex items-center gap-2 shadow-md shadow-purple-900/40";
+        } else if (tab === "dev_studio") {
+          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-fuchsia-300 border border-purple-600/40 hover:bg-purple-900/50 flex items-center gap-2";
+        } else {
+          btn.className = "px-4 py-2 rounded-lg text-sm font-medium bg-[#180c2c] text-purple-200/80 hover:bg-purple-900/50 border border-purple-900/50 flex items-center gap-2";
+        }
+      });
+      renderActiveView();
+    }
+
+    function openUploadModal() {
+      if (!isDeveloperRole()) {
+        alert("Only Developer accounts can upload games.");
+        return;
+      }
+      document.getElementById("modalTitle").textContent = "Upload Game, Logo & Website Redirect";
+      document.getElementById("editGameId").value = "";
+      document.getElementById("uploadForm").reset();
+      document.getElementById("gameRedirectUrl").value = "";
+      selectedUploadFiles = [];
+      detectedLogoDataUrl = null;
+      detectedLogoFileName = null;
+      document.getElementById("logoPreviewBox").classList.add("hidden");
+      document.getElementById("virusScanPanel").classList.add("hidden");
+      document.getElementById("selectedFilesList").innerHTML = "";
+      document.getElementById("gameVersion").value = "1.0.0";
+      setSubmitButtonsState(false, "🚀 Upload & Publish to WYRMTOPIA Store", "🚀 Publish");
+
+      document.getElementById("uploadModal").classList.remove("hidden");
+      document.getElementById("uploadModal").classList.add("flex");
+    }
+
+    function openConfigureModalForGame(gameId) {
+      if (!isDeveloperRole()) return;
+      const game = gamesCatalog.find(g => g.id === gameId);
+      if (!game) return;
+
+      if (game.author.toLowerCase() !== currentUser.username.toLowerCase()) {
+        alert("Permission Denied: You can only configure games created by your account.");
+        return;
+      }
+
+      const parts = game.version.split(".");
+      if (parts.length === 3 && !isNaN(parts[2])) {
+        parts[2] = Number(parts[2]) + 1;
+      }
+      const nextVersion = parts.join(".");
+
+      document.getElementById("modalTitle").textContent = `Push Update for "${game.title}"`;
+      document.getElementById("editGameId").value = game.id;
+      document.getElementById("gameTitle").value = game.title;
+      document.getElementById("gameVersion").value = nextVersion;
+      document.getElementById("gameGenre").value = game.genre;
+      document.getElementById("gameCover").value = (game.cover && !game.cover.startsWith("data:")) ? game.cover : "";
+      document.getElementById("gameRedirectUrl").value = getGameRedirectUrl(game);
+      document.getElementById("gameDesc").value = game.description;
+      document.getElementById("gameFile").value = "";
+      document.getElementById("gameFolder").value = "";
+      selectedUploadFiles = [];
+      detectedLogoDataUrl = null;
+      detectedLogoFileName = null;
+      document.getElementById("logoPreviewBox").classList.add("hidden");
+      document.getElementById("virusScanPanel").classList.add("hidden");
+      document.getElementById("selectedFilesList").innerHTML = "";
+      setSubmitButtonsState(false, `🚀 Push Update (v${nextVersion}) to Store`, "🚀 Push Update");
+
+      document.getElementById("uploadModal").classList.remove("hidden");
+      document.getElementById("uploadModal").classList.add("flex");
+    }
+
+    function closeUploadModal() {
+      document.getElementById("uploadModal").classList.add("hidden");
+      document.getElementById("uploadModal").classList.remove("flex");
+    }
+
+    async function handlePublishGame(e) {
+      e.preventDefault();
+      if (!isDeveloperRole()) return;
+
+      setSubmitButtonsState(true, "Publishing to WYRMTOPIA Store...", "Saving...");
+
+      try {
+        const scanResult = await runLiveFileVirusScan();
+        if (!scanResult.passed) {
+          alert(
+            "⛔ WyrmShield Antivirus Blocked Upload:\n\n" +
+            scanResult.threats.join("\n")
+          );
+          return;
+        }
+
+        const editId = document.getElementById("editGameId").value;
+        const existingGame = editId ? gamesCatalog.find(g => g.id === editId) : null;
+
+        if (existingGame && existingGame.author.toLowerCase() !== currentUser.username.toLowerCase()) {
+          alert("Permission Denied: You cannot modify another developer's game.");
+          return;
+        }
+
+        const title = document.getElementById("gameTitle").value.trim();
+        const version = document.getElementById("gameVersion").value.trim();
+        const genre = document.getElementById("gameGenre").value;
+        let cover = document.getElementById("gameCover").value.trim();
+        const redirectUrl = normalizeExternalUrl(document.getElementById("gameRedirectUrl").value);
+        const description = document.getElementById("gameDesc").value.trim();
+        const files = selectedUploadFiles;
+
+        if (detectedLogoDataUrl) {
+          cover = detectedLogoDataUrl;
+        } else if (!cover && existingGame && existingGame.cover) {
+          cover = existingGame.cover;
+        }
+
+        let archiveFileName;
+        let launcherScript;
+        let bundledFiles;
+        let fileSize;
+
+        if (existingGame && files.length === 0 && existingGame.launcherScript) {
+          const updatedPkg = updateExistingPackageRedirectUrl(existingGame, title, version, redirectUrl);
+          archiveFileName = updatedPkg.archiveFileName;
+          launcherScript = updatedPkg.launcherScript;
+          bundledFiles = updatedPkg.bundledFiles;
+          fileSize = existingGame.fileSize || (redirectUrl ? "In-Store Web + Bundle" : "HTTPS .ZIP Bundle");
+        } else {
+          const totalBytes = files.reduce((acc, f) => acc + f.size, 0);
+          if (files.length > 0 && redirectUrl) {
+            fileSize = `In-Store Web + .ZIP (${(totalBytes / 1024).toFixed(1)} KB)`;
+          } else if (files.length > 0) {
+            fileSize = `HTTPS .ZIP • ${files.length} file(s) (${(totalBytes / 1024).toFixed(1)} KB)`;
+          } else if (redirectUrl) {
+            fileSize = "🎮 Play in Store / Web Link";
+          } else {
+            fileSize = "Verified .ZIP Bundle";
+          }
+
+          const pkg = await buildWebFolderPackage(
+            files,
+            title,
+            version,
+            currentUser.username,
+            description,
+            scanResult.files,
+            redirectUrl
+          );
+          archiveFileName = pkg.archiveFileName;
+          launcherScript = pkg.launcherScript;
+          bundledFiles = pkg.bundledFiles;
+        }
+
+        const gameObj = {
+          id: editId || `game_${Date.now()}`,
+          title,
+          author: currentUser.username,
+          genre,
+          version,
+          description,
+          cover,
+          fileName: archiveFileName,
+          fileSize,
+          bundledFiles,
+          launcherScript,
+          fileUrl: existingGame ? existingGame.fileUrl : null,
+          updatedAt: new Date().toISOString()
+        };
+
+        await saveGameToCatalog(gameObj);
+        closeUploadModal();
+      } finally {
+        setSubmitButtonsState(false, "🚀 Upload & Publish to WYRMTOPIA Store", "🚀 Publish");
+      }
+    }
+
+    // Boot application & restore active session
+    initRealtimeSync();
+    (function restoreSessionOnBoot() {
+      const saved = localStorage.getItem("nebula_active_session");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.username && parsed.role) {
+            completeLoginSession(parsed);
+          }
+        } catch (_) {}
+      }
+    })();
+  </script>
+</body>
+</html>
