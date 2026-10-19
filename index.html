@@ -43,10 +43,10 @@
           <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
             WYRMTOPIA Store
             <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold">
-              Desktop Client Exclusive
+              Desktop App
             </span>
           </h1>
-          <p class="text-xs text-purple-300/70">Official Game Launcher, Auto-Updater & Developer Studio</p>
+          <p class="text-xs text-purple-300/70">Official Windows Client</p>
         </div>
       </div>
 
@@ -55,75 +55,76 @@
         download="WyrmtopiaSetup.iso"
         class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-emerald-700/30 flex items-center gap-1.5"
       >
-        <span>💿 Download Installer (.ISO)</span>
+        <span>💿 Download Installer</span>
       </a>
     </div>
   </header>
 
-  <!-- MAIN NOTICE & DOWNLOAD CARD -->
-  <main class="max-w-3xl mx-auto px-6 py-12 flex-1 flex items-center justify-center w-full">
-    <div class="w-full bg-[#160b29] border border-purple-800/80 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-purple-950/70 relative overflow-hidden">
+  <!-- MAIN DOWNLOAD & HOW-TO CARD -->
+  <main class="max-w-2xl mx-auto px-6 py-12 flex-1 flex items-center justify-center w-full">
+    <div class="w-full bg-[#160b29] border border-purple-800/80 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-purple-950/70">
 
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-bold uppercase tracking-wider mb-6">
-        <span>⚠️ Web Browser Version Discontinued</span>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-bold uppercase tracking-wider mb-5">
+        <span>⚠️ Web Version No Longer Supported</span>
       </div>
 
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug mb-3">
-        The Web Store Is No Longer Supported.<br />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-emerald-400">
-          Download the WYRMTOPIA Official Installer Disc to Continue.
-        </span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug mb-6">
+        Download the WYRMTOPIA Store Desktop App to Continue.
       </h2>
-
-      <p class="text-sm text-purple-200/85 leading-relaxed mb-6">
-        WYRMTOPIA Store is packaged as a clean <strong>Windows Virtual Installer Disc (<code>WyrmtopiaSetup.iso</code>)</strong>. Double-click the downloaded <code>.iso</code> file on Windows 10 or 11 to open it instantly and run <code>WyrmtopiaSetup.exe</code> with zero browser or Windows Security blocks.
-      </p>
 
       <!-- Live Published Version Box -->
       <div class="bg-[#0c0517] border border-purple-900/80 rounded-2xl p-5 mb-6">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold" id="liveVersionBadge">
-              Official Release
-            </span>
-            <span class="text-xs text-purple-300/80 font-medium">
-              🛡️ Verified Clean by WyrmShield
-            </span>
-          </div>
+          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold" id="liveVersionBadge">
+            Official Release
+          </span>
           <span class="text-[11px] font-mono text-purple-400/70" id="liveShaBadge">
-            Windows 10 / 11 (.ISO)
+            Windows 10 / 11
           </span>
         </div>
 
         <div class="text-xs text-purple-200/80 mt-2 font-mono bg-[#140926] border border-purple-900/60 rounded-xl p-3" id="liveReleaseNotes">
-          • 1-Click graphical installer (bypasses Chrome .zip blocks & WindowsZoneId=4 blocks)<br />
-          • Automatic store & game version updates<br />
-          • Full Developer Studio with 10-version history & rollback
+          Official WYRMTOPIA Store Desktop Client & Game Launcher.
         </div>
       </div>
 
-      <!-- Primary Static .ISO Download Button -->
+      <!-- Primary Download Button -->
       <a
         id="mainDownloadLink"
         href="WyrmtopiaSetup.iso"
         download="WyrmtopiaSetup.iso"
         class="w-full py-4 px-6 rounded-2xl font-extrabold text-base sm:text-lg bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-700/30 transition flex items-center justify-center gap-3 cursor-pointer"
       >
-        <span id="mainDownloadText">💿 Download WYRMTOPIA Store Installer (WyrmtopiaSetup.iso)</span>
+        <span id="mainDownloadText">💿 Download WYRMTOPIA Store Installer</span>
       </a>
 
-      <!-- Simple 2-Step Instructions -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-6 border-t border-purple-900/60 text-xs">
-        <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 space-y-1.5">
-          <div class="font-bold text-purple-200 text-sm mb-1">🚀 Why an .ISO Installer Disc?</div>
-          <p class="text-purple-300/80">✓ <strong>No Chrome Blocks:</strong> Chrome does not flag <code>.iso</code> disc images like it flags <code>.zip</code> executables.</p>
-          <p class="text-purple-300/80">✓ <strong>No Windows Security Blocks:</strong> Files inside a virtual disc never carry internet block tags.</p>
-        </div>
+      <!-- Direct How-To Steps -->
+      <div class="mt-8 pt-6 border-t border-purple-900/60">
+        <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-4">
+          How to Install
+        </h3>
 
-        <div class="bg-[#0c0517]/90 border border-emerald-500/30 rounded-xl p-4 space-y-1.5">
-          <div class="font-bold text-emerald-400 text-sm mb-1">🛡️ 2-Step Installation</div>
-          <p class="text-purple-200/90"><strong>1.</strong> Double-click <code>WyrmtopiaSetup.iso</code> in your <strong>Downloads</strong> folder (Windows opens it automatically like a folder).</p>
-          <p class="text-purple-200/90"><strong>2.</strong> Double-click <strong><code>WyrmtopiaSetup.exe</code></strong> inside and click <strong>Install WYRMTOPIA Store Now</strong>!</p>
+        <div class="space-y-3 text-xs sm:text-sm">
+          <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center shrink-0 text-xs">1</span>
+            <p class="text-purple-100">
+              Click the green button above to download <strong><code>WyrmtopiaSetup.iso</code></strong>.
+            </p>
+          </div>
+
+          <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center shrink-0 text-xs">2</span>
+            <p class="text-purple-100">
+              Open your <strong>Downloads</strong> folder and double-click <strong><code>WyrmtopiaSetup.iso</code></strong> to open it.
+            </p>
+          </div>
+
+          <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-emerald-600 text-black font-bold flex items-center justify-center shrink-0 text-xs">3</span>
+            <p class="text-purple-100">
+              Double-click <strong><code>WyrmtopiaSetup.exe</code></strong> inside and click <strong>Install WYRMTOPIA Store Now</strong>.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -131,7 +132,7 @@
   </main>
 
   <footer class="border-t border-purple-900/40 py-5 text-center text-xs text-purple-400/60">
-    Copyright &copy; 2026 Wyrmtopia Studio. All accounts, games, and cloud saves are synced with the WYRMTOPIA Desktop App.
+    Copyright &copy; 2026 Wyrmtopia Studio.
   </footer>
 
   <script>
@@ -157,7 +158,7 @@
             document.getElementById("liveReleaseNotes").textContent = data.release_notes;
           }
           document.getElementById("mainDownloadText").textContent =
-            `💿 Download WYRMTOPIA Store Installer (Installs v${data.version})`;
+            `💿 Download WYRMTOPIA Store Installer (v${data.version})`;
         }
       } catch (err) {
         console.warn("Could not query store_versions metadata:", err);
