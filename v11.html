@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WYRMTOPIA Store — Official Desktop App</title>
+  <link rel="icon" href="WyrmtopiaLogo.ico" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0b0514] text-purple-50 min-h-screen flex flex-col justify-between font-sans selection:bg-purple-600 selection:text-white bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/35 via-[#0b0514] to-[#0b0514]">
+
+  <!-- TOP HEADER BAR -->
+  <header class="border-b border-purple-900/60 bg-[#120822]/90 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="w-10 h-10 shrink-0 drop-shadow-[0_0_10px_rgba(192,38,211,0.45)]" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wyrmBg" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1d0b38" />
+              <stop offset="50%" stop-color="#0d041a" />
+              <stop offset="100%" stop-color="#2e0f54" />
+            </linearGradient>
+            <linearGradient id="wyrmRim" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#d946ef" />
+              <stop offset="50%" stop-color="#7e22ce" />
+              <stop offset="100%" stop-color="#a855f7" />
+            </linearGradient>
+            <linearGradient id="wyrmWing" x1="46" y1="52" x2="210" y2="188" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f0abfc" />
+              <stop offset="50%" stop-color="#c026d3" />
+              <stop offset="100%" stop-color="#6b21a8" />
+            </linearGradient>
+          </defs>
+          <polygon points="128,10 230,69 230,187 128,246 26,187 26,69" fill="url(#wyrmBg)" stroke="url(#wyrmRim)" stroke-width="12" stroke-linejoin="round" />
+          <polygon points="128,30 212,79 212,177 128,226 44,177 44,79" fill="none" stroke="#d946ef" stroke-opacity="0.3" stroke-width="3" />
+          <polygon points="88,72 68,38 108,62" fill="#c026d3" />
+          <polygon points="168,72 188,38 148,62" fill="#c026d3" />
+          <polygon points="128,50 144,74 128,94 112,74" fill="#f0abfc" />
+          <polygon points="46,82 82,188 128,122 174,188 210,82 182,92 164,152 128,96 92,152 74,92" fill="url(#wyrmWing)" stroke="#f5d0fe" stroke-width="4" stroke-linejoin="round" />
+        </svg>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            WYRMTOPIA Store
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold">
+              Desktop App
+            </span>
+          </h1>
+          <p class="text-xs text-purple-300/70">Official Windows Client</p>
+        </div>
+      </div>
+
+      <a
+        href="WyrmtopiaStore.exe"
+        download="WyrmtopiaStore.exe"
+        class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-emerald-700/30 flex items-center gap-1.5"
+      >
+        <span>⬇ Download Store (.EXE)</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN DOWNLOAD & HOW-TO CARD -->
+  <main class="max-w-2xl mx-auto px-6 py-12 flex-1 flex items-center justify-center w-full">
+    <div class="w-full bg-[#160b29] border border-purple-800/80 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-purple-950/70">
+
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-bold uppercase tracking-wider mb-5">
+        <span>⚠️ Web Version No Longer Supported</span>
+      </div>
+
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug mb-6">
+        Download the WYRMTOPIA Store Desktop App to Continue.
+      </h2>
+
+      <!-- Base Client Info Box -->
+      <div class="bg-[#0c0517] border border-purple-900/80 rounded-2xl p-5 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">
+            v1.0.0 Base Client (Auto-Updates on Launch)
+          </span>
+          <span class="text-[11px] font-mono text-purple-400/70">
+            Windows 10 / 11 (.EXE)
+          </span>
+        </div>
+
+        <div class="text-xs text-purple-200/80 mt-2 font-mono bg-[#140926] border border-purple-900/60 rounded-xl p-3">
+          Official WYRMTOPIA Store Desktop Client. Automatically checks for and installs the latest store updates when opened.
+        </div>
+      </div>
+
+      <!-- Primary Static .EXE Download Button -->
+      <a
+        href="WyrmtopiaStore.exe"
+        download="WyrmtopiaStore.exe"
+        class="w-full py-4 px-6 rounded-2xl font-extrabold text-base sm:text-lg bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-700/30 transition flex items-center justify-center gap-3 cursor-pointer"
+      >
+        <span>💻 Download WYRMTOPIA Store (WyrmtopiaStore.exe)</span>
+      </a>
+
+      <!-- Direct How-To Steps -->
+      <div class="mt-8 pt-6 border-t border-purple-900/60">
+        <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-4">
+          How to Launch &amp; Update
+        </h3>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center shrink-0 text-xs">1</span>
+            <p class="text-purple-100">
+              Click the green button above to download <strong><code>WyrmtopiaStore.exe</code></strong>.
+            </p>
+          </div>
+
+          <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center shrink-0 text-xs">2</span>
+            <p class="text-purple-100">
+              Open your <strong>Downloads</strong> folder and double-click <strong><code>WyrmtopiaStore.exe</code></strong> to launch the store.
+            </p>
+          </div>
+
+          <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-emerald-600 text-black font-bold flex items-center justify-center shrink-0 text-xs">3</span>
+            <p class="text-purple-100">
+              Sign in to your account—if a newer store version is available, click <strong>Update Store Now</strong> inside the app to update automatically.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="border-t border-purple-900/40 py-5 text-center text-xs text-purple-400/60">
+    Copyright &copy; 2026 Wyrmtopia Studio.
+  </footer>
+
+</body>
+</html>

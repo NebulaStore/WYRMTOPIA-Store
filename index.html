@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WYRMTOPIA Store — Official Desktop Installer</title>
+  <title>WYRMTOPIA Store — Official Desktop App</title>
   <link rel="icon" href="WyrmtopiaLogo.ico" type="image/x-icon" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-[#0b0514] text-purple-50 min-h-screen flex flex-col justify-between font-sans selection:bg-purple-600 selection:text-white bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/35 via-[#0b0514] to-[#0b0514]">
 
@@ -51,11 +50,11 @@
       </div>
 
       <a
-        href="WyrmtopiaSetup.iso"
-        download="WyrmtopiaSetup.iso"
+        href="WyrmtopiaStore.exe"
+        download="WyrmtopiaStore.exe"
         class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-emerald-700/30 flex items-center gap-1.5"
       >
-        <span>💿 Download Installer</span>
+        <span>⬇ Download Store (.EXE)</span>
       </a>
     </div>
   </header>
@@ -72,57 +71,56 @@
         Download the WYRMTOPIA Store Desktop App to Continue.
       </h2>
 
-      <!-- Live Published Version Box -->
+      <!-- Base Client Info Box -->
       <div class="bg-[#0c0517] border border-purple-900/80 rounded-2xl p-5 mb-6">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold" id="liveVersionBadge">
-            Official Release
+          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">
+            v1.0.0 Base Client (Auto-Updates on Launch)
           </span>
-          <span class="text-[11px] font-mono text-purple-400/70" id="liveShaBadge">
-            Windows 10 / 11
+          <span class="text-[11px] font-mono text-purple-400/70">
+            Windows 10 / 11 (.EXE)
           </span>
         </div>
 
-        <div class="text-xs text-purple-200/80 mt-2 font-mono bg-[#140926] border border-purple-900/60 rounded-xl p-3" id="liveReleaseNotes">
-          Official WYRMTOPIA Store Desktop Client & Game Launcher.
+        <div class="text-xs text-purple-200/80 mt-2 font-mono bg-[#140926] border border-purple-900/60 rounded-xl p-3">
+          Official WYRMTOPIA Store Desktop Client. Automatically checks for and installs the latest store updates when opened.
         </div>
       </div>
 
-      <!-- Primary Download Button -->
+      <!-- Primary Static .EXE Download Button -->
       <a
-        id="mainDownloadLink"
-        href="WyrmtopiaSetup.iso"
-        download="WyrmtopiaSetup.iso"
+        href="WyrmtopiaStore.exe"
+        download="WyrmtopiaStore.exe"
         class="w-full py-4 px-6 rounded-2xl font-extrabold text-base sm:text-lg bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-700/30 transition flex items-center justify-center gap-3 cursor-pointer"
       >
-        <span id="mainDownloadText">💿 Download WYRMTOPIA Store Installer</span>
+        <span>💻 Download WYRMTOPIA Store (WyrmtopiaStore.exe)</span>
       </a>
 
       <!-- Direct How-To Steps -->
       <div class="mt-8 pt-6 border-t border-purple-900/60">
         <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-4">
-          How to Install
+          How to Launch &amp; Update
         </h3>
 
         <div class="space-y-3 text-xs sm:text-sm">
           <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
             <span class="w-6 h-6 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center shrink-0 text-xs">1</span>
             <p class="text-purple-100">
-              Click the green button above to download <strong><code>WyrmtopiaSetup.iso</code></strong>.
+              Click the green button above to download <strong><code>WyrmtopiaStore.exe</code></strong>.
             </p>
           </div>
 
           <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
             <span class="w-6 h-6 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center shrink-0 text-xs">2</span>
             <p class="text-purple-100">
-              Open your <strong>Downloads</strong> folder and double-click <strong><code>WyrmtopiaSetup.iso</code></strong> to open it.
+              Open your <strong>Downloads</strong> folder and double-click <strong><code>WyrmtopiaStore.exe</code></strong> to launch the store.
             </p>
           </div>
 
           <div class="bg-[#0c0517]/90 border border-purple-900/70 rounded-xl p-4 flex items-start gap-3">
             <span class="w-6 h-6 rounded-full bg-emerald-600 text-black font-bold flex items-center justify-center shrink-0 text-xs">3</span>
             <p class="text-purple-100">
-              Double-click <strong><code>WyrmtopiaSetup.exe</code></strong> inside and click <strong>Install WYRMTOPIA Store Now</strong>.
+              Sign in to your account—if a newer store version is available, click <strong>Update Store Now</strong> inside the app to update automatically.
             </p>
           </div>
         </div>
@@ -135,37 +133,5 @@
     Copyright &copy; 2026 Wyrmtopia Studio.
   </footer>
 
-  <script>
-    const SUPABASE_URL = "https://oirhhzmhkomcqbffqfny.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_5bEZnUlGpFbjrSg8wtvmbw_vCMagphO";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    async function loadPublishedStoreVersionInfo() {
-      try {
-        const { data, error } = await supabaseClient
-          .from("store_versions")
-          .select("id,version,release_notes,sha256")
-          .eq("is_published", true)
-          .limit(1)
-          .maybeSingle();
-
-        if (!error && data) {
-          document.getElementById("liveVersionBadge").textContent = `v${data.version} (Official Release)`;
-          if (data.sha256) {
-            document.getElementById("liveShaBadge").textContent = `SHA256: ${data.sha256.slice(0, 12)}…`;
-          }
-          if (data.release_notes) {
-            document.getElementById("liveReleaseNotes").textContent = data.release_notes;
-          }
-          document.getElementById("mainDownloadText").textContent =
-            `💿 Download WYRMTOPIA Store Installer (v${data.version})`;
-        }
-      } catch (err) {
-        console.warn("Could not query store_versions metadata:", err);
-      }
-    }
-
-    loadPublishedStoreVersionInfo();
-  </script>
 </body>
 </html>
