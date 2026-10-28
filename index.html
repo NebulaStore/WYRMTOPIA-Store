@@ -6,6 +6,7 @@
   <title>WYRMTOPIA Store — Official Desktop App</title>
   <link rel="icon" href="WyrmtopiaLogo.ico" type="image/x-icon" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-[#0b0514] text-purple-50 min-h-screen flex flex-col justify-between font-sans selection:bg-purple-600 selection:text-white bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/35 via-[#0b0514] to-[#0b0514]">
 
@@ -50,9 +51,10 @@
       </div>
 
       <a
+        id="headerDownloadBtn"
         href="WyrmtopiaStore.exe"
-        download="WyrmtopiaStore.exe"
-        class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-emerald-700/30 flex items-center gap-1.5"
+        onclick="return downloadStoreExe(event)"
+        class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-emerald-700/30 flex items-center gap-1.5 cursor-pointer"
       >
         <span>⬇ Download Store (.EXE)</span>
       </a>
@@ -71,11 +73,11 @@
         Download the WYRMTOPIA Store Desktop App to Continue.
       </h2>
 
-      <!-- Base Client Info Box -->
+      <!-- Client Info Box -->
       <div class="bg-[#0c0517] border border-purple-900/80 rounded-2xl p-5 mb-6">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">
-            v1.0.0 Base Client (Auto-Updates on Launch)
+          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold" id="versionBadge">
+            Official Desktop Client (Auto-Updates on Launch)
           </span>
           <span class="text-[11px] font-mono text-purple-400/70">
             Windows 10 / 11 (.EXE)
@@ -87,14 +89,17 @@
         </div>
       </div>
 
-      <!-- Primary Static .EXE Download Button -->
+      <!-- Primary Download Button -->
       <a
+        id="mainDownloadBtn"
         href="WyrmtopiaStore.exe"
-        download="WyrmtopiaStore.exe"
+        onclick="return downloadStoreExe(event)"
         class="w-full py-4 px-6 rounded-2xl font-extrabold text-base sm:text-lg bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-700/30 transition flex items-center justify-center gap-3 cursor-pointer"
       >
-        <span>💻 Download WYRMTOPIA Store (WyrmtopiaStore.exe)</span>
+        <span id="mainDownloadText">💻 Download WYRMTOPIA Store (WyrmtopiaStore.exe)</span>
       </a>
+
+      <div id="downloadStatusText" class="hidden text-center text-xs text-emerald-400 font-semibold mt-3"></div>
 
       <!-- Direct How-To Steps -->
       <div class="mt-8 pt-6 border-t border-purple-900/60">
@@ -133,5 +138,146 @@
     Copyright &copy; 2026 Wyrmtopia Studio.
   </footer>
 
+  <script>
+    const SUPABASE_URL = "https://oirhhzmhkomcqbffqfny.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_5bEZnUlGpFbjrSg8wtvmbw_vCMagphO";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let resolvedHttpsUrl = null;
+    let fallbackBase64Bytes = null;
+
+    function base64ToUint8Array(base64) {
+      const binaryString = atob(base64.trim());
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    function setDownloadLinks(url) {
+      resolvedHttpsUrl = url;
+      const mainBtn = document.getElementById("mainDownloadBtn");
+      const headerBtn = document.getElementById("headerDownloadBtn");
+      mainBtn.href = url;
+      headerBtn.href = url;
+      // Only set the 'download' attribute for same-origin URLs so cross-origin Supabase links never fail
+      if (!url.startsWith("http")) {
+        mainBtn.setAttribute("download", "WyrmtopiaStore.exe");
+        headerBtn.setAttribute("download", "WyrmtopiaStore.exe");
+      } else {
+        mainBtn.removeAttribute("download");
+        headerBtn.removeAttribute("download");
+      }
+    }
+
+    // Automatically resolves a working WyrmtopiaStore.exe URL so the browser never shows "無法在網站上擷取檔案"
+    async function resolveWorkingStoreExeLink() {
+      // 1. Check if WyrmtopiaStore.exe is uploaded directly alongside index.html
+      if (window.location.protocol.startsWith("http")) {
+        try {
+          const localCheck = await fetch("./WyrmtopiaStore.exe", { method: "HEAD", cache: "no-store" });
+          if (localCheck.ok) {
+            setDownloadLinks("./WyrmtopiaStore.exe");
+            return;
+          }
+        } catch (e) {}
+      }
+
+      // 2. Otherwise, fetch the base/published store build from Supabase store_versions
+      try {
+        const { data: rows } = await supabaseClient
+          .from("store_versions")
+          .select("id,version,file_url,is_published,created_at")
+          .order("created_at", { ascending: true });
+
+        if (rows && rows.length > 0) {
+          // Prefer v1.0.0 base client if present, otherwise use the published or latest row
+          const targetRow =
+            rows.find(r => r.version === "1.0.0" && r.file_url) ||
+            rows.find(r => r.is_published && r.file_url) ||
+            rows[rows.length - 1];
+
+          if (targetRow && targetRow.file_url) {
+            const payload = targetRow.file_url.trim();
+
+            if (payload.startsWith("https://")) {
+              const dlUrl = `${payload}${payload.includes("?") ? "&" : "?"}download=WyrmtopiaStore.exe`;
+              setDownloadLinks(dlUrl);
+              return;
+            }
+
+            if (payload.startsWith("base64:") || payload.startsWith("data:")) {
+              const b64 = payload.startsWith("base64:")
+                ? payload.slice(7)
+                : payload.slice(payload.indexOf(",") + 1);
+              fallbackBase64Bytes = base64ToUint8Array(b64);
+
+              // Upload to Supabase Storage so the browser gets a real HTTPS URL
+              const storagePath = "launcher/WyrmtopiaStore.exe";
+              const { error: upErr } = await supabaseClient.storage
+                .from("game-builds")
+                .upload(storagePath, fallbackBase64Bytes, {
+                  upsert: true,
+                  contentType: "application/octet-stream"
+                });
+
+              if (!upErr) {
+                const { data: pubData } = supabaseClient.storage
+                  .from("game-builds")
+                  .getPublicUrl(storagePath);
+                if (pubData && pubData.publicUrl) {
+                  setDownloadLinks(`${pubData.publicUrl}?download=WyrmtopiaStore.exe`);
+                  return;
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Could not query Supabase store_versions:", err);
+      }
+    }
+
+    async function downloadStoreExe(event) {
+      const statusEl = document.getElementById("downloadStatusText");
+      statusEl.classList.remove("hidden");
+
+      if (!resolvedHttpsUrl && !fallbackBase64Bytes) {
+        event.preventDefault();
+        statusEl.textContent = "⏳ Locating WyrmtopiaStore.exe on server...";
+        await resolveWorkingStoreExeLink();
+      }
+
+      if (resolvedHttpsUrl) {
+        statusEl.textContent = "✓ Downloading WyrmtopiaStore.exe! Open it from your Downloads folder.";
+        window.location.assign(resolvedHttpsUrl);
+        event.preventDefault();
+        return false;
+      }
+
+      if (fallbackBase64Bytes) {
+        event.preventDefault();
+        const blob = new Blob([fallbackBase64Bytes], { type: "application/octet-stream" });
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = "WyrmtopiaStore.exe";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+        statusEl.textContent = "✓ Downloading WyrmtopiaStore.exe! Open it from your Downloads folder.";
+        return false;
+      }
+
+      event.preventDefault();
+      statusEl.textContent = "⚠️ WyrmtopiaStore.exe has not been uploaded yet. Please place WyrmtopiaStore.exe in your website folder or upload it in the Store Admin Panel.";
+      return false;
+    }
+
+    resolveWorkingStoreExeLink();
+  </script>
 </body>
 </html>
